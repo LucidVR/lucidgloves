@@ -9,7 +9,7 @@
 #define COMMUNICATION COMM_SERIAL //Which communication protocol to use
 
 #define LOOP_TIME 4 //How much time between data sends (ms), set to 0 for a good time :)
-#define CALIBRATION_LOOPS 5000//How many loops should be calibrated. Set to -1 to always be calibrated.
+#define CALIBRATION_LOOPS -1//How many loops should be calibrated. Set to -1 to always be calibrated.
 
 #define COMM_SERIAL 0   //serial over USB
   #define SERIAL_BAUD_RATE 115200
