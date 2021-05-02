@@ -26,8 +26,6 @@ void loop() {
       calibrate = true;
       loops++;
     }
-
-    Serial.println("\nLoops: "+String(loops));
     
     int* fingerPos = getFingerPositions(calibrate, calibButton);
     bool joyButton = getButton(PIN_JOY_BTN);
