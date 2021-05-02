@@ -17,17 +17,27 @@ void setupInputs(){
   #if !PINCH_GESTURE
   pinMode(PIN_PNCH_BTN, INPUT_PULLUP);
   #endif
+
+  pinMode(PIN_CALIB, INPUT_PULLUP);
 }
 
-int* getFingerPositions(bool calibrating){
+int* getFingerPositions(bool calibrating, bool reset){
   int rawFingers[5] = {analogRead(PIN_PINKY), analogRead(PIN_RING), analogRead(PIN_MIDDLE), analogRead(PIN_INDEX), NO_THUMB?0:analogRead(PIN_THUMB)};
-
+  
   //flip pot values if needed
   #if FLIP_POTS
   for (int i = 0; i <5; i++){
     rawFingers[i] = ANALOG_MAX - rawFingers[i];
   }
   #endif
+
+  //reset max and mins as needed
+  if (reset){
+    for (int i = 0; i <5; i++){
+      maxFingers[i] = 0;
+      minFingers[i] = ANALOG_MAX;
+    }
+  }
   
   //if during the calibration sequence, make sure to update max and mins
   if (calibrating){
@@ -74,5 +84,5 @@ int getJoyY(){
 }
 
 bool getButton(byte pin){
-  return digitalRead(pin) == HIGH;
+  return digitalRead(pin) != HIGH;
 }

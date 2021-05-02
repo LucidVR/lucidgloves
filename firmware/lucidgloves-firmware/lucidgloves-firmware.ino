@@ -48,6 +48,7 @@
   #define PIN_TRIG_BTN  10 //unused if gesture set
   #define PIN_GRAB_BTN  11 //unused if gesture set
   #define PIN_PNCH_BTN  12 //unused if gesture set
+  #define PIN_CALIB     13 //button for recalibration
   #define DEBUG_LED LED_BUILTIN
 #elif defined(ESP32)
   //(This configuration is for ESP32 DOIT V1 so make sure to change if you're on another board)
@@ -64,5 +65,6 @@
   #define PIN_TRIG_BTN  12 //unused if gesture set
   #define PIN_GRAB_BTN  13 //unused if gesture set
   #define PIN_PNCH_BTN  23 //unused if gesture set
-  #define DEBUG_LED LED_BUILTIN
+  #define PIN_CALIB     12 //button for recalibration
+  #define DEBUG_LED 2
 #endif

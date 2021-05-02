@@ -17,14 +17,19 @@ void setup() {
 void loop() {
   if (comm->isOpen()){
 
+    bool calibButton = getButton(PIN_CALIB);
+    if (calibButton)
+      loops = 0;
+
     bool calibrate = false;
     if (loops < CALIBRATION_LOOPS || ALWAYS_CALIBRATING){
       calibrate = true;
       loops++;
     }
-      
+
+    Serial.println("\nLoops: "+String(loops));
     
-    int* fingerPos = getFingerPositions(calibrate);
+    int* fingerPos = getFingerPositions(calibrate, calibButton);
     bool joyButton = getButton(PIN_JOY_BTN);
 
     #if TRIGGER_GESTURE
