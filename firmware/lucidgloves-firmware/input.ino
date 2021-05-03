@@ -67,9 +67,9 @@ int getJoyX(){
   #if JOYSTICK_BLANK
   return ANALOG_MAX/2;
   #elif JOY_FLIP_X
-  int rawValue = ANALOG_MAX - analogRead(PIN_JOY_X);
+  return ANALOG_MAX - analogRead(PIN_JOY_X);
   #else
-  int rawValue = analogRead(PIN_JOY_X);
+  return analogRead(PIN_JOY_X);
   #endif
 }
 

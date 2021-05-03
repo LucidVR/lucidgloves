@@ -26,7 +26,7 @@
 #define PINCH_GESTURE   true
 
 //joystick configuration
-#define JOYSTICK_BLANK true
+#define JOYSTICK_BLANK false
 #define JOY_FLIP_X false
 #define JOY_FLIP_Y false
 
@@ -59,7 +59,7 @@
   #define PIN_THUMB     32
   #define PIN_JOY_X     33
   #define PIN_JOY_Y     25
-  #define PIN_JOY_BTN   26 
+  #define PIN_JOY_BTN   26
   #define PIN_A_BTN     27 
   #define PIN_B_BTN     14
   #define PIN_TRIG_BTN  12 //unused if gesture set
