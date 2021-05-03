@@ -63,13 +63,21 @@ int* getFingerPositions(bool calibrating, bool reset){
   
 }
 
+int analogReadDeadzone(byte pin){
+  int raw = analogRead(pin);
+  if (abs(ANALOG_MAX/2 - raw) < JOYSTICK_DEADZONE * ANALOG_MAX / 100)
+    return ANALOG_MAX/2;
+  else
+    return raw;
+}
+
 int getJoyX(){
   #if JOYSTICK_BLANK
   return ANALOG_MAX/2;
   #elif JOY_FLIP_X
-  return ANALOG_MAX - analogRead(PIN_JOY_X);
+  return ANALOG_MAX - analogReadDeadzone(PIN_JOY_X);
   #else
-  return analogRead(PIN_JOY_X);
+  return analogReadDeadzone(PIN_JOY_X);
   #endif
 }
 
@@ -77,9 +85,9 @@ int getJoyY(){
   #if JOYSTICK_BLANK
   return ANALOG_MAX/2;
   #elif JOY_FLIP_Y
-  return ANALOG_MAX - analogRead(PIN_JOY_Y);
+  return ANALOG_MAX - analogReadDeadzone(PIN_JOY_Y);
   #else
-  return analogRead(PIN_JOY_Y);
+  return analogReadDeadzone(PIN_JOY_Y);
   #endif
 }
 
