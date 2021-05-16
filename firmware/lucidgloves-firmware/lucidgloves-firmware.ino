@@ -33,6 +33,8 @@
 
 #define NO_THUMB false //If for some reason you don't want to track the thumb
 
+#define USING_CALIB_PIN false //When PIN_CALIB is shorted (or it's button pushed) it will reset calibration if this is on.
+
 //PINS CONFIGURATION 
 #if defined(__AVR__)
   //(This configuration is for Arduino Nano so make sure to change if you're on another board)
@@ -50,7 +52,7 @@
   #define PIN_GRAB_BTN  11 //unused if gesture set
   #define PIN_PNCH_BTN  12 //unused if gesture set
   #define PIN_CALIB     13 //button for recalibration
-  #define DEBUG_LED LED_BUILTIN
+  #define DEBUG_LED     LED_BUILTIN
 #elif defined(ESP32)
   //(This configuration is for ESP32 DOIT V1 so make sure to change if you're on another board)
   #define PIN_PINKY     36

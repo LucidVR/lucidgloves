@@ -16,11 +16,14 @@ void setup() {
 
 void loop() {
   if (comm->isOpen()){
-
+    #if USING_CALIB_PIN
     bool calibButton = getButton(PIN_CALIB);
     if (calibButton)
       loops = 0;
-
+    #else
+    bool calibButton = false;
+    #endif
+    
     bool calibrate = false;
     if (loops < CALIBRATION_LOOPS || ALWAYS_CALIBRATING){
       calibrate = true;

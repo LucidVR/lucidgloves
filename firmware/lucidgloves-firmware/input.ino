@@ -18,7 +18,9 @@ void setupInputs(){
   pinMode(PIN_PNCH_BTN, INPUT_PULLUP);
   #endif
 
+  #if USING_CALIB_PIN
   pinMode(PIN_CALIB, INPUT_PULLUP);
+  #endif
 }
 
 int* getFingerPositions(bool calibrating, bool reset){
