@@ -8,5 +8,7 @@ class ICommunication {
     virtual void start() = 0;
 
     virtual void output(char* data) = 0;
+
+    virtual void loop() = 0;
     
 };

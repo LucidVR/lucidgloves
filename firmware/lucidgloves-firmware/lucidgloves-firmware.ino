@@ -5,20 +5,26 @@
  */
 //This is the configuration file, main structure in _main.ino
 //CONFIGURATION SETTINGS:
-#define COMMUNICATION COMM_SERIAL //Which communication protocol to use
+#define COMMUNICATION COMM_WIFISERIAL //Which communication protocol to use
 
-#define LOOP_TIME 4 //How much time between data sends (ms), set to 0 for a good time :)
+#define LOOP_TIME 50 //How much time between data sends (ms), set to 0 for a good time :)
 #define CALIBRATION_LOOPS -1//How many loops should be calibrated. Set to -1 to always be calibrated.
 
 #define COMM_SERIAL 0   //serial over USB
   #define SERIAL_BAUD_RATE 115200
   
 #define COMM_BTSERIAL 1 //serial over Bluetooth (Work in progress)
-  #define BTSERIAL_DEVICE_NAME "ESP32test"
+  #define BTSERIAL_DEVICE_NAME "lucidgloves-right"
+
+#define COMM_WIFISERIAL 2
+  #define WIFISERIAL_SSID "FRITZ!Box 7362 SL"
+  #define WIFISERIAL_PASSWORD "86619567583490915352"
+  #define WIFISERIAL_SERVER "192.168.0.48"
+  #define WIFISERIAL_SERVER_PORT 9002
 
 //ANALOG INPUT CONFIG
-#define ANALOG_MAX 1023   //Set to 1023 on Arduino, 4095 on ESP32. Make sure is the same as driver setting.
-#define FLIP_POTS  false  //Flip values from potentiometers (for fingers!) if they are backwards
+#define ANALOG_MAX 4095   //Set to 1023 on Arduino, 4095 on ESP32. Make sure is the same as driver setting.
+#define FLIP_POTS  true  //Flip values from potentiometers (for fingers!) if they are backwards
 
 //Gesture enables, make false to use button override
 #define TRIGGER_GESTURE true
@@ -55,13 +61,13 @@
   #define DEBUG_LED     LED_BUILTIN
 #elif defined(ESP32)
   //(This configuration is for ESP32 DOIT V1 so make sure to change if you're on another board)
-  #define PIN_PINKY     36
-  #define PIN_RING      39
-  #define PIN_MIDDLE    34
+  #define PIN_PINKY     25
+  #define PIN_RING      33
+  #define PIN_MIDDLE    32
   #define PIN_INDEX     35
-  #define PIN_THUMB     32
-  #define PIN_JOY_X     33
-  #define PIN_JOY_Y     25
+  #define PIN_THUMB     34
+  #define PIN_JOY_X     26
+  #define PIN_JOY_Y     27
   #define PIN_JOY_BTN   26
   #define PIN_A_BTN     27 
   #define PIN_B_BTN     14
