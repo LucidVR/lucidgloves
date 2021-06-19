@@ -35,6 +35,9 @@
 
 #define USING_CALIB_PIN false //When PIN_CALIB is shorted (or it's button pushed) it will reset calibration if this is on.
 
+#define USING_FORCE_FEEDBACK false //Force feedback haptics allow you to feel the solid objects you hold
+#define SERVO_SCALING false
+
 //PINS CONFIGURATION 
 #if defined(__AVR__)
   //(This configuration is for Arduino Nano so make sure to change if you're on another board)
