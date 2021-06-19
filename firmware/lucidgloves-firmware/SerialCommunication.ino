@@ -20,4 +20,8 @@ class SerialCommunication : public ICommunication {
       Serial.print(data);
       Serial.flush();
     }
+
+    char* readData(){
+      return "0&0&0&0&0"; //not yet implemented
+    }
 };

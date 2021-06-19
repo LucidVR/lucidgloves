@@ -25,5 +25,9 @@ class BTSerialCommunication : public ICommunication {
     void output(char* data){
       m_SerialBT.print(data);
     }
+
+    char* readData(){
+      return "0&0&0&0&0"; //not yet implemented
+    }
 };
 #endif
