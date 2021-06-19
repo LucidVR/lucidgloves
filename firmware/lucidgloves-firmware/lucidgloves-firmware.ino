@@ -53,6 +53,11 @@
   #define PIN_PNCH_BTN  12 //unused if gesture set
   #define PIN_CALIB     13 //button for recalibration
   #define DEBUG_LED     LED_BUILTIN
+  #define PIN_PINKY_MOTOR     2 //used for force feedback
+  #define PIN_RING_MOTOR      3
+  #define PIN_MIDDLE_MOTOR    4
+  #define PIN_INDEX_MOTOR     5
+  #define PIN_THUMB_MOTOR     6
 #elif defined(ESP32)
   //(This configuration is for ESP32 DOIT V1 so make sure to change if you're on another board)
   #define PIN_PINKY     36
@@ -70,4 +75,9 @@
   #define PIN_PNCH_BTN  23 //unused if gesture set
   #define PIN_CALIB     12 //button for recalibration
   #define DEBUG_LED 2
+  #define PIN_PINKY_MOTOR     5 //used for force feedback
+  #define PIN_RING_MOTOR      18
+  #define PIN_MIDDLE_MOTOR    19
+  #define PIN_INDEX_MOTOR     21
+  #define PIN_THUMB_MOTOR     3
 #endif
