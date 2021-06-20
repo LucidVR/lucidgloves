@@ -26,8 +26,8 @@ class BTSerialCommunication : public ICommunication {
       m_SerialBT.print(data);
     }
 
-    char* readData(){
-      return "0&0&0&0&0"; //not yet implemented
+    bool readData(char* input){
+      return false; //not yet implemented
     }
 };
 #endif

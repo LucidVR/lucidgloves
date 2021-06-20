@@ -9,5 +9,5 @@ class ICommunication {
 
     virtual void output(char* data) = 0;
 
-    virtual char* readData() = 0;
+    virtual bool readData(char* input) = 0;
 };

@@ -12,6 +12,7 @@ class SerialCommunication : public ICommunication {
     }
 
     void start(){
+      //Serial.setTimeout(1000000);
       Serial.begin(SERIAL_BAUD_RATE);
       m_isOpen = true;
     }
@@ -21,7 +22,9 @@ class SerialCommunication : public ICommunication {
       Serial.flush();
     }
 
-    char* readData(){
-      return "0&0&0&0&0"; //not yet implemented
+    bool readData(char* input){
+      byte size = Serial.readBytesUntil('\n', input, 100);
+      input[size] = NULL;
+      return input != NULL && strlen(input) > 0;
     }
 };

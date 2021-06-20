@@ -27,8 +27,7 @@ char* encode(int* flexion, int joyX, int joyY, bool joyClick, bool triggerButton
   return stringToEncode;
 }
 //legacy decoding
-int* decodeData(char* stringToDecode){
-    int* hapticLimits;
+void decodeData(char* stringToDecode, int* hapticLimits){
     byte index = 0;
     char* ptr = strtok(stringToDecode, "&");  // takes a list of delimiters
     while(ptr != NULL)
@@ -37,6 +36,4 @@ int* decodeData(char* stringToDecode){
         index++;
         ptr = strtok(NULL, "&");  // takes a list of delimiters
     }
-
-    return hapticLimits;
 }

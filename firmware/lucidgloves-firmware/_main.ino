@@ -54,7 +54,22 @@ void loop() {
     bool pinchButton = getButton(PIN_PNCH_BTN);
     #endif
     
-    comm->output(encode(fingerPos, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton));
+    //comm->output(encode(fingerPos, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton));
+
+    if (USING_FORCE_FEEDBACK){
+      char received[100];
+      if (comm->readData(received)){
+        int hapticLimits[5];
+        decodeData(received, hapticLimits);
+        Serial.println("Haptics: ");
+        Serial.println(hapticLimits[0]);
+        Serial.println(hapticLimits[1]);
+        Serial.println(hapticLimits[2]);
+        Serial.println(hapticLimits[3]);
+        Serial.println(hapticLimits[4]);
+      }
+    }
+
     delay(LOOP_TIME);
   }
 }
