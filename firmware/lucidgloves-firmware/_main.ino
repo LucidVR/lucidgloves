@@ -11,6 +11,10 @@ void setup() {
   comm->start();
 
   setupInputs();
+
+  if (USING_FORCE_FEEDBACK){
+    setupServoHaptics();  
+  }
   
 }
 
@@ -61,12 +65,7 @@ void loop() {
       if (comm->readData(received)){
         int hapticLimits[5];
         decodeData(received, hapticLimits);
-        Serial.println("Haptics: ");
-        Serial.println(hapticLimits[0]);
-        Serial.println(hapticLimits[1]);
-        Serial.println(hapticLimits[2]);
-        Serial.println(hapticLimits[3]);
-        Serial.println(hapticLimits[4]);
+        writeServoHaptics(hapticLimits);
       }
     }
 
