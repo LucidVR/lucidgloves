@@ -7,5 +7,5 @@ bool pinchGesture(int *flexion){
 }
 
 bool triggerGesture(int *flexion){
-  return flexion[1]<=(1023/2)?0:1;
+  return flexion[1]<=(ANALOG_MAX/2)?0:1;
 }
