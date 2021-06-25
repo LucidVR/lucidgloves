@@ -58,16 +58,16 @@ void loop() {
     bool pinchButton = getButton(PIN_PNCH_BTN);
     #endif
     
-    //comm->output(encode(fingerPos, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton));
+    comm->output(encode(fingerPos, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton));
 
-    if (USING_FORCE_FEEDBACK){
+    #if USING_FORCE_FEEDBACK
       char received[100];
       if (comm->readData(received)){
-        int hapticLimits[5];
+        int hapticLimits[6];
         decodeData(received, hapticLimits);
         writeServoHaptics(hapticLimits);
       }
-    }
+    #endif
 
     delay(LOOP_TIME);
   }

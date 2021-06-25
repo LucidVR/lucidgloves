@@ -1,5 +1,5 @@
 /*
- * LucidGloves Firmware Version 2
+ * LucidGloves Firmware Version 3 (beta)
  * Author: Lucas_VRTech - LucidVR
  * lucidvrtech.com
  */
@@ -36,7 +36,7 @@
 #define USING_CALIB_PIN false //When PIN_CALIB is shorted (or it's button pushed) it will reset calibration if this is on.
 
 #define USING_FORCE_FEEDBACK false //Force feedback haptics allow you to feel the solid objects you hold
-#define SERVO_SCALING false
+#define SERVO_SCALING false //dynamic scaling of servo motors
 
 //PINS CONFIGURATION 
 #if defined(__AVR__)
@@ -82,5 +82,10 @@
   #define PIN_RING_MOTOR      18
   #define PIN_MIDDLE_MOTOR    19
   #define PIN_INDEX_MOTOR     21
-  #define PIN_THUMB_MOTOR     3
+  #define PIN_THUMB_MOTOR     17
 #endif
+
+//advanced settings, you can probably leave these
+#define ENCODING 1
+#define ENCODE_LEGACY 0
+#define ENCODE_ALPHA  1
