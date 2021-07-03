@@ -63,12 +63,11 @@ void loop() {
     #if USING_FORCE_FEEDBACK
       char received[100];
       if (comm->readData(received)){
-        int hapticLimits[6];
+        int hapticLimits[5];
         decodeData(received, hapticLimits);
         writeServoHaptics(hapticLimits);
       }
     #endif
-
     delay(LOOP_TIME);
   }
 }
