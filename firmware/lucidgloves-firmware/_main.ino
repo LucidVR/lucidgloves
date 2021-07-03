@@ -12,9 +12,9 @@ void setup() {
 
   setupInputs();
 
-  if (USING_FORCE_FEEDBACK){
+  #if USING_FORCE_FEEDBACK
     setupServoHaptics();  
-  }
+  #endif
   
 }
 
@@ -58,7 +58,7 @@ void loop() {
     bool pinchButton = getButton(PIN_PNCH_BTN);
     #endif
     
-    comm->output(encode(fingerPos, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton));
+    comm->output(encode(fingerPos, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton));
 
     #if USING_FORCE_FEEDBACK
       char received[100];
