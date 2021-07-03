@@ -1,3 +1,5 @@
+#if USING_FORCE_FEEDBACK
+
 #if defined(ESP32)
   #include "ESP32Servo.h"
 #else
@@ -21,7 +23,7 @@ void setupServoHaptics(){
 //static scaling, maps to entire range of servo
 void scaleLimits(int* hapticLimits, float* scaledLimits){
   for (int i = 0; i < sizeof(hapticLimits); i++){
-    scaledLimits[i] = hapticLimits[i] / 1000.0f * 180.0f;
+    scaledLimits[i] = 180.0f - hapticLimits[i] / 1000.0f * 180.0f;
   }
 }
 
@@ -40,7 +42,7 @@ void dynScaleLimits(int* hapticLimits, float* scaledLimits){
 }
 
 void writeServoHaptics(int* hapticLimits){
-  float scaledLimits[5];
+  float scaledLimits[6];
   scaleLimits(hapticLimits, scaledLimits);
   pinkyServo.write(scaledLimits[0]);
   ringServo.write(scaledLimits[1]);
@@ -48,3 +50,5 @@ void writeServoHaptics(int* hapticLimits){
   indexServo.write(scaledLimits[3]);
   thumbServo.write(scaledLimits[4]);
 }
+
+#endif
