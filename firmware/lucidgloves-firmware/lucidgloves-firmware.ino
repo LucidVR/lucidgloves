@@ -86,6 +86,6 @@
 #endif
 
 //advanced settings, you can probably leave these
-#define ENCODING 1
-#define ENCODE_LEGACY 1
-#define ENCODE_ALPHA  0
+#define ENCODING 0
+#define ENCODE_LEGACY 0
+#define ENCODE_ALPHA  1
