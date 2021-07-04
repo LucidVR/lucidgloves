@@ -3,17 +3,17 @@
  * Author: Lucas_VRTech - LucidVR
  * lucidvrtech.com
  */
+
+#include "AdvancedConfig.h"
+
 //This is the configuration file, main structure in _main.ino
 //CONFIGURATION SETTINGS:
 #define COMMUNICATION COMM_SERIAL //Which communication protocol to use
 
-#define LOOP_TIME 4 //How much time between data sends (ms), set to 0 for a good time :)
-#define CALIBRATION_LOOPS -1//How many loops should be calibrated. Set to -1 to always be calibrated.
-
-#define COMM_SERIAL 0   //serial over USB
+//serial over USB
   #define SERIAL_BAUD_RATE 115200
   
-#define COMM_BTSERIAL 1 //serial over Bluetooth (Work in progress)
+//serial over Bluetooth (Work in progress)
   #define BTSERIAL_DEVICE_NAME "ESP32test"
 
 //ANALOG INPUT CONFIG
@@ -84,8 +84,3 @@
   #define PIN_INDEX_MOTOR     21
   #define PIN_THUMB_MOTOR     17
 #endif
-
-//advanced settings, you can probably leave these
-#define ENCODING 1
-#define ENCODE_LEGACY 0
-#define ENCODE_ALPHA  1
