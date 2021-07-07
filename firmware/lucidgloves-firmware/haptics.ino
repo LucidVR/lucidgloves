@@ -44,11 +44,11 @@ void dynScaleLimits(int* hapticLimits, float* scaledLimits){
 void writeServoHaptics(int* hapticLimits){
   float scaledLimits[5];
   scaleLimits(hapticLimits, scaledLimits);
-  pinkyServo.write(scaledLimits[0]);
-  ringServo.write(scaledLimits[1]);
+  pinkyServo.write(scaledLimits[4]);
+  ringServo.write(scaledLimits[3]);
   middleServo.write(scaledLimits[2]);
-  indexServo.write(scaledLimits[3]);
-  thumbServo.write(scaledLimits[4]);
+  indexServo.write(scaledLimits[1]);
+  thumbServo.write(scaledLimits[0]);
 }
 
 #endif
