@@ -57,8 +57,10 @@ void loop() {
     #else
     bool pinchButton = getButton(PIN_PNCH_BTN);
     #endif
+
+    bool menuButton = getButton(PIN_MENU_BTN);
     
-    comm->output(encode(fingerPos, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton));
+    comm->output(encode(fingerPos, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
 
     #if USING_FORCE_FEEDBACK
       char received[100];

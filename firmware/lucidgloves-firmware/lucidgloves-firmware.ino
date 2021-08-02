@@ -9,12 +9,11 @@
 //This is the configuration file, main structure in _main.ino
 //CONFIGURATION SETTINGS:
 #define COMMUNICATION COMM_SERIAL //Which communication protocol to use
-
 //serial over USB
   #define SERIAL_BAUD_RATE 115200
   
 //serial over Bluetooth (Work in progress)
-  #define BTSERIAL_DEVICE_NAME "ESP32test"
+  #define BTSERIAL_DEVICE_NAME "lucidgloves-left"
 
 //ANALOG INPUT CONFIG
 #define ANALOG_MAX 1023   //Set to 1023 on Arduino, 4095 on ESP32. Make sure is the same as driver setting.
@@ -57,10 +56,11 @@
   #define PIN_CALIB     13 //button for recalibration
   #define DEBUG_LED     LED_BUILTIN
   #define PIN_PINKY_MOTOR     2 //used for force feedback
-  #define PIN_RING_MOTOR      3
-  #define PIN_MIDDLE_MOTOR    4
-  #define PIN_INDEX_MOTOR     5
-  #define PIN_THUMB_MOTOR     6
+  #define PIN_RING_MOTOR      3 //^
+  #define PIN_MIDDLE_MOTOR    4 //^
+  #define PIN_INDEX_MOTOR     5 //^
+  #define PIN_THUMB_MOTOR     6 //^
+  #define PIN_MENU_BTN        8
 #elif defined(ESP32)
   //(This configuration is for ESP32 DOIT V1 so make sure to change if you're on another board)
   #define PIN_PINKY     36
@@ -76,11 +76,12 @@
   #define PIN_TRIG_BTN  12 //unused if gesture set
   #define PIN_GRAB_BTN  13 //unused if gesture set
   #define PIN_PNCH_BTN  23 //unused if gesture set
-  #define PIN_CALIB     12 //button for recalibration
+  #define PIN_CALIB     27 //button for recalibration
   #define DEBUG_LED 2
-  #define PIN_PINKY_MOTOR     5 //used for force feedback
-  #define PIN_RING_MOTOR      18
-  #define PIN_MIDDLE_MOTOR    19
-  #define PIN_INDEX_MOTOR     21
-  #define PIN_THUMB_MOTOR     17
+  #define PIN_PINKY_MOTOR     5  //used for force feedback
+  #define PIN_RING_MOTOR      18 //^
+  #define PIN_MIDDLE_MOTOR    19 //^
+  #define PIN_INDEX_MOTOR     21 //^
+  #define PIN_THUMB_MOTOR     17 //^
+  #define PIN_MENU_BTN        12
 #endif

@@ -6,6 +6,8 @@ void setupInputs(){
   pinMode(PIN_A_BTN, INPUT_PULLUP);
   pinMode(PIN_B_BTN, INPUT_PULLUP);
 
+  pinMode(PIN_MENU_BTN, INPUT_PULLUP);
+  
   #if !TRIGGER_GESTURE
   pinMode(PIN_TRIG_BTN, INPUT_PULLUP);
   #endif
