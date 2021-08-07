@@ -1,5 +1,5 @@
 /*
- * LucidGloves Firmware Version 3 (beta)
+ * LucidGloves Firmware Version 4
  * Author: Lucas_VRTech - LucidVR
  * lucidvrtech.com
  */
@@ -76,12 +76,12 @@
   #define PIN_TRIG_BTN  12 //unused if gesture set
   #define PIN_GRAB_BTN  13 //unused if gesture set
   #define PIN_PNCH_BTN  23 //unused if gesture set
-  #define PIN_CALIB     27 //button for recalibration
+  #define PIN_CALIB     12 //button for recalibration
   #define DEBUG_LED 2
   #define PIN_PINKY_MOTOR     5  //used for force feedback
   #define PIN_RING_MOTOR      18 //^
   #define PIN_MIDDLE_MOTOR    19 //^
   #define PIN_INDEX_MOTOR     21 //^
   #define PIN_THUMB_MOTOR     17 //^
-  #define PIN_MENU_BTN        12
+  #define PIN_MENU_BTN        27
 #endif
