@@ -8,6 +8,6 @@
 #define COMM_BTSERIAL 1 
 
 //Encoding
-#define ENCODING 0
+#define ENCODING 1
 #define ENCODE_LEGACY 0
 #define ENCODE_ALPHA  1
