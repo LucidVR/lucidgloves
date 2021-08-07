@@ -38,7 +38,7 @@ The assembly **for each hand** is as follows:
 
 Guide for printing parts: [Printing guide](https://github.com/LucidVR/lucidgloves-hardware/wiki/Parts-Printing-Guide)
 
-**Required parts for each hand: [Parts List](https://github.com/LucidVR/lucidgloves-hardware/wiki/Prototype-3-Parts-List)**  
+**Required parts for each hand: [Parts Lists](https://github.com/LucidVR/lucidgloves/wiki/Parts-Lists)**  
 Optional:  
 * Joysticks for locomotion 
   - will be making a DIY treadmill eventually as well for those who would prefer that  
