@@ -1,4 +1,4 @@
-![LucidGloves](https://cdn.discordapp.com/attachments/785135646082990120/873662938848825344/LucidGlovesBlackwstroke.png)
+![LucidGloves](https://cdn.discordapp.com/attachments/785135646082990120/873666310855360582/LucidGlovesBlackwbkgnd.png)
 
 # lucidgloves- Firmware and 3D Print Files
 This repo contains the arduino firmware as well as the STL files for Prototype 3 of the LucidVR glove prototype. This is a finger tracking glove that allows you to use your hands in VR. Follow along with Lucas_VRTech's developments on his Tiktok page:
