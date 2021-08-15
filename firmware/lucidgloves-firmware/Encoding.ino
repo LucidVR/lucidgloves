@@ -21,7 +21,7 @@ char* encode(int* flexion, int joyX, int joyY, bool joyClick, bool triggerButton
   static char stringToEncode[75];
   
   sprintf(stringToEncode, "%d&%d&%d&%d&%d&%d&%d&%d&%d&%d&%d&%d&%d\n", 
-  flexion[4], flexion[3], flexion[2], flexion[1], flexion[0],
+  flexion[0], flexion[1], flexion[2], flexion[3], flexion[4],
   joyX, joyY, joyClick,
   triggerButton, aButton, bButton, grab, pinch
   );
@@ -46,7 +46,7 @@ char* encode(int* flexion, int joyX, int joyY, bool joyClick, bool triggerButton
   static char stringToEncode[75];
   
   sprintf(stringToEncode, "A%dB%dC%dD%dE%dF%dG%d%s%s%s%s%s%s%s%s\n", 
-  flexion[4], flexion[3], flexion[2], flexion[1], flexion[0],
+  flexion[0], flexion[1], flexion[2], flexion[3], flexion[4],
   joyX, joyY, joyClick?"H":"",
   triggerButton?"I":"", aButton?"J":"", bButton?"K":"", grab?"L":"", pinch?"M":"", menu?"N":"", calib?"O":""
   );
