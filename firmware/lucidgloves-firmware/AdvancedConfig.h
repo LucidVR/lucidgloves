@@ -11,3 +11,10 @@
 #define ENCODING 1
 #define ENCODE_LEGACY 0
 #define ENCODE_ALPHA  1
+
+//Finger indeces (not used for legacy)
+#define PINKY_IND 4
+#define RING_IND 3
+#define MIDDLE_IND 2
+#define INDEX_IND 1
+#define THUMB_IND 0
