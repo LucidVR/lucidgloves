@@ -6,7 +6,7 @@ https://www.tiktok.com/@lucas_vrtech
 
 # Support
 Join the LucidVR discord server for assistance:
-https://discord.gg/RjV9T8jN2G
+https://discord.gg/lucidvr
 
 
 # Firmware
