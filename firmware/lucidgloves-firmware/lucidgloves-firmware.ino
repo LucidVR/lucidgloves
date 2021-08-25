@@ -16,7 +16,7 @@
   #define BTSERIAL_DEVICE_NAME "lucidgloves-left"
 
 //ANALOG INPUT CONFIG
-#define ANALOG_MAX 1023   //Set to 1023 on Arduino, 4095 on ESP32. Make sure is the same as driver setting.
+#define ANALOG_MAX 4095   //4095 on ESP32, 1023 on Arduino. Make sure is the same as driver setting.
 #define FLIP_POTS  false  //Flip values from potentiometers (for fingers!) if they are backwards
 
 //Gesture enables, make false to use button override
