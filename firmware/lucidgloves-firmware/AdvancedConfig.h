@@ -26,6 +26,11 @@
 #define ANALOG_MAX 4095 
 #endif
 
-//ANALOG_MAX override:
+
+//ANALOG_MAX OVERRIDE:
 //uncomment and set as needed (only touch if you know what you are doing)
 //#define ANALOG_MAX 4095 
+
+#ifndef ANALOG_MAX
+#error "This board doesn't have an auto ANALOG_MAX assignment, please set it manually by uncommenting ANALOG_MAX OVERRIDE!"
+#endif
