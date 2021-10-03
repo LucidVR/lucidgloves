@@ -18,3 +18,13 @@
 #define MIDDLE_IND 2
 #define INDEX_IND 1
 #define THUMB_IND 0
+
+//Filtering and clamping analog inputs
+#define CLAMP_ANALOG_MAP true //clamp the mapped analog values from 0 to ANALOG_MAX
+
+#define CLAMP_FLEXION false  //clamp the raw flexion values
+#define CLAMP_MIN 0  //the minimum value from the flexion sensors
+#define CLAMP_MAX 4095  //the maximum value from the flexion sensors
+
+#define ENABLE_MEDIAN_FILTER false //use the median of the previous values, helps reduce noise
+#define MEDIAN_SAMPLES 20
