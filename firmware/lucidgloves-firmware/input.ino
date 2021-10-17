@@ -1,4 +1,4 @@
-// RunningMedian by Rob Tillaart
+// Requires RunningMedian library by Rob Tillaart
 #if ENABLE_MEDIAN_FILTER
   #include <RunningMedian.h>
   RunningMedian rmSamples[5] = {

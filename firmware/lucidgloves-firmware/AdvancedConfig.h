@@ -26,5 +26,7 @@
 #define CLAMP_MIN 0  //the minimum value from the flexion sensors
 #define CLAMP_MAX 4095  //the maximum value from the flexion sensors
 
+// You must install RunningMedian library to use this feature
+// https://www.arduino.cc/reference/en/libraries/runningmedian/
 #define ENABLE_MEDIAN_FILTER false //use the median of the previous values, helps reduce noise
 #define MEDIAN_SAMPLES 20
