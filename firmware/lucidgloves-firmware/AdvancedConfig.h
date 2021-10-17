@@ -18,3 +18,19 @@
 #define MIDDLE_IND 2
 #define INDEX_IND 1
 #define THUMB_IND 0
+
+//Automatically set ANALOG_MAX depending on the microcontroller
+#if defined(__AVR__)
+#define ANALOG_MAX 1023
+#elif defined(ESP32)
+#define ANALOG_MAX 4095 
+#endif
+
+
+//ANALOG_MAX OVERRIDE:
+//uncomment and set as needed (only touch if you know what you are doing)
+//#define ANALOG_MAX 4095 
+
+#ifndef ANALOG_MAX
+#error "This board doesn't have an auto ANALOG_MAX assignment, please set it manually by uncommenting ANALOG_MAX OVERRIDE!"
+#endif
