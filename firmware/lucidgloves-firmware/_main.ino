@@ -53,7 +53,7 @@ void loop() {
     #endif
 
     #if PINCH_GESTURE
-    bool pinchButton = grabGesture(fingerPos);
+    bool pinchButton = pinchGesture(fingerPos);
     #else
     bool pinchButton = getButton(PIN_PNCH_BTN) != INVERT_PINCH;
     #endif
