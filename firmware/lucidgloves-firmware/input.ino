@@ -84,7 +84,7 @@ int* getFingerPositions(bool calibrating, bool reset){
   
   for (int i = 0; i<5; i++){
     if (minFingers[i] != maxFingers[i]){
-      calibrated[i] = map( rawFingers[i], minFingers[i], maxFingers[i], 0, 4095 );
+      calibrated[i] = map( rawFingers[i], minFingers[i], maxFingers[i], 0, ANALOG_MAX );
       #if CLAMP_ANALOG_MAP
         if (calibrated[i] < 0)
           calibrated[i] = 0;
