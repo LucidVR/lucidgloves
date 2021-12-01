@@ -63,5 +63,5 @@ More information will be available on the [LucidVR site](http://lucidvrtech.com/
 *  Prototype 4 Tutorial to come out in the future
 
 # Driver
-This project uses the open source OpenVR driver created by LucidVR and Danwillm:
-https://github.com/LucidVR/lucidgloves-openvr
+This project uses the OpenGloves OpenVR driver, developed by danwillm and Lucas VRTech:
+https://github.com/LucidVR/opengloves-driver
