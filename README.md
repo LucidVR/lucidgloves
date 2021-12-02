@@ -62,6 +62,9 @@ More information will be available on the [LucidVR site](http://lucidvrtech.com/
 *  [Prototype 3/3.1 Building Tutorial](https://youtu.be/Qj4hqRKiy8g)
 *  Prototype 4 Tutorial to come out in the future
 
-# Driver
-This project uses the open source OpenVR driver created by LucidVR and Danwillm:
-https://github.com/LucidVR/lucidgloves-openvr
+# SteamVR Compatibility (OpenGloves)
+This project uses the OpenGloves OpenVR driver for compatibility with SteamVR, which is downloadable on Steam:  
+https://store.steampowered.com/app/1574050/OpenGloves/
+
+Source code available on GitHub:  
+https://github.com/LucidVR/opengloves-driver
