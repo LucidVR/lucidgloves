@@ -33,7 +33,7 @@
 #define INVERT_JOY false
 #define INVERT_MENU false
 #define INVERT_CALIB false
-//These only apply with gesture button overrride:
+//These only apply with gesture button override:
 #define INVERT_TRIGGER false
 #define INVERT_GRAB false
 #define INVERT_PINCH false
