@@ -48,3 +48,9 @@
 // https://www.arduino.cc/reference/en/libraries/runningmedian/
 #define ENABLE_MEDIAN_FILTER false //use the median of the previous values, helps reduce noise
 #define MEDIAN_SAMPLES 20
+
+// Experimental. Uses micro-second pulse values for servo control instead of degrees.
+#define SERVO_SMOOTH_STEPPING false
+// The driver sends values from 0-1000 today.
+#define FORCE_FEEDBACK_MIN 0
+#define FORCE_FEEDBACK_MAX 1000
