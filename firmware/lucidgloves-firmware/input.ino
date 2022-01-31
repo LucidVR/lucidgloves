@@ -1,3 +1,5 @@
+#include "MinMaxCalibration.h"
+
 // Requires RunningMedian library by Rob Tillaart
 #if ENABLE_MEDIAN_FILTER
   #include <RunningMedian.h>
@@ -10,8 +12,8 @@
   };
 #endif
 
-int maxFingers[5] = {0,0,0,0,0};
-int minFingers[5] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
+#define CALIBRATION_RANGE { 0, ANALOG_MAX, CLAMP_ANALOG_MAP }
+MinMaxCalibration<int> calibration[5] = {CALIBRATION_RANGE, CALIBRATION_RANGE, CALIBRATION_RANGE, CALIBRATION_RANGE, CALIBRATION_RANGE};
 
 void setupInputs(){
   pinMode(PIN_JOY_BTN, INPUT_PULLUP);
@@ -39,65 +41,33 @@ void setupInputs(){
 
 int* getFingerPositions(bool calibrating, bool reset){
   int rawFingers[5] = {NO_THUMB?0:analogRead(PIN_THUMB), analogRead(PIN_INDEX), analogRead(PIN_MIDDLE), analogRead(PIN_RING), analogRead(PIN_PINKY)};
-
-  //flip pot values if needed
-  #if FLIP_POTS
-  for (int i = 0; i <5; i++){
-    rawFingers[i] = ANALOG_MAX - rawFingers[i];
-  }
-  #endif
-
-  #if ENABLE_MEDIAN_FILTER
-  for (int i = 0; i < 5; i++){
-    rmSamples[i].add( rawFingers[i] );
-    rawFingers[i] = rmSamples[i].getMedian();
-  }
-  #endif
-
-  //reset max and mins as needed
-  if (reset){
-    for (int i = 0; i <5; i++){
-      maxFingers[i] = 0;
-      minFingers[i] = ANALOG_MAX;
-    }
-  }
-  
-  //if during the calibration sequence, make sure to update max and mins
-  if (calibrating){
-    for (int i = 0; i <5; i++){
-      if (rawFingers[i] > maxFingers[i])
-        #if CLAMP_FLEXION
-          maxFingers[i] = ( rawFingers[i] <= CLAMP_MAX )? rawFingers[i] : CLAMP_MAX;
-        #else
-          maxFingers[i] = rawFingers[i];
-        #endif
-      if (rawFingers[i] < minFingers[i])
-        #if CLAMP_FLEXION
-          minFingers[i] = ( rawFingers[i] >= CLAMP_MIN )? rawFingers[i] : CLAMP_MIN;
-        #else
-          minFingers[i] = rawFingers[i];
-        #endif
-    }
-  }
-
   static int calibrated[5] = {511,511,511,511,511};
-  
-  for (int i = 0; i<5; i++){
-    if (minFingers[i] != maxFingers[i]){
-      calibrated[i] = map( rawFingers[i], minFingers[i], maxFingers[i], 0, ANALOG_MAX );
-      #if CLAMP_ANALOG_MAP
-        if (calibrated[i] < 0)
-          calibrated[i] = 0;
-        if (calibrated[i] > ANALOG_MAX)
-          calibrated[i] = ANALOG_MAX;
+
+  for (int i = 0; i <5; i++) {
+    #if FLIP_POTS
+      rawFingers[i] = ANALOG_MAX - rawFingers[i];
+    #endif
+
+    #if ENABLE_MEDIAN_FILTER
+      rmSamples[i].add(rawFingers[i]);
+      rawFingers[i] = rmSamples[i].getMedian();
+    #endif
+
+    // Reset max and mins as needed.
+    if (reset) calibration[i].reset();
+
+    // Put this value into the calibrator.
+    if (calibrating) {
+      #if !CLAMP_FLEXION
+        calibration[i].update(rawFingers[i]);
+      #else
+        calibration[i].update(constrain(rawFingers[i], CLAMP_MIN, CLAMP_MAX));
       #endif
     }
-    else {
-      calibrated[i] = ANALOG_MAX / 2;
-    }
+
+    calibrated[i] = calibration[i].calibrate(rawFingers[i], 0, ANALOG_MAX);
   }
   return calibrated;
-  
 }
 
 int analogReadDeadzone(byte pin){
