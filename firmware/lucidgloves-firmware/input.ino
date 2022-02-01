@@ -39,11 +39,15 @@ void setupInputs(){
   #endif
 }
 
-int* getFingerPositions(bool calibrating, bool reset){
-  int rawFingers[5] = {NO_THUMB?0:analogRead(PIN_THUMB), analogRead(PIN_INDEX), analogRead(PIN_MIDDLE), analogRead(PIN_RING), analogRead(PIN_PINKY)};
-  static int calibrated[5] = {511,511,511,511,511};
 
-  for (int i = 0; i <5; i++) {
+void getFingerPositions(int* rawFingers){
+  rawFingers[0] = NO_THUMB?0:analogRead(PIN_THUMB);
+  rawFingers[1] = analogRead(PIN_INDEX);
+  rawFingers[2] = analogRead(PIN_MIDDLE);
+  rawFingers[3] = analogRead(PIN_RING);
+  rawFingers[4] = analogRead(PIN_PINKY);
+
+  for (int i = 0; i < 5; i++) {
     #if FLIP_POTS
       rawFingers[i] = ANALOG_MAX - rawFingers[i];
     #endif
@@ -53,21 +57,10 @@ int* getFingerPositions(bool calibrating, bool reset){
       rawFingers[i] = rmSamples[i].getMedian();
     #endif
 
-    // Reset max and mins as needed.
-    if (reset) calibration[i].reset();
-
-    // Put this value into the calibrator.
-    if (calibrating) {
-      #if !CLAMP_FLEXION
-        calibration[i].update(rawFingers[i]);
-      #else
-        calibration[i].update(constrain(rawFingers[i], CLAMP_MIN, CLAMP_MAX));
-      #endif
-    }
-
-    calibrated[i] = calibration[i].calibrate(rawFingers[i], 0, ANALOG_MAX);
+    #if CLAMP_FLEXION
+      rawFingers[i] = constrain(rawFingers[i], CLAMP_MIN, CLAMP_MAX);
+    #endif
   }
-  return calibrated;
 }
 
 int analogReadDeadzone(byte pin){

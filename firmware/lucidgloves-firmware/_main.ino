@@ -1,4 +1,9 @@
+#include "MinMaxCalibration.h"
+
 #define ALWAYS_CALIBRATING CALIBRATION_LOOPS == -1
+
+#define CALIBRATION_RANGE { 0, ANALOG_MAX, CLAMP_ANALOG_MAP }
+MinMaxCalibration<int> calibrators[5] = {CALIBRATION_RANGE, CALIBRATION_RANGE, CALIBRATION_RANGE, CALIBRATION_RANGE, CALIBRATION_RANGE};
 
 ICommunication* comm;
 int loops = 0;
@@ -34,11 +39,29 @@ void loop() {
       loops++;
     }
     
-    int* fingerPos = getFingerPositions(calibrate, calibButton);
+    int rawFingerPositions[5];
+    int calibratedFingerPositions[5];
+    getFingerPositions(rawFingerPositions);
+
+    for (size_t i = 0; i < 5; ++i) {
+      // Calibration button is set. Reset the the min/max values.
+      if (calibButton) {
+        calibrators[i].reset();
+      }
+
+      // Add the new value to the calibration set.
+      if (calibrate) {
+        calibrators[i].update(rawFingerPositions[i]);
+      }
+
+      // Adjust the raw data based on the calibrator.
+      calibratedFingerPositions[i] = calibrators[i].calibrate(rawFingerPositions[i], 0, ANALOG_MAX);
+    }
+
     bool joyButton = getButton(PIN_JOY_BTN) != INVERT_JOY;
 
     #if TRIGGER_GESTURE
-    bool triggerButton = triggerGesture(fingerPos);
+    bool triggerButton = triggerGesture(calibratedFingerPositions);
     #else
     bool triggerButton = getButton(PIN_TRIG_BTN) != INVERT_TRIGGER;
     #endif
@@ -47,20 +70,20 @@ void loop() {
     bool bButton = getButton(PIN_B_BTN) != INVERT_B;
 
     #if GRAB_GESTURE
-    bool grabButton = grabGesture(fingerPos);
+    bool grabButton = grabGesture(calibratedFingerPositions);
     #else
     bool grabButton = getButton(PIN_GRAB_BTN) != INVERT_GRAB;
     #endif
 
     #if PINCH_GESTURE
-    bool pinchButton = pinchGesture(fingerPos);
+    bool pinchButton = pinchGesture(calibratedFingerPositions);
     #else
     bool pinchButton = getButton(PIN_PNCH_BTN) != INVERT_PINCH;
     #endif
 
     bool menuButton = getButton(PIN_MENU_BTN) != INVERT_MENU;
     
-    comm->output(encode(fingerPos, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
+    comm->output(encode(calibratedFingerPositions, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
 
     #if USING_FORCE_FEEDBACK
       char received[100];
