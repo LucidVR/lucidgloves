@@ -50,7 +50,7 @@
 #define USING_CALIB_PIN false //When PIN_CALIB is shorted (or it's button pushed) it will reset calibration if this is on.
 
 #define USING_FORCE_FEEDBACK false //Force feedback haptics allow you to feel the solid objects you hold
-#define SERVO_SCALING false //dynamic scaling of servo motors
+#define USING_FORCE_FEEDBACK_SCALING false // Experimental. Limit servo range of motion to the calibrated input range.
 
 //PINS CONFIGURATION 
 #if defined(__AVR__)

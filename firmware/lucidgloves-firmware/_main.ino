@@ -4,6 +4,8 @@
 
 #define CALIBRATION_RANGE { 0, ANALOG_MAX, CLAMP_ANALOG_MAP }
 MinMaxCalibration<int> calibrators[5] = {CALIBRATION_RANGE, CALIBRATION_RANGE, CALIBRATION_RANGE, CALIBRATION_RANGE, CALIBRATION_RANGE};
+// Prevent Arduino IDE from being "helpful" and auto generating this prototype ABOVE the inludes.
+void writeServoHaptics(const MinMaxCalibration<int>* calibrators, const int* hapticLimits);
 
 ICommunication* comm;
 int loops = 0;
@@ -90,7 +92,7 @@ void loop() {
       if (comm->readData(received)){
         int hapticLimits[5];
         decodeData(received, hapticLimits);
-        writeServoHaptics(hapticLimits);
+        writeServoHaptics(calibrators, hapticLimits);
       }
     #endif
     delay(LOOP_TIME);

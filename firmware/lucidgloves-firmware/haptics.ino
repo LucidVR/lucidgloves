@@ -1,4 +1,5 @@
 #if USING_FORCE_FEEDBACK
+#include "MinMaxCalibration.h"
 
 #if defined(ESP32)
   #include "ESP32Servo.h"
@@ -12,6 +13,9 @@ Servo middleServo;
 Servo indexServo;
 Servo thumbServo;
 
+// Use a list for easier modification of all servos.
+Servo* servos[5] = { &thumbServo, &indexServo, &middleServo, &ringServo, &pinkyServo };
+
 void setupServoHaptics(){
   pinkyServo.attach(PIN_PINKY_MOTOR);
   ringServo.attach(PIN_RING_MOTOR);
@@ -20,35 +24,24 @@ void setupServoHaptics(){
   thumbServo.attach(PIN_THUMB_MOTOR);
 }
 
-//static scaling, maps to entire range of servo
-void scaleLimits(int* hapticLimits, float* scaledLimits){
-  for (int i = 0; i < 5; i++){
-    scaledLimits[i] = 180.0f - hapticLimits[i] / 1000.0f * 180.0f;
+void writeServoHaptics(const MinMaxCalibration<int>* calibrators, const int* hapticLimits) {
+  // haptic limits are 0-1000, calibration outputs are 0-4096, servo inputs are 0-180
+
+  for (size_t i = 0; i < 5; ++i) {
+    int servo_output;
+    #if !USING_FORCE_FEEDBACK_SCALING
+      // haptic limits are 0-1000, need to map to servo output of 0-180
+      servo_output = map(hapticLimits[i], 0, 1000, 0, 180);
+    #else
+      // First map 0-1000 to 0-4096 based on the calibrated range of the fingers.
+      servo_output = calibrators[i].calibrate(hapticLimits[i], 0, 1000);
+
+      // Second map from 0-4096 to the input of the servos.
+      servo_output = map(hapticLimits[i], 0, ANALOG_MAX, 0, 180);
+    #endif
+
+    servos[i]->write(servo_output);
   }
-}
-
-//dynamic scaling, maps to the limits calibrated from your finger
-void dynScaleLimits(int* hapticLimits, float* scaledLimits){
-  //will be refactored to take min and max as an argument
-
-  /* this implementation of dynamic scaling relies on the assumption 
-   * that the servo reaches 2/3 of the potentiometer's range, 
-   * and that 0 degrees is geared to the start of the potentiometer.
-   * Different hardware types may need to handle dynamic scaling differently.
-   */
-  for (int i = 0; i < sizeof(hapticLimits); i++){
-    scaledLimits[i] = hapticLimits[i] / 1000.0f * 180.0f;
-  }
-}
-
-void writeServoHaptics(int* hapticLimits){
-  float scaledLimits[5];
-  scaleLimits(hapticLimits, scaledLimits);
-  pinkyServo.write(scaledLimits[4]);
-  ringServo.write(scaledLimits[3]);
-  middleServo.write(scaledLimits[2]);
-  indexServo.write(scaledLimits[1]);
-  thumbServo.write(scaledLimits[0]);
 }
 
 #endif
