@@ -8,9 +8,10 @@
 #define COMM_BTSERIAL 1 
 
 //Encoding
-#define ENCODING 1
 #define ENCODE_LEGACY 0
 #define ENCODE_ALPHA  1
+#define ENCODE_ALPHA_FULL_JOINT 2
+#define ENCODING ENCODE_ALPHA
 
 //Finger indeces (not used for legacy)
 #define PINKY_IND 4

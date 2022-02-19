@@ -59,8 +59,33 @@ void loop() {
     #endif
 
     bool menuButton = getButton(PIN_MENU_BTN) != INVERT_MENU;
-    
-    comm->output(encode(fingerPos, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
+    #if ENCODING == ENCODE_ALPHA_FULL_JOINT
+      // String length based on str_len((AAA)XXXX(AAB)XXXX(AAC)XXXX(AAD)XXXX(AB)XXXX) + '\0'
+      // We first allocate a blob of memory, then we convert it to a list of pointers, by
+      // indexing into it.
+      char blob[5][44 + 1];
+      char* encoded_fingers[5] = {blob[0], blob[1], blob[2], blob[3], blob[4]};
+
+      // String length based Fingers + Joys (FXXXXGXXXXX) + Buttons + '\0'
+      char comm_message[44*5 + 5*2 + 1*8 + 1];
+
+      // Encode each finger. Since we only have one measurement per finger, set all joints
+      // to the same, and set splay to the middle.
+      int thumb_values[4] = { fingerPos[0], fingerPos[0], fingerPos[0], ANALOG_MAX/2 };
+      encode_thumb(encoded_fingers[0], thumb_values);
+      for (int i = 1; i < 5; i++) {
+        // Joint 0 should be 0 for all fingers, we don't track that, the rest are the same
+        // as the thumb.
+        int finger_values[5] = { 0, fingerPos[i], fingerPos[i], fingerPos[i], ANALOG_MAX/2 };
+        encode_finger(i, encoded_fingers[i], finger_values);
+      }
+
+      encode(comm_message, encoded_fingers, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton);
+
+      comm->output(comm_message);
+    #else
+      comm->output(encode(fingerPos, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
+    #endif
 
     #if USING_FORCE_FEEDBACK
       char received[100];
