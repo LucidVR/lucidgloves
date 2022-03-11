@@ -14,8 +14,7 @@ Open the firmware files located in the firmware/lucidgloves-firmware folder.
 By default the firmware is configured for an arduino nano using serial.
 To configure the firmware, change the defines in the lucidgloves-firmware.ino file.
 
-**Configuration instructions are here: [Configuration Instructions](https://github.com/LucidVR/lucidgloves/wiki/Firmware-Setup-and-Customization-Tutorial).** 
-
+**Configuration instructions are here: [Configuration Instructions](https://github.com/LucidVR/lucidgloves/wiki/Firmware-Setup-and-Customization-Tutorial).**
 **Firmware Troubleshooting Guide are here: [Firmware Troubleshooting Guide](https://github.com/LucidVR/lucidgloves/wiki/Firmware-Troubleshooting-Guide).** 
 
 ## Tested boards:
