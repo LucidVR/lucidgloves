@@ -70,4 +70,5 @@ https://store.steampowered.com/app/1574050/OpenGloves/
 Source code available on GitHub:  
 https://github.com/LucidVR/opengloves-driver
 
+# Other Languages
 **[English](https://github.com/LucidVR/lucidgloves/blob/main/README.md) | [简体中文](https://github.com/LucidVR/lucidgloves/blob/main/README_CN.md)**
