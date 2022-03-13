@@ -68,4 +68,4 @@ GitHub上已公布的源代码:
 https://github.com/LucidVR/opengloves-driver
 
 # Other Languages
-**[English](https://github.com/LucidVR/lucidgloves/blob/main/README.md) | [简体中文](https://github.com/LucidVR/lucidgloves/blob/main/README_CN.md)**
+**[English](https://github.com/LucidVR/lucidgloves/blob/main/README.md) | [简体中文](https://github.com/LucidVR/lucidgloves/blob/main/Readme_Languages/README_CN.md)**
