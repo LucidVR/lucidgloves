@@ -12,7 +12,7 @@ https://discord.gg/lucidvr
 此固件默认使用和配置arduino nano以及它的USB通讯端口。如果使用USB通讯端口，您需要使用相应的数据项与设备相连。
 如果您想配置此固件，请在lucidgloves-firmware.ino文件做出相应的改变。
 
-**详细的配置方法：请点击此处进入配置教程 -> [配置教程传送门](https://github.com/LucidVR/lucidgloves-hardware/wiki/Firmware-V2-Customization).**
+**详细的配置方法：请点击此处进入配置教程 -> [配置教程传送门](https://github.com/LucidVR/lucidgloves-hardware/wiki/Firmware-V2-Customization).**\
 **固件问题的故障排除教程：-> [固件故障排除教程](https://github.com/LucidVR/lucidgloves/wiki/Firmware-Troubleshooting-Guide).** 
 
 ## 已测试过的主板:
