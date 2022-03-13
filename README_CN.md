@@ -1,6 +1,6 @@
 ![LucidGloves](https://cdn.discordapp.com/attachments/785135646082990120/873666310855360582/LucidGlovesBlackwbkgnd.png)
 
-**[English](https://github.com/RyanPiao/lucidgloves/blob/main/README.md) | [简体中文](https://github.com/RyanPiao/lucidgloves/blob/main/README_CN.md)**
+**[English](https://github.com/LucidVR/lucidgloves/blob/main/README.md) | [简体中文](https://github.com/LucidVR/lucidgloves/blob/main/README_CN.md)**
 
 # lucid手套- 固件与3D打印文件
 此Repo含有lucid手套的原型机V3到V4的arduino固件以及3D打印所需要的STL文件。LucidGloves是DIY触觉反馈手指追踪手套，如果配合LucidVR使用，可以在大部分支持Valve Index手柄支持的游戏。我们的宗旨是用最少的钱，得到最大的体验。原作者Lucas_VRTech会在他的抖音账号里更新此项目的最新进展, 请关注https://www.tiktok.com/@lucas_vrtech 。
