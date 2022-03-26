@@ -15,7 +15,7 @@ struct outputData{
 };
 */
 
-#if ENCODING == ENCODING_LEGACY //will be moved to its own manager in Firmware v4
+#if ENCODING == ENCODE_LEGACY //will be moved to its own manager in Firmware v4
 //legacy encoding
 char* encode(int* flexion, int joyX, int joyY, bool joyClick, bool triggerButton, bool aButton, bool bButton, bool grab, bool pinch, bool calib, bool menu){
   static char stringToEncode[75];
