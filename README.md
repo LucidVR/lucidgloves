@@ -40,11 +40,11 @@ For Prototypes 3 and 3.1 -
 * GuideRing(Will need to be resized) OR GuideNode(3.1) (2+ per finger, 1+ for thumb)
 * EndCap (1x per finger, will need to be resized to fit) 
 
-For Prototype 4 and 4.1 - 
+For Prototypes 4 and 4.1 - 
 * HapticSpool (5x)
 * Tensioner_GreenPot (5x) OR Tensioner_WLPot (5x)
 * SpoolCover (5x)
-* RigidMount (1x) (One for each hand, make sure to flip for other hand)
+* RigidMount (1x) (Left or right hand)
 * WLPotSlideHolder OR WLPotElasticHolder OR GreenPotSlideHolder (5x)
 * Quest2_MountSlider OR Vive3.0_MountSlider (1x)
 * GuideRing (Proto 3) (Will need to be resized) OR GuideNode (Proto 3.1) (2+ per finger, 1+ for thumb)
@@ -56,7 +56,7 @@ Guide for printing parts: [Printing guide](https://github.com/LucidVR/lucidglove
 **Required parts for each hand: [Parts Lists](https://github.com/LucidVR/lucidgloves/wiki/Parts-Lists)**  
 Optional:  
 * Joysticks for locomotion 
-  - will be making a DIY treadmill eventually as well for those who would prefer that  
+  - Will be making a DIY treadmill eventually as well for those who would prefer that  
 * Buttons (Most can be replaced with gestures) (One is required for autocalibration)
 
 More information will be available on the [LucidVR site](http://lucidvrtech.com/) very soon.  
