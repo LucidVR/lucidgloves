@@ -1,6 +1,6 @@
 ![LucidGloves](https://cdn.discordapp.com/attachments/785135646082990120/873666310855360582/LucidGlovesBlackwbkgnd.png)
 
-# LucidGloves - Firmware and 3D Print Files
+# LucidGloves - Firmware and 3D Printer Files
 This repo contains the arduino firmware as well as the STL files for Prototypes 3 through 4 of the LucidVR glove. This is a finger tracking glove that allows you to use your hands in VR. Follow along with Lucas_VRTech's developments on his Tiktok page:
 https://www.tiktok.com/@lucas_vrtech
 
@@ -28,7 +28,7 @@ To configure the firmware, change the defines in the lucidgloves-firmware.ino fi
 
 # Hardware
 STL files for 3D printing are located in the hardware folder. 
-*Prototype 4 models are currently experimental*
+*Prototype 4 models are currently experimental.*
 
 The assembly **for each hand** is as follows:
 
@@ -40,7 +40,7 @@ For Prototypes 3 and 3.1 -
 * GuideRing(Will need to be resized) OR GuideNode(3.1) (2+ per finger, 1+ for thumb)
 * EndCap (1x per finger, will need to be resized to fit) 
 
-For Prototype 4 and 4.1- 
+For Prototype 4 and 4.1 - 
 * HapticSpool (5x)
 * Tensioner_GreenPot (5x) OR Tensioner_WLPot (5x)
 * SpoolCover (5x)
