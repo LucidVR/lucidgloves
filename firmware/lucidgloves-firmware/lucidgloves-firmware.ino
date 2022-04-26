@@ -8,12 +8,22 @@
 
 //This is the configuration file, main structure in _main.ino
 //CONFIGURATION SETTINGS:
-#define COMMUNICATION COMM_SERIAL //Which communication protocol to use
+#define COMMUNICATION COMM_WIFI  //Which communication protocol to use
 //serial over USB
   #define SERIAL_BAUD_RATE 115200
   
 //serial over Bluetooth
   #define BTSERIAL_DEVICE_NAME "lucidgloves-left"
+
+//WiFi Communications
+//Please read through the code before entering your SSID and your password"
+// #define WIFI_SSID "WIFI SSID here"
+// #define WIFI_PASSWORD "password here"
+
+  #define WIFI_SSID "Linksys"
+  #define WIFI_PASSWORD "abcdefghijklmnopqrstuvwxy123456"
+  #define WIFI_PORT 444
+  
 
 //ANALOG INPUT CONFIG
 #define FLIP_POTS  false  //Flip values from potentiometers (for fingers!) if they are backwards
@@ -49,7 +59,7 @@
 
 #define USING_CALIB_PIN false //When PIN_CALIB is shorted (or it's button pushed) it will reset calibration if this is on.
 
-#define USING_FORCE_FEEDBACK false //Force feedback haptics allow you to feel the solid objects you hold
+#define USING_FORCE_FEEDBACK true //Force feedback haptics allow you to feel the solid objects you hold
 #define SERVO_SCALING false //dynamic scaling of servo motors
 
 //PINS CONFIGURATION 

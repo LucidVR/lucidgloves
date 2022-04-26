@@ -6,6 +6,7 @@
 //Comm defines, no touchy
 #define COMM_SERIAL 0   
 #define COMM_BTSERIAL 1 
+#define COMM_WIFI 2
 
 //Encoding
 #define ENCODING 1
