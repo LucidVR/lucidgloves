@@ -18,13 +18,13 @@ To configure the firmware, change the defines in the lucidgloves-firmware.ino fi
 **Firmware Troubleshooting Guide is here: [Firmware Troubleshooting Guide](https://github.com/LucidVR/lucidgloves/wiki/Firmware-Troubleshooting-Guide).** 
 
 ## Tested boards:
-	* Arduino Nano
-	* ESP-WROOM-32
+* Arduino Nano
+* ESP-WROOM-32
 
 ## Supported Communication Methods:
-	* USB Serial
-	* Bluetooth Serial (On ESP32 boards)
-	* BLE (Soon, not up yet)
+* USB Serial
+* Bluetooth Serial (On ESP32 boards)
+* BLE (Soon, not up yet)
 
 # Hardware
 STL files for 3D printing are located in the hardware folder. 
