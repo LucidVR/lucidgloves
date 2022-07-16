@@ -12,17 +12,32 @@
 //serial over USB
   #define SERIAL_BAUD_RATE 115200
   
-//serial over Bluetooth (Work in progress)
+//serial over Bluetooth
   #define BTSERIAL_DEVICE_NAME "lucidgloves-left"
 
 //ANALOG INPUT CONFIG
-#define ANALOG_MAX 4095   //4095 on ESP32, 1023 on Arduino. Make sure is the same as driver setting.
 #define FLIP_POTS  false  //Flip values from potentiometers (for fingers!) if they are backwards
 
 //Gesture enables, make false to use button override
 #define TRIGGER_GESTURE true
 #define GRAB_GESTURE    true
 #define PINCH_GESTURE   true
+
+
+//BUTTON INVERT
+//If a button registers as pressed when not and vice versa (eg. using normally-closed switches),
+//you can invert their behaviour here by setting their line to true.
+//If unsure, set to false
+#define INVERT_A false
+#define INVERT_B false
+#define INVERT_JOY false
+#define INVERT_MENU false
+#define INVERT_CALIB false
+//These only apply with gesture button override:
+#define INVERT_TRIGGER false
+#define INVERT_GRAB false
+#define INVERT_PINCH false
+
 
 //joystick configuration
 #define JOYSTICK_BLANK false //make true if not using the joystick
