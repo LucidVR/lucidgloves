@@ -1,5 +1,10 @@
 #define ALWAYS_CALIBRATING CALIBRATION_LOOPS == -1
 
+#define CALIB_OVERRIDE false
+#if USING_CALIB_PIN && COMMUNICATION == COMM_SERIAL && PIN_CALIB == 0 && !CALIB_OVERRIDE
+  #error "You can't set your calibration pin to 0 over usb. You can calibrate with the BOOT button when using bluetooth only. Set CalibOverride to true to override this."
+#endif
+
 ICommunication* comm;
 int loops = 0;
 void setup() {

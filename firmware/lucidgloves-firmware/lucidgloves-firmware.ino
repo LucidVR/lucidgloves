@@ -67,7 +67,7 @@
   #define PIN_TRIG_BTN  12 //unused if gesture set
   #define PIN_GRAB_BTN  13 //unused if gesture set
   #define PIN_PNCH_BTN  23 //unused if gesture set
-  #define PIN_CALIB     12 //button for recalibration
+  #define PIN_CALIB     12 //button for recalibration (You can set this to GPIO0 to use the BOOT button, but only when using Bluetooth.)
   #define DEBUG_LED 2
   #define PIN_PINKY_MOTOR     5  //used for force feedback
   #define PIN_RING_MOTOR      18 //^
