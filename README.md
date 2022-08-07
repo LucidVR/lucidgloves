@@ -61,7 +61,7 @@ Optional:
 
 More information will be available on the [LucidVR site](http://lucidvrtech.com/) very soon.  
 *  [Prototype 3/3.1 Building Tutorial](https://youtu.be/Qj4hqRKiy8g)
-*  Prototype 4 Tutorial to come out in the future
+*  [Prototype 4/4.1 Building Tutorial](https://youtu.be/2yF-SJcg3zQ)
 
 # SteamVR Compatibility (OpenGloves)
 This project uses the OpenGloves OpenVR driver for compatibility with SteamVR, which is downloadable on Steam:  
