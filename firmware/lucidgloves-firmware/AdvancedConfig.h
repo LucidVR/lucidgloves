@@ -3,14 +3,9 @@
 #define LOOP_TIME 4 //How much time between data sends (ms), set to 0 for a good time :)
 #define CALIBRATION_LOOPS -1//How many loops should be calibrated. Set to -1 to always be calibrated.
 
-//Comm defines, no touchy
-#define COMM_SERIAL 0   
-#define COMM_BTSERIAL 1 
-
 //Encoding
-#define ENCODING 1
-#define ENCODE_LEGACY 0
-#define ENCODE_ALPHA  1
+#define ENCODING ENCODE_ALPHA
+
 
 //Finger indeces (not used for legacy)
 #define PINKY_IND 4
@@ -28,11 +23,10 @@
 
 
 //ANALOG_MAX OVERRIDE:
-//uncomment and set as needed (only touch if you know what you are doing)
-//#define ANALOG_MAX 4095 
+//#define ANALOG_MAX 4095 //uncomment and set as needed
 
 #ifndef ANALOG_MAX
-#error "This board doesn't have an auto ANALOG_MAX assignment, please set it manually by uncommenting ANALOG_MAX OVERRIDE!"
+#error "This board doesn't have an auto ANALOG_MAX assignment, please set it manually by uncommenting the line below ANALOG_MAX OVERRIDE!"
 #endif
 
 //Filtering and clamping analog inputs

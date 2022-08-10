@@ -4,7 +4,9 @@
  * lucidvrtech.com
  */
 
+#include "ConfigUtils.h"
 #include "AdvancedConfig.h"
+
 
 //This is the configuration file, main structure in _main.ino
 //CONFIGURATION SETTINGS:
