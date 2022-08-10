@@ -26,7 +26,7 @@
 //#define ANALOG_MAX 4095 //uncomment and set as needed
 
 #ifndef ANALOG_MAX
-#error "This board doesn't have an auto ANALOG_MAX assignment, please set it manually by uncommenting the line below ANALOG_MAX OVERRIDE!"
+#error "This board doesn't have an auto ANALOG_MAX assignment, please set it manually by uncommenting the line below ANALOG_MAX OVERRIDE in AdvancedConfig.h"
 #endif
 
 //Filtering and clamping analog inputs

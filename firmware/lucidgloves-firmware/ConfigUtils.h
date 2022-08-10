@@ -8,3 +8,8 @@
 //Encode
 #define ENCODE_LEGACY 0
 #define ENCODE_ALPHA  1
+
+//Multiplexer
+#define MUX(p) (p + 100)
+#define UNMUX(p) (p % 100)
+#define ISMUX(p) (p >= 100)

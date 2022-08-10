@@ -54,8 +54,11 @@
 #define USING_FORCE_FEEDBACK false //Force feedback haptics allow you to feel the solid objects you hold
 #define SERVO_SCALING false //dynamic scaling of servo motors
 
+#define USING_MULTIPLEXER true //Whether or not you are using a multiplexer for inputs
+
 #if defined(ESP32)
   //(This configuration is for ESP32 DOIT V1 so make sure to change if you're on another board)
+  //To use a pin on the multiplexer, use MUX(pin). So for example pin 15 on a mux would be MUX(15).
   #define PIN_PINKY     36
   #define PIN_RING      39
   #define PIN_MIDDLE    34
@@ -77,6 +80,14 @@
   #define PIN_INDEX_MOTOR     21 //^
   #define PIN_THUMB_MOTOR     17 //^
   #define PIN_MENU_BTN        27
+
+  //Select pins for multiplexers, set as needed if using a mux. You can add or remove pins as needed depending on how many select pins your mux needs.
+  #define PINS_MUX_SELECT     32,  /*S0 pin*/ \
+                              33,  /*S1 pin*/ \
+                              25,  /*S2 pin*/ \
+                              26   /*S3 pin (if your mux is 3-bit like 74HC4051 then you can remove this line and the backslash before it.)*/
+  
+  #define MUX_INPUT 35  //the input or SIG pin of the multiplexer. This can't be a mux pin.
   
 //PINS CONFIGURATION 
 #elif defined(__AVR__)
@@ -102,4 +113,12 @@
   #define PIN_INDEX_MOTOR     5 //^
   #define PIN_THUMB_MOTOR     6 //^
   #define PIN_MENU_BTN        8
+
+  //Select pins for multiplexers, set as needed if using a mux. You can add or remove pins as needed depending on how many select pins your mux needs.
+  #define PINS_MUX_SELECT     10,  /*S0 pin*/ \
+                              11,  /*S1 pin*/ \
+                              12,  /*S2 pin*/ \
+                              13   /*S3 pin (if your mux is 3-bit like 74HC4051 then you can remove this line and the backslash before it.)*/
+  
+  #define MUX_INPUT 35  //the input or SIG pin of the multiplexer. This can't be a mux pin.
 #endif

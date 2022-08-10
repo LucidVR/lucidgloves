@@ -35,10 +35,43 @@ void setupInputs(){
   #if USING_CALIB_PIN
   pinMode(PIN_CALIB, INPUT_PULLUP);
   #endif
+
+  #if USING_MULTIPLEXER
+  byte selectPins[] = {PINS_MUX_SELECT};
+  for (int i = 0; i < sizeof(selectPins); i++){
+    pinMode(selectPins[i], OUTPUT);
+  }
+  #endif
 }
 
+int analogPinRead(int pin){
+  #if USING_MULTIPLEXER
+  if (ISMUX(pin)){
+    return readMux(UNMUX(pin));
+  }
+  else{
+    return analogRead(pin);
+  }
+  #else
+   return analogRead(UNMUX(pin));
+  #endif
+}
+
+#if USING_MULTIPLEXER
+int readMux(byte pin){
+  byte selectPins[] = {PINS_MUX_SELECT}; //get the array of select pins for the mux
+
+  for (int i = sizeof(selectPins - 1); i > -1; i--){
+    digitalWrite(selectPins[i], ((int)pow(2,i) & (pin)) == 0 ? LOW:HIGH); //convert the pin number to binary, and set each digit to it's corresponsing select pin.
+  }
+
+  delayMicroseconds(1);
+  return analogRead(MUX_INPUT);
+}
+#endif
+
 int* getFingerPositions(bool calibrating, bool reset){
-  int rawFingers[5] = {NO_THUMB?0:analogRead(PIN_THUMB), analogRead(PIN_INDEX), analogRead(PIN_MIDDLE), analogRead(PIN_RING), analogRead(PIN_PINKY)};
+  int rawFingers[5] = {NO_THUMB?0:analogPinRead(PIN_THUMB), analogPinRead(PIN_INDEX), analogPinRead(PIN_MIDDLE), analogPinRead(PIN_RING), analogPinRead(PIN_PINKY)};
 
   //flip pot values if needed
   #if FLIP_POTS
@@ -100,8 +133,8 @@ int* getFingerPositions(bool calibrating, bool reset){
   
 }
 
-int analogReadDeadzone(byte pin){
-  int raw = analogRead(pin);
+int analogReadDeadzone(int pin){
+  int raw = analogPinRead(pin);
   if (abs(ANALOG_MAX/2 - raw) < JOYSTICK_DEADZONE * ANALOG_MAX / 100)
     return ANALOG_MAX/2;
   else
