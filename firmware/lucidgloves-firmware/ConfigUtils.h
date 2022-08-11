@@ -16,5 +16,4 @@
 
 //finger mixing
 #define MIXING_NONE 0
-#define MIXING_ARCCOS 1
 #define MIXING_SINCOS 2

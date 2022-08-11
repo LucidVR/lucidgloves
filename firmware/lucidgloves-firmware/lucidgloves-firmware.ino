@@ -89,9 +89,9 @@
   
   #define MUX_INPUT 35  //the input or SIG pin of the multiplexer. This can't be a mux pin.
 
-  //Signal mixing for finger values. Options are: MIXING_NONE, MIXING_ARCCOS (not implemented yet), MIXING_SINCOS
-  //For double rotary hall effect sensors use MIXING_SINCOS. For single hall effect sensors use MIXING_ARCCOS. For potentiometers use MIXING_NONE.
-  #define FLEXION_MIXING MIXING_SINCOS
+  //Signal mixing for finger values. Options are: MIXING_NONE, MIXING_SINCOS
+  //For double rotary hall effect sensors use MIXING_SINCOS. For potentiometers use MIXING_NONE.
+  #define FLEXION_MIXING MIXING_NONE
     //Secondary analog pins for mixing. Only used by MIXING_SINCOS. Use MUX(pin) if you are using a multiplexer for it.
     #define PIN_PINKY_SECOND     MUX(1) 
     #define PIN_RING_SECOND      MUX(3)
