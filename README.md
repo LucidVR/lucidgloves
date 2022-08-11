@@ -51,7 +51,9 @@ For Prototypes 4 and 4.1 -
 * EndCap (Proto 3) (1x per finger, will need to be resized to fit)
 
 
+
 Guide for printing parts: [Printing guide](https://github.com/LucidVR/lucidgloves/wiki/Parts-Printing-Guides)
+
 
 **Required parts for each hand: [Parts Lists](https://github.com/LucidVR/lucidgloves/wiki/Parts-Lists)**  
 Optional:  

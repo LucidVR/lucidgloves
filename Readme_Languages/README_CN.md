@@ -49,7 +49,7 @@ https://discord.gg/lucidvr
 * EndCap (Proto 3) (1x per finger, will need to be resized to fit) | 手指套
 
 
-3D打印教程: [打印教程传送门](https://github.com/LucidVR/lucidgloves-hardware/wiki/Parts-Printing-Guide)
+3D打印教程: [打印教程传送门](https://github.com/LucidVR/lucidgloves-hardware/wiki/Parts-Printing-Guides)
 
 **需要购买的材料: [所需材料传送门](https://github.com/LucidVR/lucidgloves/wiki/Parts-Lists)**  
 可选配置:  
