@@ -51,7 +51,9 @@ For Prototypes 4 and 4.1 -
 * EndCap (Proto 3) (1x per finger, will need to be resized to fit)
 
 
-Guide for printing parts: [Printing guides](https://github.com/LucidVR/lucidgloves-hardware/wiki/Parts-Printing-Guides)
+
+Guide for printing parts: [Printing guide](https://github.com/LucidVR/lucidgloves/wiki/Parts-Printing-Guides)
+
 
 **Required parts for each hand: [Parts Lists](https://github.com/LucidVR/lucidgloves/wiki/Parts-Lists)**  
 Optional:  
@@ -61,7 +63,7 @@ Optional:
 
 More information will be available on the [LucidVR site](http://lucidvrtech.com/) very soon.  
 *  [Prototype 3/3.1 Building Tutorial](https://youtu.be/Qj4hqRKiy8g)
-*  Prototype 4 Tutorial to come out in the future
+*  [Prototype 4/4.1 Building Tutorial](https://youtu.be/2yF-SJcg3zQ)
 
 # SteamVR Compatibility (OpenGloves)
 This project uses the OpenGloves OpenVR driver for compatibility with SteamVR, which is downloadable on Steam:  
