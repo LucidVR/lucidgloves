@@ -65,7 +65,7 @@ int readMux(byte pin){
     digitalWrite(selectPins[i], ((int)pow(2,i) & (pin)) == 0 ? LOW:HIGH); //convert the pin number to binary, and set each digit to it's corresponsing select pin.
   }
 
-  delayMicroseconds(1);
+  delayMicroseconds(MULTIPLEXER_DELAY);
   return analogRead(MUX_INPUT);
 }
 #endif
