@@ -13,3 +13,8 @@
 #define MUX(p) (p + 100)
 #define UNMUX(p) (p % 100)
 #define ISMUX(p) (p >= 100)
+
+//finger mixing
+#define MIXING_NONE 0
+#define MIXING_ARCCOS 1
+#define MIXING_SINCOS 2

@@ -13,6 +13,17 @@
 int maxFingers[5] = {0,0,0,0,0};
 int minFingers[5] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
 
+#if FLEXION_MIXING == MIXING_SINCOS
+  int sinMin[5] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
+  int sinMax[5] = {0,0,0,0,0};
+
+  int cosMin[5] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
+  int cosMax[5] = {0,0,0,0,0};
+
+  bool cosPositive[5] = {true, true, true, true, true};
+  double totalOffset[5] = {0,0,0,0,0};
+#endif
+
 void setupInputs(){
   pinMode(PIN_JOY_BTN, INPUT_PULLUP);
   pinMode(PIN_A_BTN, INPUT_PULLUP);
@@ -71,8 +82,17 @@ int readMux(byte pin){
 #endif
 
 int* getFingerPositions(bool calibrating, bool reset){
+  #if FLEXION_MIXING == MIXING_NONE //no mixing, just linear
   int rawFingers[5] = {NO_THUMB?0:analogPinRead(PIN_THUMB), analogPinRead(PIN_INDEX), analogPinRead(PIN_MIDDLE), analogPinRead(PIN_RING), analogPinRead(PIN_PINKY)};
+  
+  #elif FLEXION_MIXING == MIXING_SINCOS
+  int rawFingers[5] = {NO_THUMB?0:sinCosMix(PIN_THUMB, PIN_THUMB_SECOND, 0 ), 
+                                  sinCosMix(PIN_INDEX, PIN_INDEX_SECOND, 1 ), 
+                                  sinCosMix(PIN_MIDDLE,PIN_MIDDLE_SECOND,2 ), 
+                                  sinCosMix(PIN_RING,  PIN_RING_SECOND,  3 ), 
+                                  sinCosMix(PIN_PINKY, PIN_PINKY_SECOND, 4 )};
 
+  #endif
   //flip pot values if needed
   #if FLIP_POTS
   for (int i = 0; i <5; i++){
@@ -164,3 +184,37 @@ int getJoyY(){
 bool getButton(byte pin){
   return digitalRead(pin) != HIGH;
 }
+
+#if FLEXION_MIXING == MIXING_SINCOS
+//mixing
+int sinCosMix(int sinPin, int cosPin, int i){
+
+  int sinRaw = analogPinRead(sinPin);
+  int cosRaw = analogPinRead(cosPin);
+
+  
+  //scaling
+  sinMin[i] = min(sinRaw, sinMin[i]);
+  sinMax[i] = max(sinRaw, sinMax[i]);
+
+  cosMin[i] = min(cosRaw, cosMin[i]);
+  cosMax[i] = max(cosRaw, cosMax[i]);
+
+  int sinScaled = map(sinRaw, sinMin[i], sinMax[i], -ANALOG_MAX, ANALOG_MAX);
+  int cosScaled = map(cosRaw, cosMin[i], cosMax[i], -ANALOG_MAX, ANALOG_MAX);
+
+  //trigonometry stuffs
+  double tanRaw = ((double)sinScaled)/((double)cosScaled);
+  double angleRaw = atan(tanRaw);
+
+  //counting rotations
+  if ((cosScaled > 0) != cosPositive[i]){
+    totalOffset[i] += PI * (cosPositive[i]?-1:1) * (cosScaled>sinScaled?1:-1);
+  }
+  cosPositive[i] = cosScaled > 0;
+  double totalAngle = angleRaw + totalOffset[i];
+
+  return (int)(totalAngle * ANALOG_MAX);
+  
+}
+#endif

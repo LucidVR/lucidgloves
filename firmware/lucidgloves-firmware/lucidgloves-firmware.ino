@@ -10,7 +10,7 @@
 
 //This is the configuration file, main structure in _main.ino
 //CONFIGURATION SETTINGS:
-#define COMMUNICATION COMM_SERIAL //Which communication protocol to use
+#define COMMUNICATION COMM_SERIAL //Which communication protocol to use. Options are: COMM_SERIAL (usb), COMM_BTSERIAL (bluetooth)
 //serial over USB
   #define SERIAL_BAUD_RATE 115200
   
@@ -54,7 +54,7 @@
 #define USING_FORCE_FEEDBACK false //Force feedback haptics allow you to feel the solid objects you hold
 #define SERVO_SCALING false //dynamic scaling of servo motors
 
-#define USING_MULTIPLEXER true //Whether or not you are using a multiplexer for inputs
+#define USING_MULTIPLEXER false //Whether or not you are using a multiplexer for inputs
 
 #if defined(ESP32)
   //(This configuration is for ESP32 DOIT V1 so make sure to change if you're on another board)
@@ -88,6 +88,16 @@
                               26   /*S3 pin (if your mux is 3-bit like 74HC4051 then you can remove this line and the backslash before it.)*/
   
   #define MUX_INPUT 35  //the input or SIG pin of the multiplexer. This can't be a mux pin.
+
+  //Signal mixing for finger values. Options are: MIXING_NONE, MIXING_ARCCOS (not implemented yet), MIXING_SINCOS
+  //For double rotary hall effect sensors use MIXING_SINCOS. For single hall effect sensors use MIXING_ARCCOS. For potentiometers use MIXING_NONE.
+  #define FLEXION_MIXING MIXING_SINCOS
+    //Secondary analog pins for mixing. Only used by MIXING_SINCOS. Use MUX(pin) if you are using a multiplexer for it.
+    #define PIN_PINKY_SECOND     MUX(1) 
+    #define PIN_RING_SECOND      MUX(3)
+    #define PIN_MIDDLE_SECOND    MUX(5)
+    #define PIN_INDEX_SECOND     MUX(7)
+    #define PIN_THUMB_SECOND     MUX(9)
   
 //PINS CONFIGURATION 
 #elif defined(__AVR__)
