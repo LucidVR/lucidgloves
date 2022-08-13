@@ -37,7 +37,7 @@
 
 // Enable and set min and max to match your sensor's expected raw value range
 // This discards any spurious values outside of the useful range
-#define CLAMP_FLEXION false  //clamp the raw flexion values
+#define CLAMP_SENSORS false  //clamp the raw sensor values
 #define CLAMP_MIN 0  //the minimum value from the flexion sensors
 #define CLAMP_MAX ANALOG_MAX  //the maximum value from the flexion sensors
 

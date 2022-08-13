@@ -10,8 +10,8 @@
   };
 #endif
 
-int maxFingers[5] = {0,0,0,0,0};
-int minFingers[5] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
+int maxFingers[10] = {0,0,0,0,0,0,0,0,0,0};
+int minFingers[10] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
 
 #if FLEXION_MIXING == MIXING_SINCOS
   int sinMin[5] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
@@ -83,25 +83,53 @@ int readMux(byte pin){
 
 int* getFingerPositions(bool calibrating, bool reset){
   #if FLEXION_MIXING == MIXING_NONE //no mixing, just linear
-  int rawFingers[5] = {NO_THUMB?0:analogPinRead(PIN_THUMB), analogPinRead(PIN_INDEX), analogPinRead(PIN_MIDDLE), analogPinRead(PIN_RING), analogPinRead(PIN_PINKY)};
+  int rawFingersFlexion[5] = {NO_THUMB?0:analogPinRead(PIN_THUMB), analogPinRead(PIN_INDEX), analogPinRead(PIN_MIDDLE), analogPinRead(PIN_RING), analogPinRead(PIN_PINKY)};
   
   #elif FLEXION_MIXING == MIXING_SINCOS
-  int rawFingers[5] = {NO_THUMB?0:sinCosMix(PIN_THUMB, PIN_THUMB_SECOND, 0 ), 
+  int rawFingersFlexion[5] = {NO_THUMB?0:sinCosMix(PIN_THUMB, PIN_THUMB_SECOND, 0 ), 
                                   sinCosMix(PIN_INDEX, PIN_INDEX_SECOND, 1 ), 
                                   sinCosMix(PIN_MIDDLE,PIN_MIDDLE_SECOND,2 ), 
                                   sinCosMix(PIN_RING,  PIN_RING_SECOND,  3 ), 
                                   sinCosMix(PIN_PINKY, PIN_PINKY_SECOND, 4 )};
 
   #endif
+
+  int rawFingers[10];
+
+  #if USING_SPLAY
+    int rawFingersSplay[5] = {NO_THUMB?0:analogPinRead(PIN_THUMB_SPLAY), 
+                              analogPinRead(PIN_INDEX_SPLAY), 
+                              analogPinRead(PIN_MIDDLE_SPLAY), 
+                              analogPinRead(PIN_RING_SPLAY), 
+                              analogPinRead(PIN_PINKY_SPLAY)};
+  #else
+    int rawFingersSplay[5] = {0,0,0,0,0};
+  #endif
+  
+    //memcpy(rawFingers, rawFingersFlexion, 5); //memcpy doesn't seem to work here
+    //memcpy(&rawFingers[5], rawFingersSplay, 5); 
+
+  for (int i = 0; i < 5; i++){
+    rawFingers[i] = rawFingersFlexion[i];
+    rawFingers[i+5] = rawFingersSplay[i];
+  }
+  
+  
   //flip pot values if needed
-  #if FLIP_POTS
-  for (int i = 0; i <5; i++){
+  #if FLIP_FLEXION
+  for (int i = 0; i < 5; i++){
+    rawFingers[i] = ANALOG_MAX - rawFingers[i];
+  }
+  #endif
+  
+  #if FLIP_SPLAY
+  for (int i = 5; i < 10; i++){
     rawFingers[i] = ANALOG_MAX - rawFingers[i];
   }
   #endif
 
   #if ENABLE_MEDIAN_FILTER
-  for (int i = 0; i < 5; i++){
+  for (int i = 0; i < 10; i++){
     rmSamples[i].add( rawFingers[i] );
     rawFingers[i] = rmSamples[i].getMedian();
   }
@@ -109,7 +137,7 @@ int* getFingerPositions(bool calibrating, bool reset){
 
   //reset max and mins as needed
   if (reset){
-    for (int i = 0; i <5; i++){
+    for (int i = 0; i <10; i++){
       maxFingers[i] = 0;
       minFingers[i] = ANALOG_MAX;
     }
@@ -117,15 +145,15 @@ int* getFingerPositions(bool calibrating, bool reset){
   
   //if during the calibration sequence, make sure to update max and mins
   if (calibrating){
-    for (int i = 0; i <5; i++){
+    for (int i = 0; i <10; i++){
       if (rawFingers[i] > maxFingers[i])
-        #if CLAMP_FLEXION
+        #if CLAMP_SENSORS
           maxFingers[i] = ( rawFingers[i] <= CLAMP_MAX )? rawFingers[i] : CLAMP_MAX;
         #else
           maxFingers[i] = rawFingers[i];
         #endif
       if (rawFingers[i] < minFingers[i])
-        #if CLAMP_FLEXION
+        #if CLAMP_SENSORS
           minFingers[i] = ( rawFingers[i] >= CLAMP_MIN )? rawFingers[i] : CLAMP_MIN;
         #else
           minFingers[i] = rawFingers[i];
@@ -133,9 +161,9 @@ int* getFingerPositions(bool calibrating, bool reset){
     }
   }
 
-  static int calibrated[5] = {511,511,511,511,511};
+  static int calibrated[10] = {ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2};
   
-  for (int i = 0; i<5; i++){
+  for (int i = 0; i<10; i++){
     if (minFingers[i] != maxFingers[i]){
       calibrated[i] = map( rawFingers[i], minFingers[i], maxFingers[i], 0, ANALOG_MAX );
       #if CLAMP_ANALOG_MAP

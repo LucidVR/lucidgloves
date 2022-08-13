@@ -18,7 +18,11 @@
   #define BTSERIAL_DEVICE_NAME "lucidgloves-left"
 
 //ANALOG INPUT CONFIG
-#define FLIP_POTS  false  //Flip values from potentiometers (for fingers!) if they are backwards
+#define USING_SPLAY false //whether or not your glove tracks splay. - tracks the side to side "wag" of fingers. Requires 5 more inputs.
+#define USING_MULTIPLEXER false //Whether or not you are using a multiplexer for inputs
+#define FLIP_FLEXION  false  //Flip values from potentiometers (for fingers!) if they are backwards
+#define FLIP_SPLAY false //Flip values for splay
+
 
 //Gesture enables, make false to use button override
 #define TRIGGER_GESTURE true
@@ -54,12 +58,10 @@
 #define USING_FORCE_FEEDBACK false //Force feedback haptics allow you to feel the solid objects you hold
 #define SERVO_SCALING false //dynamic scaling of servo motors
 
-#define USING_MULTIPLEXER false //Whether or not you are using a multiplexer for inputs
-
 #if defined(ESP32)
   //(This configuration is for ESP32 DOIT V1 so make sure to change if you're on another board)
   //To use a pin on the multiplexer, use MUX(pin). So for example pin 15 on a mux would be MUX(15).
-  #define PIN_PINKY     36
+  #define PIN_PINKY     36 //These 5 are for flexion
   #define PIN_RING      39
   #define PIN_MIDDLE    34
   #define PIN_INDEX     35
@@ -79,7 +81,15 @@
   #define PIN_MIDDLE_MOTOR    19 //^
   #define PIN_INDEX_MOTOR     21 //^
   #define PIN_THUMB_MOTOR     17 //^
-  #define PIN_MENU_BTN        27
+  #define PIN_MENU_BTN        29
+
+  //Splay pins. Only used for splay tracking gloves. Use MUX(pin) if you are using a multiplexer for it.
+  #define PIN_PINKY_SPLAY  MUX(10)
+  #define PIN_RING_SPLAY   MUX(11)
+  #define PIN_MIDDLE_SPLAY MUX(12)
+  #define PIN_INDEX_SPLAY  MUX(13)
+  #define PIN_THUMB_SPLAY  MUX(14)
+  
 
   //Select pins for multiplexers, set as needed if using a mux. You can add or remove pins as needed depending on how many select pins your mux needs.
   #define PINS_MUX_SELECT     32,  /*S0 pin*/ \
@@ -92,7 +102,7 @@
   //Signal mixing for finger values. Options are: MIXING_NONE, MIXING_SINCOS
   //For double rotary hall effect sensors use MIXING_SINCOS. For potentiometers use MIXING_NONE.
   #define FLEXION_MIXING MIXING_NONE
-    //Secondary analog pins for mixing. Only used by MIXING_SINCOS. Use MUX(pin) if you are using a multiplexer for it.
+    //Secondary analog pins for mixing flexion values. Only used by MIXING_SINCOS. Use MUX(pin) if you are using a multiplexer for it.
     #define PIN_PINKY_SECOND     MUX(1) 
     #define PIN_RING_SECOND      MUX(3)
     #define PIN_MIDDLE_SECOND    MUX(5)
@@ -124,11 +134,28 @@
   #define PIN_THUMB_MOTOR     6 //^
   #define PIN_MENU_BTN        8
 
+  //Splay pins. Only used for splay tracking gloves. Use MUX(pin) if you are using a multiplexer for it.
+  #define PIN_PINKY_SPLAY  MUX(10)
+  #define PIN_RING_SPLAY   MUX(11)
+  #define PIN_MIDDLE_SPLAY MUX(12)
+  #define PIN_INDEX_SPLAY  MUX(13)
+  #define PIN_THUMB_SPLAY  MUX(14)
+  
   //Select pins for multiplexers, set as needed if using a mux. You can add or remove pins as needed depending on how many select pins your mux needs.
   #define PINS_MUX_SELECT     10,  /*S0 pin*/ \
                               11,  /*S1 pin*/ \
                               12,  /*S2 pin*/ \
                               13   /*S3 pin (if your mux is 3-bit like 74HC4051 then you can remove this line and the backslash before it.)*/
   
-  #define MUX_INPUT 35  //the input or SIG pin of the multiplexer. This can't be a mux pin.
+  #define MUX_INPUT A0  //the input or SIG pin of the multiplexer. This can't be a mux pin.
+
+  //Signal mixing for finger values. Options are: MIXING_NONE, MIXING_SINCOS
+  //For double rotary hall effect sensors use MIXING_SINCOS. For potentiometers use MIXING_NONE.
+  #define FLEXION_MIXING MIXING_NONE
+    //Secondary analog pins for mixing. Only used by MIXING_SINCOS. Use MUX(pin) if you are using a multiplexer for it.
+    #define PIN_PINKY_SECOND     MUX(1) 
+    #define PIN_RING_SECOND      MUX(3)
+    #define PIN_MIDDLE_SECOND    MUX(5)
+    #define PIN_INDEX_SECOND     MUX(7)
+    #define PIN_THUMB_SECOND     MUX(9)
 #endif
