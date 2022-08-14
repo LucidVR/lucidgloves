@@ -1,7 +1,12 @@
 // Requires RunningMedian library by Rob Tillaart
 #if ENABLE_MEDIAN_FILTER
   #include <RunningMedian.h>
-  RunningMedian rmSamples[5] = {
+  RunningMedian rmSamples[10] = {
+      RunningMedian(MEDIAN_SAMPLES),
+      RunningMedian(MEDIAN_SAMPLES),
+      RunningMedian(MEDIAN_SAMPLES),
+      RunningMedian(MEDIAN_SAMPLES),
+      RunningMedian(MEDIAN_SAMPLES),
       RunningMedian(MEDIAN_SAMPLES),
       RunningMedian(MEDIAN_SAMPLES),
       RunningMedian(MEDIAN_SAMPLES),
@@ -138,6 +143,8 @@ int* getFingerPositions(bool calibrating, bool reset){
   //reset max and mins as needed
   if (reset){
     for (int i = 0; i <10; i++){
+      if (i < 5)
+        totalOffset[i] = 0;
       maxFingers[i] = 0;
       minFingers[i] = ANALOG_MAX;
     }
