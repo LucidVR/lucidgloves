@@ -28,7 +28,7 @@
 #endif
 
 
-#define MULTIPLEXER_DELAY   3 //How many microseconds should be delayed between multiplexer reads
+#define MULTIPLEXER_DELAY   0 //How many microseconds should be delayed between multiplexer reads
 
 
 //ANALOG_MAX OVERRIDE:

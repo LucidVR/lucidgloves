@@ -15,6 +15,9 @@
   };
 #endif
 
+
+byte selectPins[] = {PINS_MUX_SELECT};
+
 int maxFingers[10] = {0,0,0,0,0,0,0,0,0,0};
 int minFingers[10] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
 
@@ -54,6 +57,7 @@ void setupInputs(){
 
   #if USING_MULTIPLEXER
   byte selectPins[] = {PINS_MUX_SELECT};
+  pinMode(MUX_INPUT, INPUT);
   for (int i = 0; i < sizeof(selectPins); i++){
     pinMode(selectPins[i], OUTPUT);
   }
@@ -75,13 +79,112 @@ int analogPinRead(int pin){
 
 #if USING_MULTIPLEXER
 int readMux(byte pin){
-  byte selectPins[] = {PINS_MUX_SELECT}; //get the array of select pins for the mux
+  /*byte selectPins[] = {PINS_MUX_SELECT}; //get the array of select pins for the mux
 
   for (int i = sizeof(selectPins - 1); i > -1; i--){
     digitalWrite(selectPins[i], ((int)pow(2,i) & (pin)) == 0 ? LOW:HIGH); //convert the pin number to binary, and set each digit to it's corresponsing select pin.
   }
 
-  delayMicroseconds(MULTIPLEXER_DELAY);
+  delayMicroseconds(MULTIPLEXER_DELAY);*/
+  switch(pin){
+    case 0:
+      digitalWrite(selectPins[0], LOW);
+      digitalWrite(selectPins[1], LOW);
+      digitalWrite(selectPins[2], LOW);
+      digitalWrite(selectPins[3], LOW);
+      break;
+    case 1:
+      digitalWrite(selectPins[0], HIGH);
+      digitalWrite(selectPins[1], LOW);
+      digitalWrite(selectPins[2], LOW);
+      digitalWrite(selectPins[3], LOW);
+      break;
+    case 2:
+      digitalWrite(selectPins[0], LOW);
+      digitalWrite(selectPins[1], HIGH);
+      digitalWrite(selectPins[2], LOW);
+      digitalWrite(selectPins[3], LOW);
+      break;
+   case 3:
+      digitalWrite(selectPins[0], HIGH);
+      digitalWrite(selectPins[1], HIGH);
+      digitalWrite(selectPins[2], LOW);
+      digitalWrite(selectPins[3], LOW);
+      break;
+   case 4:
+      digitalWrite(selectPins[0], LOW);
+      digitalWrite(selectPins[1], LOW);
+      digitalWrite(selectPins[2], HIGH);
+      digitalWrite(selectPins[3], LOW);
+      break;
+    case 5:
+      digitalWrite(selectPins[0], HIGH);
+      digitalWrite(selectPins[1], LOW);
+      digitalWrite(selectPins[2], HIGH);
+      digitalWrite(selectPins[3], LOW);
+      break;
+    case 6:
+      digitalWrite(selectPins[0], LOW);
+      digitalWrite(selectPins[1], HIGH);
+      digitalWrite(selectPins[2], HIGH);
+      digitalWrite(selectPins[3], LOW);
+      break;
+    case 7:
+      digitalWrite(selectPins[0], HIGH);
+      digitalWrite(selectPins[1], HIGH);
+      digitalWrite(selectPins[2], HIGH);
+      digitalWrite(selectPins[3], LOW);
+      break;
+    case 8:
+      digitalWrite(selectPins[0], LOW);
+      digitalWrite(selectPins[1], LOW);
+      digitalWrite(selectPins[2], LOW);
+      digitalWrite(selectPins[3], HIGH);
+      break;
+    case 9:
+      digitalWrite(selectPins[0], HIGH);
+      digitalWrite(selectPins[1], LOW);
+      digitalWrite(selectPins[2], LOW);
+      digitalWrite(selectPins[3], HIGH);
+      break;
+   case 10:
+      digitalWrite(selectPins[0], LOW);
+      digitalWrite(selectPins[1], HIGH);
+      digitalWrite(selectPins[2], LOW);
+      digitalWrite(selectPins[3], HIGH);
+      break;
+    case 11:
+      digitalWrite(selectPins[0], HIGH);
+      digitalWrite(selectPins[1], HIGH);
+      digitalWrite(selectPins[2], LOW);
+      digitalWrite(selectPins[3], HIGH);
+      break;
+    case 12:
+      digitalWrite(selectPins[0], LOW);
+      digitalWrite(selectPins[1], LOW);
+      digitalWrite(selectPins[2], HIGH);
+      digitalWrite(selectPins[3], HIGH);
+      break;
+    case 13:
+      digitalWrite(selectPins[0], HIGH);
+      digitalWrite(selectPins[1], LOW);
+      digitalWrite(selectPins[2], HIGH);
+      digitalWrite(selectPins[3], HIGH);
+      break;
+    case 14:
+      digitalWrite(selectPins[0], LOW);
+      digitalWrite(selectPins[1], HIGH);
+      digitalWrite(selectPins[2], HIGH);
+      digitalWrite(selectPins[3], HIGH);
+      break;
+   case 15:
+      digitalWrite(selectPins[0], HIGH);
+      digitalWrite(selectPins[1], HIGH);
+      digitalWrite(selectPins[2], HIGH);
+      digitalWrite(selectPins[3], HIGH);
+      break;
+  }
+  delayMicroseconds(1);
   return analogRead(MUX_INPUT);
 }
 #endif
@@ -110,7 +213,6 @@ void getFingerPositions(bool calibrating, bool reset){
   #else
     int rawFingersSplay[5] = {0,0,0,0,0};
   #endif
-  
     //memcpy(rawFingers, rawFingersFlexion, 5); //memcpy doesn't seem to work here
     //memcpy(&rawFingers[5], rawFingersSplay, 5); 
 
@@ -183,6 +285,7 @@ void getFingerPositions(bool calibrating, bool reset){
     else {
       fingerPos[i] = ANALOG_MAX / 2;
     }
+    
   }
 }
 
