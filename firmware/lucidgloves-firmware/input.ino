@@ -143,8 +143,10 @@ int* getFingerPositions(bool calibrating, bool reset){
   //reset max and mins as needed
   if (reset){
     for (int i = 0; i <10; i++){
+      #if FLEXION_MIXING == MIXING_SINCOS
       if (i < 5)
         totalOffset[i] = 0;
+      #endif
       maxFingers[i] = 0;
       minFingers[i] = ANALOG_MAX;
     }

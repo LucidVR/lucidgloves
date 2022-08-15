@@ -5,9 +5,35 @@
   #error "You can't set your calibration pin to 0 over usb. You can calibrate with the BOOT button when using bluetooth only. Set CalibOverride to true to override this."
 #endif
 
+bool calibrate = false;
+bool calibButton = false;
+int* fingerPos;
+
 ICommunication* comm;
+
+#if ESP32_DUAL_CORE_SET
+TaskHandle_t Task1;
+int threadLoops = 0;
+int lastMicros = 0;
+void getInputs(void* parameter){
+    for(;;){
+      lastMicros = micros();
+      fingerPos = getFingerPositions(calibrate, calibButton); //Save finger positions in thread
+      Serial.println(micros() - lastMicros);
+      threadLoops++;
+      if (threadLoops%100 == 0){
+        vTaskDelay(1);
+      }
+    }
+}
+#endif
+
 int loops = 0;
 void setup() {
+  fingerPos = new int[10];
+  for (int i=0; i<10; i++){
+    fingerPos[i] = 0;
+  }
   #if COMMUNICATION == COMM_SERIAL
     comm = new SerialCommunication();
   #elif COMMUNICATION == COMM_BTSERIAL
@@ -21,25 +47,41 @@ void setup() {
     setupServoHaptics();  
   #endif
   
+  #if ESP32_DUAL_CORE_SET
+    xTaskCreatePinnedToCore(
+      getInputs, /* Function to implement the task */
+      "Get_Inputs", /* Name of the task */
+      10000,  /* Stack size in words */
+      NULL,  /* Task input parameter */
+      tskIDLE_PRIORITY,  /* Priority of the task */
+      &Task1,  /* Task handle. */
+      0); /* Core where the task should run */
+  #endif
 }
 
 void loop() {
   if (comm->isOpen()){
     #if USING_CALIB_PIN
-    bool calibButton = getButton(PIN_CALIB) != INVERT_CALIB;
+    calibButton = getButton(PIN_CALIB) != INVERT_CALIB;
     if (calibButton)
       loops = 0;
     #else
-    bool calibButton = false;
+    calibButton = false;
     #endif
-    
-    bool calibrate = false;
+
+
+    //bool calibrate = false;
     if (loops < CALIBRATION_LOOPS || ALWAYS_CALIBRATING){
       calibrate = true;
       loops++;
     }
-    
-    int* fingerPos = getFingerPositions(calibrate, calibButton);
+    else{
+      calibrate = false;
+    }
+
+    #if !ESP32_DUAL_CORE_SET
+      fingerPos = getFingerPositions(calibrate, calibButton);
+    #endif
     bool joyButton = getButton(PIN_JOY_BTN) != INVERT_JOY;
 
     #if TRIGGER_GESTURE
