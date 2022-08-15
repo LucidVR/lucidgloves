@@ -16,21 +16,41 @@ ICommunication* comm;
 std::mutex fingerPosMutex;
 TaskHandle_t Task1;
 int threadLoops = 0;
+
 int lastMicros = 0;
+int otherStuffLast = 0;
+int fingerPosTotal = 0;
+int otherStuffTotal = 0;
+int fullLoopTotal = 0;
 void getInputs(void* parameter){
     for(;;){
-      Serial.println(micros() - lastMicros);
+      int fullLoopTime = micros() - lastMicros;
+      fullLoopTotal += fullLoopTime;
+      int fingerPosTime;
+      int otherStuffTime;
       lastMicros = micros();
       {
+        otherStuffLast=micros();
         std::lock_guard<std::mutex> lock(fingerPosMutex);
+        otherStuffTime = micros() - otherStuffLast;
+        otherStuffTotal += otherStuffTime;
+        int fingerPosLast = micros();
         fingerPos = getFingerPositions(calibrate, calibButton); //Save finger positions in thread
+        fingerPosTime = micros() - fingerPosLast;
+        fingerPosTotal += fingerPosTime;
       }
       threadLoops++;
       if (threadLoops%100 == 0){
         vTaskDelay(1);
       }
       delayMicroseconds(1);
-    }
+      Serial.println(//"Full loop: " + (String)fullLoopTime + 
+                 //", Full Loop Avg: " + (String)(fullLoopTotal / threadLoops) +
+                 ", Finger Pos: " + (String)fingerPosTime + 
+                 ", Finger Pos Avg: " + (String)(fingerPosTotal / threadLoops) +
+                 ", Mutex Stuff: " + (String)otherStuffTime + 
+                 ", Mutex Stuff Avg: " + (String)(otherStuffTotal / threadLoops));
+    }           
 }
 #endif
 
