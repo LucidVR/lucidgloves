@@ -1,3 +1,4 @@
+#include <mutex>
 #define ALWAYS_CALIBRATING CALIBRATION_LOOPS == -1
 
 #define CALIB_OVERRIDE false
@@ -12,18 +13,23 @@ int* fingerPos;
 ICommunication* comm;
 
 #if ESP32_DUAL_CORE_SET
+std::mutex fingerPosMutex;
 TaskHandle_t Task1;
 int threadLoops = 0;
 int lastMicros = 0;
 void getInputs(void* parameter){
     for(;;){
-      lastMicros = micros();
-      fingerPos = getFingerPositions(calibrate, calibButton); //Save finger positions in thread
       Serial.println(micros() - lastMicros);
+      lastMicros = micros();
+      {
+        std::lock_guard<std::mutex> lock(fingerPosMutex);
+        fingerPos = getFingerPositions(calibrate, calibButton); //Save finger positions in thread
+      }
       threadLoops++;
       if (threadLoops%100 == 0){
         vTaskDelay(1);
       }
+      delayMicroseconds(1);
     }
 }
 #endif
@@ -105,10 +111,18 @@ void loop() {
     bool pinchButton = getButton(PIN_PNCH_BTN) != INVERT_PINCH;
     #endif
 
+    int fingerPosCopy[10];
     bool menuButton = getButton(PIN_MENU_BTN) != INVERT_MENU;
-    
-    comm->output(encode(fingerPos, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
-
+    {
+      #if ESP32_DUAL_CORE_SET
+      const std::lock_guard<std::mutex> lock(fingerPosMutex);
+      #endif
+      //memcpy(fingerPosCopy, fingerPos, sizeof(fingerPos));
+      for (int i = 0; i < 10; i++){
+        fingerPosCopy[i] = fingerPos[i];
+      }
+    }
+    comm->output(encode(fingerPosCopy, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
     #if USING_FORCE_FEEDBACK
       char received[100];
       if (comm->readData(received)){
