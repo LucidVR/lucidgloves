@@ -7,6 +7,9 @@
 #define ENCODING ENCODE_ALPHA
 
 
+//Bluetooth advaned settings
+#define BT_ECHO true //Should the bluetooth data be echoed over serial for debugging
+
 //Finger indeces (not used for legacy)
 #define PINKY_IND 4
 #define RING_IND 3
