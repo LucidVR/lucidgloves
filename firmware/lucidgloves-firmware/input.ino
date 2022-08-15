@@ -86,7 +86,7 @@ int readMux(byte pin){
 }
 #endif
 
-int* getFingerPositions(bool calibrating, bool reset){
+void getFingerPositions(bool calibrating, bool reset){
   #if FLEXION_MIXING == MIXING_NONE //no mixing, just linear
   int rawFingersFlexion[5] = {NO_THUMB?0:analogPinRead(PIN_THUMB), analogPinRead(PIN_INDEX), analogPinRead(PIN_MIDDLE), analogPinRead(PIN_RING), analogPinRead(PIN_PINKY)};
   
@@ -170,24 +170,20 @@ int* getFingerPositions(bool calibrating, bool reset){
     }
   }
 
-  static int calibrated[10] = {ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2, ANALOG_MAX / 2};
-  
   for (int i = 0; i<10; i++){
     if (minFingers[i] != maxFingers[i]){
-      calibrated[i] = map( rawFingers[i], minFingers[i], maxFingers[i], 0, ANALOG_MAX );
+      fingerPos[i] = map( rawFingers[i], minFingers[i], maxFingers[i], 0, ANALOG_MAX );
       #if CLAMP_ANALOG_MAP
-        if (calibrated[i] < 0)
-          calibrated[i] = 0;
-        if (calibrated[i] > ANALOG_MAX)
-          calibrated[i] = ANALOG_MAX;
+        if (fingerPos[i] < 0)
+          fingerPos[i] = 0;
+        if (fingerPos[i] > ANALOG_MAX)
+          fingerPos[i] = ANALOG_MAX;
       #endif
     }
     else {
-      calibrated[i] = ANALOG_MAX / 2;
+      fingerPos[i] = ANALOG_MAX / 2;
     }
   }
-  return calibrated;
-  
 }
 
 int analogReadDeadzone(int pin){

@@ -35,7 +35,7 @@ void getInputs(void* parameter){
         otherStuffTime = micros() - otherStuffLast;
         otherStuffTotal += otherStuffTime;
         int fingerPosLast = micros();
-        fingerPos = getFingerPositions(calibrate, calibButton); //Save finger positions in thread
+        getFingerPositions(calibrate, calibButton); //Save finger positions in thread
         fingerPosTime = micros() - fingerPosLast;
         fingerPosTotal += fingerPosTime;
       }
@@ -106,7 +106,7 @@ void loop() {
     }
 
     #if !ESP32_DUAL_CORE_SET
-      fingerPos = getFingerPositions(calibrate, calibButton);
+      getFingerPositions(calibrate, calibButton);
     #endif
     bool joyButton = getButton(PIN_JOY_BTN) != INVERT_JOY;
 
