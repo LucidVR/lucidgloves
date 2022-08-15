@@ -8,7 +8,10 @@
 
 
 //Bluetooth advaned settings
-#define BT_ECHO true //Should the bluetooth data be echoed over serial for debugging
+#define BT_ECHO false//Should the bluetooth data be echoed over serial for debugging
+
+//ESP32 Specific Settings
+#define ESP32_DUAL_CORE true //Should inputs be handled on a separate core for communication for more accurate rotation counting
 
 //Finger indeces (not used for legacy)
 #define PINKY_IND 4
@@ -48,3 +51,8 @@
 // https://www.arduino.cc/reference/en/libraries/runningmedian/
 #define ENABLE_MEDIAN_FILTER false //use the median of the previous values, helps reduce noise
 #define MEDIAN_SAMPLES 20
+
+//ESP dual core hardware check
+#if defined(ESP32) && ESP32_DUAL_CORE
+  #define ESP32_DUAL_CORE_SET true
+#endif
