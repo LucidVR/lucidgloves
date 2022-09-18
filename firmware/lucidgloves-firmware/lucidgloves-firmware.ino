@@ -8,12 +8,12 @@
 
 //This is the configuration file, main structure in _main.ino
 //CONFIGURATION SETTINGS:
-#define COMMUNICATION COMM_BTSERIAL //Which communication protocol to use
+#define COMMUNICATION COMM_SERIAL //Which communication protocol to use
 //serial over USB
-  #define SERIAL_BAUD_RATE 115200 //A500B500C500D500E500 F20.00G0.00H0.20 A0B0C0D0E0
+  #define SERIAL_BAUD_RATE 115200
   
 //serial over Bluetooth
-  #define BTSERIAL_DEVICE_NAME "glove-right"
+  #define BTSERIAL_DEVICE_NAME "lucidgloves-left"
 
 //ANALOG INPUT CONFIG
 #define FLIP_POTS  false  //Flip values from potentiometers (for fingers!) if they are backwards
