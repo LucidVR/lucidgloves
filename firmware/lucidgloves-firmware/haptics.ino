@@ -6,6 +6,15 @@
   #include "Servo.h"
 #endif
 
+#if SERVO_SCALING // NOTE: .ino files are loaded in alphabetical order
+  #define POT_180 2500.0f // the value on a potentiometer (or other finger tracking device) when you rotate it by 180°
+  #define SERVO_MARGIN_ERROR 0 // some leeway if the servos still restrict your movement after retracting (enable SCALE_ZERO to test)
+  #define SCALE_ZERO false // true - full retraction is also scaled, servos move less; false - useful for initial testing so you don't end up with stuck servos unable to calibrate your fingers properly
+  int maxFingersServo[5] = {0,0,0,0,0};
+  int minFingersServo[5] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
+  int maxFingersAngle[5] = {180, 180, 180, 180, 180}; // max angle to which your fingers can rotate a potentiometer
+#endif
+
 Servo pinkyServo;
 Servo ringServo;
 Servo middleServo;
@@ -27,28 +36,40 @@ void scaleLimits(int* hapticLimits, float* scaledLimits){
   }
 }
 
-//dynamic scaling, maps to the limits calibrated from your finger
-void dynScaleLimits(int* hapticLimits, float* scaledLimits){
-  //will be refactored to take min and max as an argument
-
-  /* this implementation of dynamic scaling relies on the assumption 
-   * that the servo reaches 2/3 of the potentiometer's range, 
-   * and that 0 degrees is geared to the start of the potentiometer.
+//dynamic scaling, maps to the limits calibrated from your fingers
+void dynScaleLimits(int* hapticLimits, float* scaledLimits) {
+  /* This implementation of dynamic scaling relies on the finger
+   * calibration of the gloves and scales to each finger individually.
+   * Fingers don't need to start at pot reading 0, what matters is the
+   * difference between opened and closed hand. The bigger the difference,
+   * in the readings, the more degree of freedom servos will allow.
+   * Ideally, with SCALE_ZERO turned on, you should be able to fully
+   * close your hand and the screws should barely touch servo horns.
    * Different hardware types may need to handle dynamic scaling differently.
    */
-  for (int i = 0; i < sizeof(hapticLimits); i++){
-    scaledLimits[i] = hapticLimits[i] / 1000.0f * 180.0f;
+  for (int i = 0; i <= sizeof(hapticLimits); i++) {
+    #if !SCALE_ZERO
+      if (hapticLimits[i] == 0) {
+        scaledLimits[i] = 180;
+        continue;
+      }
+    #endif
+    scaledLimits[i] = maxFingersAngle[i] - hapticLimits[i] / 1000.0f * maxFingersAngle[i] + SERVO_MARGIN_ERROR;
   }
 }
 
 void writeServoHaptics(int* hapticLimits){
   float scaledLimits[5];
+  #if SERVO_SCALING
+  dynScaleLimits(hapticLimits, scaledLimits);
+  #else
   scaleLimits(hapticLimits, scaledLimits);
-  pinkyServo.write(scaledLimits[4]);
-  ringServo.write(scaledLimits[3]);
-  middleServo.write(scaledLimits[2]);
-  indexServo.write(scaledLimits[1]);
-  thumbServo.write(scaledLimits[0]);
+  #endif
+  if(hapticLimits[0] >= 0) thumbServo.write(scaledLimits[0]);
+  if(hapticLimits[1] >= 0) indexServo.write(scaledLimits[1]);
+  if(hapticLimits[2] >= 0) middleServo.write(scaledLimits[2]);
+  if(hapticLimits[3] >= 0) ringServo.write(scaledLimits[3]);
+  if(hapticLimits[4] >= 0) pinkyServo.write(scaledLimits[4]);
 }
 
 #endif

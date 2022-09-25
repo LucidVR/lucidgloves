@@ -59,6 +59,10 @@ int* getFingerPositions(bool calibrating, bool reset){
     for (int i = 0; i <5; i++){
       maxFingers[i] = 0;
       minFingers[i] = ANALOG_MAX;
+      #if SERVO_SCALING
+      maxFingersServo[i] = 0;
+      minFingersServo[i] = ANALOG_MAX;
+      #endif
     }
   }
   
@@ -78,6 +82,15 @@ int* getFingerPositions(bool calibrating, bool reset){
           minFingers[i] = rawFingers[i];
         #endif
     }
+
+    #if SERVO_SCALING
+    for (int i = 0; i < 5; i++) {
+      minFingersServo[i] = minFingers[i];
+      maxFingersServo[i] = maxFingers[i];
+      maxFingersAngle[i] = (maxFingersServo[i] - minFingersServo[i]) / POT_180 * 180;
+      maxFingersAngle[i] = min(maxFingersAngle[i], 180);
+    }
+    #endif
   }
 
   static int calibrated[5] = {511,511,511,511,511};
