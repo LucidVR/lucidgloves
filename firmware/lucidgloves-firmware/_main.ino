@@ -10,6 +10,10 @@ bool calibrate = false;
 bool calibButton = false;
 int* fingerPos;
 
+int sinScaledTest = 0;
+int cosScaledTest = 0;
+int totalAngleTest = 0;
+
 ICommunication* comm;
 
 #if ESP32_DUAL_CORE_SET
@@ -17,39 +21,39 @@ std::mutex fingerPosMutex;
 TaskHandle_t Task1;
 int threadLoops = 0;
 
-int lastMicros = 0;
-int otherStuffLast = 0;
-int fingerPosTotal = 0;
-int otherStuffTotal = 0;
-int fullLoopTotal = 0;
+//int lastMicros = 0;
+//int otherStuffLast = 0;
+//int fingerPosTotal = 0;
+//int otherStuffTotal = 0;
+//int fullLoopTotal = 0;
 void getInputs(void* parameter){
     for(;;){
-      int fullLoopTime = micros() - lastMicros;
-      fullLoopTotal += fullLoopTime;
-      int fingerPosTime;
-      int otherStuffTime;
-      lastMicros = micros();
+      //int fullLoopTime = micros() - lastMicros;
+      //fullLoopTotal += fullLoopTime;
+      //int fingerPosTime;
+      //int otherStuffTime;
+      //lastMicros = micros();
       {
-        otherStuffLast=micros();
+        //otherStuffLast=micros();
         std::lock_guard<std::mutex> lock(fingerPosMutex);
-        otherStuffTime = micros() - otherStuffLast;
-        otherStuffTotal += otherStuffTime;
-        int fingerPosLast = micros();
+        //otherStuffTime = micros() - otherStuffLast;
+        //otherStuffTotal += otherStuffTime;
+        //int fingerPosLast = micros();
         getFingerPositions(calibrate, calibButton); //Save finger positions in thread
-        fingerPosTime = micros() - fingerPosLast;
-        fingerPosTotal += fingerPosTime;
+        //fingerPosTime = micros() - fingerPosLast;
+        //fingerPosTotal += fingerPosTime;
       }
       threadLoops++;
       if (threadLoops%100 == 0){
         vTaskDelay(1);
       }
       delayMicroseconds(1);
-      Serial.println(//"Full loop: " + (String)fullLoopTime + 
+      /*Serial.println(//"Full loop: " + (String)fullLoopTime + 
                  //", Full Loop Avg: " + (String)(fullLoopTotal / threadLoops) +
                  ", Finger Pos: " + (String)fingerPosTime + 
                  ", Finger Pos Avg: " + (String)(fingerPosTotal / threadLoops) +
                  ", Mutex Stuff: " + (String)otherStuffTime + 
-                 ", Mutex Stuff Avg: " + (String)(otherStuffTotal / threadLoops));
+                 ", Mutex Stuff Avg: " + (String)(otherStuffTotal / threadLoops));*/
     }           
 }
 #endif
@@ -89,6 +93,7 @@ void loop() {
   if (comm->isOpen()){
     #if USING_CALIB_PIN
     calibButton = getButton(PIN_CALIB) != INVERT_CALIB;
+    //Serial.println(getButton(PIN_CALIB));
     if (calibButton)
       loops = 0;
     #else
@@ -141,6 +146,7 @@ void loop() {
       for (int i = 0; i < 10; i++){
         fingerPosCopy[i] = fingerPos[i];
       }
+      Serial.println((String)sinScaledTest + ", " + (String)cosScaledTest + ", " + (String)totalAngleTest);
     }
     comm->output(encode(fingerPosCopy, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
     #if USING_FORCE_FEEDBACK

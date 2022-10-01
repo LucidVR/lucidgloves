@@ -24,12 +24,21 @@ byte selectPins[] = {PINS_MUX_SELECT};
 int maxFingers[10] = {0,0,0,0,0,0,0,0,0,0};
 int minFingers[10] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
 
+
 #if FLEXION_MIXING == MIXING_SINCOS
+  #if INTERMEDIATE_CALIBRATION
   int sinMin[5] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
   int sinMax[5] = {0,0,0,0,0};
 
   int cosMin[5] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
   int cosMax[5] = {0,0,0,0,0};
+  #else
+  int sinMax[5] = {INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX};
+  int sinMin[5] = {INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN};
+
+  int cosMax[5] = {INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX};
+  int cosMin[5] = {INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN};
+  #endif
 
   bool cosPositive[5] = {true, true, true, true, true};
   double totalOffset[5] = {0,0,0,0,0};
@@ -60,7 +69,7 @@ void setupInputs(){
 
   #if USING_MULTIPLEXER
   byte selectPins[] = {PINS_MUX_SELECT};
-  pinMode(MUX_INPUT, INPUT);
+  //pinMode(MUX_INPUT, INPUT);
   for (int i = 0; i < sizeof(selectPins); i++){
     pinMode(selectPins[i], OUTPUT);
   }
@@ -69,7 +78,7 @@ void setupInputs(){
   //Range 0-4096
   adc1_config_width(ADC_WIDTH_BIT_12);
   // full voltage range
-  adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_11);
+  adc1_config_channel_atten(ADC1_CHANNEL_7, ADC_ATTEN_DB_11);
 
   // check to see what calibration is available
   if (esp_adc_cal_check_efuse(ESP_ADC_CAL_VAL_EFUSE_VREF) == ESP_OK)
@@ -210,8 +219,8 @@ int readMux(byte pin){
       break;
   }
   delayMicroseconds(1);
-  //return analogRead(MUX_INPUT);
-  return speedyRead();
+  return analogRead(MUX_INPUT);
+  //return speedyRead();
 }
 #endif
 
@@ -219,12 +228,15 @@ int speedyRead(){
   return adc1_get_raw(ADC1_CHANNEL_4);
 }
 
+int sinTest = 0;
+int cosTest = 0;
+
 void getFingerPositions(bool calibrating, bool reset){
   #if FLEXION_MIXING == MIXING_NONE //no mixing, just linear
   int rawFingersFlexion[5] = {NO_THUMB?0:analogPinRead(PIN_THUMB), analogPinRead(PIN_INDEX), analogPinRead(PIN_MIDDLE), analogPinRead(PIN_RING), analogPinRead(PIN_PINKY)};
   
   #elif FLEXION_MIXING == MIXING_SINCOS
-  int rawFingersFlexion[5] = {NO_THUMB?0:sinCosMix(PIN_THUMB, PIN_THUMB_SECOND, 0 ), 
+  int rawFingersFlexion[5] = {  /*NO_THUMB?0:analogPinRead(PIN_THUMB),   //*/NO_THUMB?0:sinCosMix(PIN_THUMB, PIN_THUMB_SECOND, 0 ), 
                                   sinCosMix(PIN_INDEX, PIN_INDEX_SECOND, 1 ), 
                                   sinCosMix(PIN_MIDDLE,PIN_MIDDLE_SECOND,2 ), 
                                   sinCosMix(PIN_RING,  PIN_RING_SECOND,  3 ), 
@@ -317,6 +329,11 @@ void getFingerPositions(bool calibrating, bool reset){
     }
     
   }
+  //Serial.println("" + (String)minFingers[2] + ", " + (String)maxFingers[2] + ", " + (String)rawFingers[2] + ", " + (String)sinTest + ", " + (String)cosTest);
+}
+
+void printThumbDebug(){
+  Serial.println("Min: " + (String)minFingers[0] + "Max: " + (String)maxFingers[0]);
 }
 
 int analogReadDeadzone(int pin){
@@ -358,16 +375,22 @@ int sinCosMix(int sinPin, int cosPin, int i){
   int sinRaw = analogPinRead(sinPin);
   int cosRaw = analogPinRead(cosPin);
 
-  
+  #if INTERMEDIATE_CALIBRATION
   //scaling
   sinMin[i] = min(sinRaw, sinMin[i]);
   sinMax[i] = max(sinRaw, sinMax[i]);
 
   cosMin[i] = min(cosRaw, cosMin[i]);
   cosMax[i] = max(cosRaw, cosMax[i]);
+  #endif
 
   int sinScaled = map(sinRaw, sinMin[i], sinMax[i], -ANALOG_MAX, ANALOG_MAX);
   int cosScaled = map(cosRaw, cosMin[i], cosMax[i], -ANALOG_MAX, ANALOG_MAX);
+
+  if (i == 2){
+      sinTest = sinScaled * 5;
+      cosTest = cosScaled * 5;
+  }
 
   //trigonometry stuffs
   double tanRaw = ((double)sinScaled)/((double)cosScaled);
@@ -379,6 +402,13 @@ int sinCosMix(int sinPin, int cosPin, int i){
   }
   cosPositive[i] = cosScaled > 0;
   double totalAngle = angleRaw + totalOffset[i];
+
+  if (i == 0){
+      sinScaledTest = sinScaled;
+      cosScaledTest = cosScaled;
+      totalAngleTest = (int)(totalAngle * ANALOG_MAX);
+  }
+  
 
   return (int)(totalAngle * ANALOG_MAX);
   

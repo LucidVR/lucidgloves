@@ -23,8 +23,13 @@ void setupServoHaptics(){
 //static scaling, maps to entire range of servo
 void scaleLimits(int* hapticLimits, float* scaledLimits){
   for (int i = 0; i < 5; i++){
+    #if FLIP_FORCE_FEEDBACK
+    scaledLimits[i] = hapticLimits[i] / 1000.0f * 180.0f;
+    #else
     scaledLimits[i] = 180.0f - hapticLimits[i] / 1000.0f * 180.0f;
+    #endif
   }
+  
 }
 
 //dynamic scaling, maps to the limits calibrated from your finger
