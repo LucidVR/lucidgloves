@@ -1,6 +1,37 @@
 //Contains the definitions that need to be evaluated before the main config file (lucidgloves-firmware.ino).
 //These shouldn't need to be changed.
 
+#include <mutex>
+#include <condition_variable>
+#include <queue>
+
+class ordered_lock {
+    std::queue<std::condition_variable *> cvar;
+    std::mutex                            cvar_lock;
+    bool                                  locked;
+public:
+    ordered_lock() : locked(false) {};
+    void lock() {
+        std::unique_lock<std::mutex> acquire(cvar_lock);
+        if (locked) {
+            std::condition_variable signal;
+            cvar.emplace(&signal);
+            signal.wait(acquire);
+        } else {
+            locked = true;
+        }
+    }
+    void unlock() {
+        std::unique_lock<std::mutex> acquire(cvar_lock);
+        if (cvar.empty()) {
+            locked = false;
+        } else {
+            cvar.front()->notify_one();
+            cvar.pop();
+        }
+    }
+};
+
 //Comm
 #define COMM_SERIAL 0   
 #define COMM_BTSERIAL 1 

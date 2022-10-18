@@ -9,7 +9,6 @@
 bool calibrate = false;
 bool calibButton = false;
 int* fingerPos;
-
 int sinScaledTest = 0;
 int cosScaledTest = 0;
 int totalAngleTest = 0;
@@ -23,10 +22,11 @@ int cosTest = 0;
 ICommunication* comm;
 
 #if ESP32_DUAL_CORE_SET
-std::mutex fingerPosMutex;
+//std::mutex fingerPosMutex;
+ordered_lock* fingerPosLock = new ordered_lock();
 TaskHandle_t Task1;
 int threadLoops = 0;
-
+int totalLocks = 0;
 //int lastMicros = 0;
 //int otherStuffLast = 0;
 //int fingerPosTotal = 0;
@@ -41,17 +41,21 @@ void getInputs(void* parameter){
       //lastMicros = micros();
       {
         //otherStuffLast=micros();
-        std::lock_guard<std::mutex> lock(fingerPosMutex);
+        //std::lock_guard<std::mutex> lock(fingerPosMutex);
+        fingerPosLock->lock();
         //otherStuffTime = micros() - otherStuffLast;
         //otherStuffTotal += otherStuffTime;
         //int fingerPosLast = micros();
+        totalLocks++;
         getFingerPositions(calibrate, calibButton); //Save finger positions in thread
+
+        fingerPosLock->unlock();
         //fingerPosTime = micros() - fingerPosLast;
         //fingerPosTotal += fingerPosTime;
       }
       threadLoops++;
       if (threadLoops%100 == 0){
-        vTaskDelay(1);
+        vTaskDelay(1); //keep watchdog fed
       }
       delayMicroseconds(1);
       /*Serial.println(//"Full loop: " + (String)fullLoopTime + 
@@ -95,7 +99,10 @@ void setup() {
   #endif
 }
 
+int mainMicros = micros();
+
 void loop() {
+  mainMicros = micros();
   if (comm->isOpen()){
     #if USING_CALIB_PIN
     calibButton = getButton(PIN_CALIB) != INVERT_CALIB;
@@ -143,17 +150,28 @@ void loop() {
     #endif
 
     int fingerPosCopy[10];
+    int mutexTimeDone;
     bool menuButton = getButton(PIN_MENU_BTN) != INVERT_MENU;
+    //Serial.println("Outside lock: " + String(totalLocks));
+    //totalLocks = 0;
     {
       #if ESP32_DUAL_CORE_SET
-      const std::lock_guard<std::mutex> lock(fingerPosMutex);
+      int mutexTime = micros();
+      //const std::lock_guard<std::mutex> lock(fingerPosMutex);
+      fingerPosLock->lock();
+      mutexTimeDone = micros()-mutexTime;
       #endif
       //memcpy(fingerPosCopy, fingerPos, sizeof(fingerPos));
       for (int i = 0; i < 10; i++){
         fingerPosCopy[i] = fingerPos[i];
       }
+      #if ESP32_DUAL_CORE_SET
+      fingerPosLock->unlock();
+      #endif
       Serial.println((String)sinTest + ", " + (String)cosTest + ", " + (String)sinMinTest + ", " + (String)sinMaxTest + ", " + (String)cosMinTest + ", " + (String)cosMaxTest + ", " + (String)totalAngleTest);
     }
+    //Serial.println("TotalLocks: " + String(totalLocks));
+   //totalLocks = 0;
     comm->output(encode(fingerPosCopy, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
     #if USING_FORCE_FEEDBACK
       char received[100];
@@ -167,5 +185,6 @@ void loop() {
       }
     #endif
     delay(LOOP_TIME);
+    //Serial.println(String(micros() - mainMicros) + ", " + String(mutexTimeDone));
   }
 }
