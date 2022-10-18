@@ -1,6 +1,6 @@
 //Advanced settings, only for the pros XD
 
-#define LOOP_TIME 4 //How much time between data sends (ms), set to 0 for a good time :)
+#define LOOP_TIME 1 //How much time between data sends (ms), set to 0 for a good time :)
 #define CALIBRATION_LOOPS -1//How many loops should be calibrated. Set to -1 to always be calibrated.
 
 //Encoding
@@ -13,7 +13,7 @@
 //ESP32 Specific Settings
 #define ESP32_DUAL_CORE true //Should inputs be handled on a separate core for communication for more accurate rotation counting
 
-#define INTERMEDIATE_CALIBRATION false //should intermediate values (used in some forms of mixing such as MIXING_SINCOS
+#define INTERMEDIATE_CALIBRATION true //should intermediate values (used in some forms of mixing such as MIXING_SINCOS
 //Intermediate values: If not autocalibrating, you may need to adjust these for accuracy
 #define INTER_MAX 1500 //only used if intermediate calibration is false
 #define INTER_MIN 1200 //only used if intermediate calibration is false
