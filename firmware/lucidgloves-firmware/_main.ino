@@ -13,6 +13,12 @@ int* fingerPos;
 int sinScaledTest = 0;
 int cosScaledTest = 0;
 int totalAngleTest = 0;
+int sinMinTest = 0;
+int sinMaxTest = 0;
+int cosMinTest = 0;
+int cosMaxTest = 0;
+int sinTest = 0;
+int cosTest = 0;
 
 ICommunication* comm;
 
@@ -146,7 +152,7 @@ void loop() {
       for (int i = 0; i < 10; i++){
         fingerPosCopy[i] = fingerPos[i];
       }
-      Serial.println((String)sinScaledTest + ", " + (String)cosScaledTest + ", " + (String)totalAngleTest);
+      Serial.println((String)sinTest + ", " + (String)cosTest + ", " + (String)sinMinTest + ", " + (String)sinMaxTest + ", " + (String)cosMinTest + ", " + (String)cosMaxTest + ", " + (String)totalAngleTest);
     }
     comm->output(encode(fingerPosCopy, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
     #if USING_FORCE_FEEDBACK

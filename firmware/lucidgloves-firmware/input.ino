@@ -40,7 +40,7 @@ int minFingers[10] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX
   int cosMin[5] = {INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN};
   #endif
 
-  bool cosPositive[5] = {true, true, true, true, true};
+  bool atanPositive[5] = {true, true, true, true, true};
   double totalOffset[5] = {0,0,0,0,0};
 #endif
 
@@ -228,9 +228,6 @@ int speedyRead(){
   return adc1_get_raw(ADC1_CHANNEL_4);
 }
 
-int sinTest = 0;
-int cosTest = 0;
-
 void getFingerPositions(bool calibrating, bool reset){
   #if FLEXION_MIXING == MIXING_NONE //no mixing, just linear
   int rawFingersFlexion[5] = {NO_THUMB?0:analogPinRead(PIN_THUMB), analogPinRead(PIN_INDEX), analogPinRead(PIN_MIDDLE), analogPinRead(PIN_RING), analogPinRead(PIN_PINKY)};
@@ -387,25 +384,30 @@ int sinCosMix(int sinPin, int cosPin, int i){
   int sinScaled = map(sinRaw, sinMin[i], sinMax[i], -ANALOG_MAX, ANALOG_MAX);
   int cosScaled = map(cosRaw, cosMin[i], cosMax[i], -ANALOG_MAX, ANALOG_MAX);
 
-  if (i == 2){
-      sinTest = sinScaled * 5;
-      cosTest = cosScaled * 5;
-  }
 
   //trigonometry stuffs
-  double tanRaw = ((double)sinScaled)/((double)cosScaled);
-  double angleRaw = atan(tanRaw);
+  double angleRaw = atan2(sinScaled, cosScaled);
 
   //counting rotations
-  if ((cosScaled > 0) != cosPositive[i]){
-    totalOffset[i] += PI * (cosPositive[i]?-1:1) * (cosScaled>sinScaled?1:-1);
+  if ((angleRaw > 0 != atanPositive[i]) && sinScaled > cosScaled){
+    totalOffset[i] += 2*PI*(atanPositive[i]?1:-1);
   }
-  cosPositive[i] = cosScaled > 0;
+  atanPositive[i] = angleRaw > 0;
   double totalAngle = angleRaw + totalOffset[i];
 
   if (i == 0){
       sinScaledTest = sinScaled;
       cosScaledTest = cosScaled;
+
+      sinMinTest = sinMin[i];
+      sinMaxTest = sinMax[i];
+
+      cosMinTest = cosMin[i];
+      cosMaxTest = cosMax[i];
+
+      sinTest = sinRaw;
+      cosTest = cosRaw;
+      
       totalAngleTest = (int)(totalAngle * ANALOG_MAX);
   }
   
