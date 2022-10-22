@@ -1,7 +1,10 @@
 #include "esp_adc_cal.h"
 // Requires RunningMedian library by Rob Tillaart
-#if ENABLE_MEDIAN_FILTER
+#if (ENABLE_MEDIAN_FILTER || ((INTERFILTER_MODE != INTERFILTER_NONE) && (FLEXION_MIXING != MIXING_NONE)))
   #include <RunningMedian.h>
+#endif
+
+#if ENABLE_MEDIAN_FILTER
   RunningMedian rmSamples[10] = {
       RunningMedian(MEDIAN_SAMPLES),
       RunningMedian(MEDIAN_SAMPLES),
@@ -13,6 +16,24 @@
       RunningMedian(MEDIAN_SAMPLES),
       RunningMedian(MEDIAN_SAMPLES),
       RunningMedian(MEDIAN_SAMPLES)
+  };
+#endif
+
+#if ((INTERFILTER_MODE != INTERFILTER_NONE) && (FLEXION_MIXING == MIXING_SINCOS))
+  RunningMedian sinSamples[5] = {
+      RunningMedian(INTERFILTER_SAMPLES),
+      RunningMedian(INTERFILTER_SAMPLES),
+      RunningMedian(INTERFILTER_SAMPLES),
+      RunningMedian(INTERFILTER_SAMPLES),
+      RunningMedian(INTERFILTER_SAMPLES)
+  };
+
+    RunningMedian cosSamples[5] = {
+      RunningMedian(INTERFILTER_SAMPLES),
+      RunningMedian(INTERFILTER_SAMPLES),
+      RunningMedian(INTERFILTER_SAMPLES),
+      RunningMedian(INTERFILTER_SAMPLES),
+      RunningMedian(INTERFILTER_SAMPLES)
   };
 #endif
 
@@ -372,13 +393,28 @@ int sinCosMix(int sinPin, int cosPin, int i){
   int sinRaw = analogPinRead(sinPin);
   int cosRaw = analogPinRead(cosPin);
 
+
+  #if INTERFILTER_MODE != INTERFILTER_NONE
+    sinSamples[i].add(sinRaw);
+    cosSamples[i].add(cosRaw);
+    int sinCalib = sinSamples[i].getMedian();
+    int cosCalib = cosSamples[i].getMedian();
+    #if INTERFILTER_MODE == INTERFILTER_ALL
+      sinRaw = sinCalib;
+      cosRaw = cosCalib;
+    #endif
+  #else
+    int sinCalib = sinRaw;
+    int cosCalib = cosRaw;
+  #endif 
+
   #if INTERMEDIATE_CALIBRATION
   //scaling
-  sinMin[i] = min(sinRaw, sinMin[i]);
-  sinMax[i] = max(sinRaw, sinMax[i]);
+  sinMin[i] = min(sinCalib, sinMin[i]);
+  sinMax[i] = max(sinCalib, sinMax[i]);
 
-  cosMin[i] = min(cosRaw, cosMin[i]);
-  cosMax[i] = max(cosRaw, cosMax[i]);
+  cosMin[i] = min(cosCalib, cosMin[i]);
+  cosMax[i] = max(cosCalib, cosMax[i]);
   #endif
 
   int sinScaled = map(sinRaw, sinMin[i], sinMax[i], -ANALOG_MAX, ANALOG_MAX);
@@ -407,6 +443,9 @@ int sinCosMix(int sinPin, int cosPin, int i){
 
       sinTest = sinRaw;
       cosTest = cosRaw;
+
+      sinCalibTest = sinCalib;
+      cosCalibTest = cosCalib;
       
       totalAngleTest = (int)(totalAngle * ANALOG_MAX);
   }

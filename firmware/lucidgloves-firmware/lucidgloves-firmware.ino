@@ -18,7 +18,7 @@
   #define BTSERIAL_DEVICE_NAME "lucidgloves-left"
 
 //ANALOG INPUT CONFIG
-#define USING_SPLAY false //whether or not your glove tracks splay. - tracks the side to side "wag" of fingers. Requires 5 more inputs.
+#define USING_SPLAY true //whether or not your glove tracks splay. - tracks the side to side "wag" of fingers. Requires 5 more inputs.
 #define USING_MULTIPLEXER true //Whether or not you are using a multiplexer for inputs
 #define FLIP_FLEXION  false  //Flip values from potentiometers (for fingers!) if they are backwards
 #define FLIP_SPLAY true //Flip values for splay

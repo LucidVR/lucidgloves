@@ -11,6 +11,8 @@ bool calibButton = false;
 int* fingerPos;
 int sinScaledTest = 0;
 int cosScaledTest = 0;
+int sinCalibTest = 0;
+int cosCalibTest = 0;
 int totalAngleTest = 0;
 int sinMinTest = 0;
 int sinMaxTest = 0;
@@ -25,20 +27,21 @@ ICommunication* comm;
 //std::mutex fingerPosMutex;
 ordered_lock* fingerPosLock = new ordered_lock();
 TaskHandle_t Task1;
-int threadLoops = 0;
+int threadLoops = 1;
 int totalLocks = 0;
-//int lastMicros = 0;
+int lastMicros = 0;
+int fullLoopTime = 0;
 //int otherStuffLast = 0;
 //int fingerPosTotal = 0;
 //int otherStuffTotal = 0;
-//int fullLoopTotal = 0;
+int fullLoopTotal = 0;
 void getInputs(void* parameter){
     for(;;){
-      //int fullLoopTime = micros() - lastMicros;
-      //fullLoopTotal += fullLoopTime;
+      fullLoopTime = micros() - lastMicros;
+      fullLoopTotal += fullLoopTime;
       //int fingerPosTime;
       //int otherStuffTime;
-      //lastMicros = micros();
+      lastMicros = micros();
       {
         //otherStuffLast=micros();
         //std::lock_guard<std::mutex> lock(fingerPosMutex);
@@ -99,10 +102,16 @@ void setup() {
   #endif
 }
 
-int mainMicros = micros();
+int lastMainMicros = micros();
+int mainMicros = 0;
+int mainMicrosTotal = 0;
+int mainloops = 1;
 
 void loop() {
-  mainMicros = micros();
+  mainloops++;
+  mainMicros = micros() - lastMainMicros;
+  mainMicrosTotal += mainMicros;
+  lastMainMicros = micros();
   if (comm->isOpen()){
     #if USING_CALIB_PIN
     calibButton = getButton(PIN_CALIB) != INVERT_CALIB;
@@ -169,6 +178,7 @@ void loop() {
       fingerPosLock->unlock();
       #endif
       Serial.println((String)sinTest + ", " + (String)cosTest + ", " + (String)sinMinTest + ", " + (String)sinMaxTest + ", " + (String)cosMinTest + ", " + (String)cosMaxTest + ", " + (String)totalAngleTest);
+      //Serial.println((String)sinTest + ", " + (String)sinMinTest + ", " + (String)sinMaxTest + ", " + (String)sinCalibTest);
     }
     //Serial.println("TotalLocks: " + String(totalLocks));
    //totalLocks = 0;
@@ -185,6 +195,6 @@ void loop() {
       }
     #endif
     delay(LOOP_TIME);
-    //Serial.println(String(micros() - mainMicros) + ", " + String(mutexTimeDone));
+    //Serial.println("Main: " + String(mainMicros) + " Main Avg: " + String(mainMicrosTotal/mainloops) + " Side: " + String(fullLoopTime) + " Side Avg: " + String(fullLoopTotal/threadLoops) + " Lock: " + String(lockTime) + " Lock avg: " + String(lockTimeTotal/lockLoops) );
   }
 }
