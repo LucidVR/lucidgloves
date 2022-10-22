@@ -5,6 +5,11 @@
 #include <condition_variable>
 #include <queue>
 
+int lockTime = 0;
+int lockLoops = 1;
+int lockTimeTotal = 0;
+int lockTimeLast = 0;
+
 class ordered_lock {
     std::queue<std::condition_variable *> cvar;
     std::mutex                            cvar_lock;
@@ -12,6 +17,10 @@ class ordered_lock {
 public:
     ordered_lock() : locked(false) {};
     void lock() {
+        lockTime = micros() - lockTimeLast;
+        lockTimeLast = micros();
+        lockTimeTotal += lockTime;
+        lockLoops++;
         std::unique_lock<std::mutex> acquire(cvar_lock);
         if (locked) {
             std::condition_variable signal;
@@ -48,3 +57,8 @@ public:
 //finger mixing
 #define MIXING_NONE 0
 #define MIXING_SINCOS 2
+
+//intermediate filtering
+#define INTERFILTER_NONE 0
+#define INTERFILTER_LIMITS 1
+#define INTERFILTER_ALL 2
