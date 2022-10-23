@@ -11,7 +11,7 @@
 #define BT_ECHO false//Should the bluetooth data be echoed over serial for debugging
 
 //ESP32 Specific Settings
-#define ESP32_DUAL_CORE true //Should inputs be handled on a separate core for communication for more accurate rotation counting
+#define ESP32_DUAL_CORE false //Should inputs be handled on a separate core for communication for more accurate rotation counting
 
 #define INTERMEDIATE_CALIBRATION true //should intermediate values (used in some forms of mixing such as MIXING_SINCOS be calibrated
 //Intermediate values: If not autocalibrating, you may need to adjust these for accuracy

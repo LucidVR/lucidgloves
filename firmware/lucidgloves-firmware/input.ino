@@ -45,7 +45,6 @@ byte selectPins[] = {PINS_MUX_SELECT};
 int maxFingers[10] = {0,0,0,0,0,0,0,0,0,0};
 int minFingers[10] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
 
-
 #if FLEXION_MIXING == MIXING_SINCOS
   #if INTERMEDIATE_CALIBRATION
   int sinMin[5] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
@@ -61,8 +60,15 @@ int minFingers[10] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX
   int cosMin[5] = {INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN};
   #endif
 
-  bool atanPositive[5] = {true, true, true, true, true};
-  double totalOffset[5] = {0,0,0,0,0};
+  int mynewvariable = 0; //WORKS PROPERLY
+  int mynewvariable2 = 0;
+  bool atanPositive[8] = {true, true, true, true, true, true, true, true};
+  int totalOffsetTester = 0;
+  int mynewvariable3 = 0;
+
+
+  //int totalOffset1[5] = {0,0,0,0,0}; //BREAKS
+  int mynewvariable4 = 0; //BREAKS
 #endif
 
 void setupInputs(){
@@ -306,8 +312,8 @@ void getFingerPositions(bool calibrating, bool reset){
   if (reset){
     for (int i = 0; i <10; i++){
       #if FLEXION_MIXING == MIXING_SINCOS
-      if (i < 5)
-        totalOffset[i] = 0;
+      /*if (i < 5)
+        totalOffset1[i] = 0;*/
       #endif
       maxFingers[i] = 0;
       minFingers[i] = ANALOG_MAX;
@@ -426,13 +432,13 @@ int sinCosMix(int sinPin, int cosPin, int i){
 
   //counting rotations
   if (((angleRaw > 0) != atanPositive[i]) && sinScaled > cosScaled){
-    totalOffset[i] += 2*PI*(atanPositive[i]?1:-1);
+    //totalOffset1[i] += atanPositive[i]?1:-1;
   }
   atanPositive[i] = angleRaw > 0;
-  double totalAngle = angleRaw + totalOffset[i];
+  double totalAngle = angleRaw + 2*PI;// * totalOffset1[i];
 
   if (i == target){
-      sinScaledTest = sinScaled;
+      /*sinScaledTest = sinScaled;
       cosScaledTest = cosScaled;
 
       sinMinTest = sinMin[i];
@@ -450,9 +456,14 @@ int sinCosMix(int sinPin, int cosPin, int i){
       minFingersTest = minFingers[target];
       maxFingersTest = maxFingers[target];
 
-      totalOffsetTest = (int)(totalOffset[i] * ANALOG_MAX);
+      totalOffsetTest = (int)(totalOffset[i] * 2 * PI * ANALOG_MAX);
       angleRawTest = (int)(angleRaw * ANALOG_MAX);
-      totalAngleTest = (int)(totalAngle * ANALOG_MAX);
+      totalAngleTest = (int)(totalAngle * ANALOG_MAX);*/
+
+      //Serial.println(totalOffset1[target]);
+      //Serial.println(totalOffsetTester);
+      Serial.println("mynewvariable: " + (String)mynewvariable + " mynewvariable2: " + (String)mynewvariable2 + " mynewvariable3: " + (String)mynewvariable3 + " mynewvariable4: " + (String)mynewvariable4);
+      
   }
   
 
