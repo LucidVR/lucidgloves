@@ -14,10 +14,14 @@ int cosScaledTest = 0;
 int sinCalibTest = 0;
 int cosCalibTest = 0;
 int totalAngleTest = 0;
+int totalOffsetTest = 0;
+int angleRawTest = 0;
 int sinMinTest = 0;
 int sinMaxTest = 0;
 int cosMinTest = 0;
 int cosMaxTest = 0;
+int minFingersTest = 0;
+int maxFingersTest = 0;
 int sinTest = 0;
 int cosTest = 0;
 
@@ -107,11 +111,20 @@ int mainMicros = 0;
 int mainMicrosTotal = 0;
 int mainloops = 1;
 
+int target = 0;
+
 void loop() {
   mainloops++;
   mainMicros = micros() - lastMainMicros;
   mainMicrosTotal += mainMicros;
   lastMainMicros = micros();
+
+  if (Serial.available() > 0){
+    target = Serial.parseInt();
+    Serial.println("Swtiching target to " + (String)target);
+  }
+  
+  
   if (comm->isOpen()){
     #if USING_CALIB_PIN
     calibButton = getButton(PIN_CALIB) != INVERT_CALIB;
@@ -177,7 +190,14 @@ void loop() {
       #if ESP32_DUAL_CORE_SET
       fingerPosLock->unlock();
       #endif
-      Serial.println((String)sinTest + ", " + (String)cosTest + ", " + (String)sinMinTest + ", " + (String)sinMaxTest + ", " + (String)cosMinTest + ", " + (String)cosMaxTest + ", " + (String)totalAngleTest);
+      Serial.println((String)sinTest + " " + (String)cosTest + " " + 
+      (String)sinMinTest + " " + (String)sinMaxTest + " " + 
+      (String)cosMinTest + " " + (String)cosMaxTest + " " + (String)fingerPosCopy[target] + " " + 
+      (String)minFingersTest + " " + (String)maxFingersTest + " " + (String)totalAngleTest + " " + 
+      (String)totalOffsetTest + " " + (String)angleRawTest + " " + 
+      (String)mainMicros + " " + (String)fullLoopTime
+      );
+      
       //Serial.println((String)sinTest + ", " + (String)sinMinTest + ", " + (String)sinMaxTest + ", " + (String)sinCalibTest);
     }
     //Serial.println("TotalLocks: " + String(totalLocks));
