@@ -66,7 +66,7 @@
   #define PIN_RING      MUX(9)
   #define PIN_MIDDLE    MUX(6)
   #define PIN_INDEX     MUX(3)
-  #define PIN_THUMB     36//MUX(0)
+  #define PIN_THUMB     MUX(0)
   #define PIN_JOY_X     33
   #define PIN_JOY_Y     25
   #define PIN_JOY_BTN   26
@@ -108,7 +108,7 @@
     #define PIN_RING_SECOND      MUX(10)
     #define PIN_MIDDLE_SECOND    MUX(7)
     #define PIN_INDEX_SECOND     MUX(4)
-    #define PIN_THUMB_SECOND     39//MUX(1)
+    #define PIN_THUMB_SECOND     MUX(1)
   
 //PINS CONFIGURATION 
 #elif defined(__AVR__)

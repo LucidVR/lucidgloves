@@ -425,13 +425,13 @@ int sinCosMix(int sinPin, int cosPin, int i){
   double angleRaw = atan2(sinScaled, cosScaled);
 
   //counting rotations
-  if ((angleRaw > 0 != atanPositive[i]) && sinScaled > cosScaled){
+  if (((angleRaw > 0) != atanPositive[i]) && sinScaled > cosScaled){
     totalOffset[i] += 2*PI*(atanPositive[i]?1:-1);
   }
   atanPositive[i] = angleRaw > 0;
   double totalAngle = angleRaw + totalOffset[i];
 
-  if (i == 0){
+  if (i == target){
       sinScaledTest = sinScaled;
       cosScaledTest = cosScaled;
 
@@ -446,7 +446,12 @@ int sinCosMix(int sinPin, int cosPin, int i){
 
       sinCalibTest = sinCalib;
       cosCalibTest = cosCalib;
-      
+
+      minFingersTest = minFingers[target];
+      maxFingersTest = maxFingers[target];
+
+      totalOffsetTest = (int)(totalOffset[i] * ANALOG_MAX);
+      angleRawTest = (int)(angleRaw * ANALOG_MAX);
       totalAngleTest = (int)(totalAngle * ANALOG_MAX);
   }
   
