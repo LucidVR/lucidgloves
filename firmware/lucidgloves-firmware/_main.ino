@@ -190,6 +190,7 @@ void loop() {
       #if ESP32_DUAL_CORE_SET
       fingerPosLock->unlock();
       #endif
+      /*
       Serial.println((String)sinTest + " " + (String)cosTest + " " + 
       (String)sinMinTest + " " + (String)sinMaxTest + " " + 
       (String)cosMinTest + " " + (String)cosMaxTest + " " + (String)fingerPosCopy[target] + " " + 
@@ -197,7 +198,7 @@ void loop() {
       (String)totalOffsetTest + " " + (String)angleRawTest + " " + 
       (String)mainMicros + " " + (String)fullLoopTime
       );
-      
+      */
       //Serial.println((String)sinTest + ", " + (String)sinMinTest + ", " + (String)sinMaxTest + ", " + (String)sinCalibTest);
     }
     //Serial.println("TotalLocks: " + String(totalLocks));
