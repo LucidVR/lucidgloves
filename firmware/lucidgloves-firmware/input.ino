@@ -67,7 +67,7 @@ int minFingers[10] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX
   int mynewvariable3 = 0;
 
 
-  //int totalOffset1[5] = {0,0,0,0,0}; //BREAKS
+  int totalOffset1[5] = {0,0,0,0,0}; //BREAKS
   int mynewvariable4 = 0; //BREAKS
 #endif
 
@@ -300,7 +300,7 @@ void getFingerPositions(bool calibrating, bool reset){
     rawFingers[i] = ANALOG_MAX - rawFingers[i];
   }
   #endif
-
+  
   #if ENABLE_MEDIAN_FILTER
   for (int i = 0; i < 10; i++){
     rmSamples[i].add( rawFingers[i] );
@@ -312,8 +312,8 @@ void getFingerPositions(bool calibrating, bool reset){
   if (reset){
     for (int i = 0; i <10; i++){
       #if FLEXION_MIXING == MIXING_SINCOS
-      /*if (i < 5)
-        totalOffset1[i] = 0;*/
+      if (i < 5)
+        totalOffset1[i] = 0;
       #endif
       maxFingers[i] = 0;
       minFingers[i] = ANALOG_MAX;
@@ -337,7 +337,7 @@ void getFingerPositions(bool calibrating, bool reset){
         #endif
     }
   }
-
+  
   for (int i = 0; i<10; i++){
     if (minFingers[i] != maxFingers[i]){
       fingerPos[i] = map( rawFingers[i], minFingers[i], maxFingers[i], 0, ANALOG_MAX );
@@ -354,10 +354,6 @@ void getFingerPositions(bool calibrating, bool reset){
     
   }
   //Serial.println("" + (String)minFingers[2] + ", " + (String)maxFingers[2] + ", " + (String)rawFingers[2] + ", " + (String)sinTest + ", " + (String)cosTest);
-}
-
-void printThumbDebug(){
-  Serial.println("Min: " + (String)minFingers[0] + "Max: " + (String)maxFingers[0]);
 }
 
 int analogReadDeadzone(int pin){
@@ -432,13 +428,13 @@ int sinCosMix(int sinPin, int cosPin, int i){
 
   //counting rotations
   if (((angleRaw > 0) != atanPositive[i]) && sinScaled > cosScaled){
-    //totalOffset1[i] += atanPositive[i]?1:-1;
+    totalOffset1[i] += atanPositive[i]?1:-1;
   }
   atanPositive[i] = angleRaw > 0;
-  double totalAngle = angleRaw + 2*PI;// * totalOffset1[i];
+  double totalAngle = angleRaw + 2*PI * totalOffset1[i];
 
   if (i == target){
-      /*sinScaledTest = sinScaled;
+      sinScaledTest = sinScaled;
       cosScaledTest = cosScaled;
 
       sinMinTest = sinMin[i];
@@ -456,14 +452,14 @@ int sinCosMix(int sinPin, int cosPin, int i){
       minFingersTest = minFingers[target];
       maxFingersTest = maxFingers[target];
 
-      totalOffsetTest = (int)(totalOffset[i] * 2 * PI * ANALOG_MAX);
+      totalOffsetTest = (int)(totalOffset1[i] * 2 * PI * ANALOG_MAX);
       angleRawTest = (int)(angleRaw * ANALOG_MAX);
-      totalAngleTest = (int)(totalAngle * ANALOG_MAX);*/
+      totalAngleTest = (int)(totalAngle * ANALOG_MAX);
 
       //Serial.println(totalOffset1[target]);
       //Serial.println(totalOffsetTester);
-      Serial.println("mynewvariable: " + (String)mynewvariable + " mynewvariable2: " + (String)mynewvariable2 + " mynewvariable3: " + (String)mynewvariable3 + " mynewvariable4: " + (String)mynewvariable4);
-      
+      //Serial.println("mynewvariable: " + (String)mynewvariable + " mynewvariable2: " + (String)mynewvariable2 + " mynewvariable3: " + (String)mynewvariable3 + " mynewvariable4: " + (String)mynewvariable4);
+      //Serial.println(i);
   }
   
 

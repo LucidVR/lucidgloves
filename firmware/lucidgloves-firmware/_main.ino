@@ -8,7 +8,7 @@
 
 bool calibrate = false;
 bool calibButton = false;
-int* fingerPos;
+int* fingerPos = (int[]){0,0,0,0,0,0,0,0,0,0};
 int sinScaledTest = 0;
 int cosScaledTest = 0;
 int sinCalibTest = 0;
@@ -77,10 +77,13 @@ void getInputs(void* parameter){
 
 int loops = 0;
 void setup() {
-  fingerPos = new int[10];
-  for (int i=0; i<10; i++){
+  //fingerPos = new int[10];
+  /*for (int i=0; i<10; i++){
     fingerPos[i] = 0;
-  }
+  }*/
+
+  //fingerPos[10] = {0,0,0,0,0,0,0,0,0,0};
+  
   #if COMMUNICATION == COMM_SERIAL
     comm = new SerialCommunication();
   #elif COMMUNICATION == COMM_BTSERIAL
@@ -106,6 +109,7 @@ void setup() {
   #endif
 }
 
+
 int lastMainMicros = micros();
 int mainMicros = 0;
 int mainMicrosTotal = 0;
@@ -120,10 +124,15 @@ void loop() {
   lastMainMicros = micros();
 
   if (Serial.available() > 0){
-    target = Serial.parseInt();
-    Serial.println("Swtiching target to " + (String)target);
+    int testtarget = Serial.parseInt();
+    if (testtarget != 0){
+      if (testtarget == -1)
+        target = 0;
+      else
+        target = testtarget;
+    }
+    //Serial.println("Swtiching target to " + (String)target);
   }
-  
   
   if (comm->isOpen()){
     #if USING_CALIB_PIN
@@ -190,7 +199,7 @@ void loop() {
       #if ESP32_DUAL_CORE_SET
       fingerPosLock->unlock();
       #endif
-      /*
+      
       Serial.println((String)sinTest + " " + (String)cosTest + " " + 
       (String)sinMinTest + " " + (String)sinMaxTest + " " + 
       (String)cosMinTest + " " + (String)cosMaxTest + " " + (String)fingerPosCopy[target] + " " + 
@@ -198,7 +207,7 @@ void loop() {
       (String)totalOffsetTest + " " + (String)angleRawTest + " " + 
       (String)mainMicros + " " + (String)fullLoopTime
       );
-      */
+      
       //Serial.println((String)sinTest + ", " + (String)sinMinTest + ", " + (String)sinMaxTest + ", " + (String)sinCalibTest);
     }
     //Serial.println("TotalLocks: " + String(totalLocks));

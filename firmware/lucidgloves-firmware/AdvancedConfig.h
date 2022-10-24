@@ -11,7 +11,7 @@
 #define BT_ECHO false//Should the bluetooth data be echoed over serial for debugging
 
 //ESP32 Specific Settings
-#define ESP32_DUAL_CORE false //Should inputs be handled on a separate core for communication for more accurate rotation counting
+#define ESP32_DUAL_CORE true //Should inputs be handled on a separate core for communication for more accurate rotation counting
 
 #define INTERMEDIATE_CALIBRATION true //should intermediate values (used in some forms of mixing such as MIXING_SINCOS be calibrated
 //Intermediate values: If not autocalibrating, you may need to adjust these for accuracy
@@ -55,11 +55,11 @@
 
 // You must install RunningMedian library to use this feature
 // https://www.arduino.cc/reference/en/libraries/runningmedian/
-#define ENABLE_MEDIAN_FILTER true //use the median of the previous values, helps reduce noise
+#define ENABLE_MEDIAN_FILTER false //use the median of the previous values, helps reduce noise
 #define MEDIAN_SAMPLES 10
 
 //intermediate filtering. Options are INTERFILTER_NONE, INTERFILTER_LIMITS (filter is only used for limit calib), INTERFILTER_ALL (filter all the way)
-#define INTERFILTER_MODE INTERFILTER_LIMITS
+#define INTERFILTER_MODE INTERFILTER_NONE
 #define INTERFILTER_SAMPLES 20
 
 //ESP dual core hardware check
