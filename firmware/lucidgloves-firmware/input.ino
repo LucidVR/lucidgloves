@@ -315,8 +315,8 @@ void getFingerPositions(bool calibrating, bool reset){
       if (i < 5)
         totalOffset1[i] = 0;
       #endif
-      maxFingers[i] = 0;
-      minFingers[i] = ANALOG_MAX;
+      maxFingers[i] = INT_MIN;
+      minFingers[i] = INT_MAX;
     }
   }
   

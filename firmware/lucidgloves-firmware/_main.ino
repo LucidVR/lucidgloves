@@ -81,7 +81,8 @@ void setup() {
   /*for (int i=0; i<10; i++){
     fingerPos[i] = 0;
   }*/
-
+  pinMode(32, INPUT_PULLUP);
+  
   //fingerPos[10] = {0,0,0,0,0,0,0,0,0,0};
   
   #if COMMUNICATION == COMM_SERIAL
@@ -117,11 +118,24 @@ int mainloops = 1;
 
 int target = 0;
 
+bool latch = false;
+
 void loop() {
   mainloops++;
   mainMicros = micros() - lastMainMicros;
   mainMicrosTotal += mainMicros;
   lastMainMicros = micros();
+
+  if (!digitalRead(32)){
+    if (!latch){
+       target++;
+       target %= 5;
+
+       latch = true;
+    }
+  }
+  else
+    latch = false;
 
   if (Serial.available() > 0){
     int testtarget = Serial.parseInt();
@@ -205,7 +219,7 @@ void loop() {
       (String)cosMinTest + " " + (String)cosMaxTest + " " + (String)fingerPosCopy[target] + " " + 
       (String)minFingersTest + " " + (String)maxFingersTest + " " + (String)totalAngleTest + " " + 
       (String)totalOffsetTest + " " + (String)angleRawTest + " " + 
-      (String)mainMicros + " " + (String)fullLoopTime
+      (String)mainMicros + " " + (String)fullLoopTime + " " + (String)target
       );
       
       //Serial.println((String)sinTest + ", " + (String)sinMinTest + ", " + (String)sinMaxTest + ", " + (String)sinCalibTest);
