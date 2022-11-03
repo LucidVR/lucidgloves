@@ -59,8 +59,8 @@
 #define MEDIAN_SAMPLES 10
 
 //intermediate filtering. Options are INTERFILTER_NONE, INTERFILTER_LIMITS (filter is only used for limit calib), INTERFILTER_ALL (filter all the way)
-#define INTERFILTER_MODE INTERFILTER_NONE
-#define INTERFILTER_SAMPLES 20
+#define INTERFILTER_MODE INTERFILTER_LIMITS
+#define INTERFILTER_SAMPLES 100
 
 //ESP dual core hardware check
 #if defined(ESP32) && ESP32_DUAL_CORE
