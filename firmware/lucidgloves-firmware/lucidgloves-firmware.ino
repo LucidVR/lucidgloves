@@ -49,16 +49,16 @@
 
 #define USING_CALIB_PIN false //When PIN_CALIB is shorted (or it's button pushed) it will reset calibration if this is on.
 
-#define USING_FORCE_FEEDBACK false //Force feedback haptics allow you to feel the solid objects you hold
+#define USING_FORCE_FEEDBACK true //Force feedback haptics allow you to feel the solid objects you hold
 #define SERVO_SCALING false //dynamic scaling of servo motors
 
 #if defined(ESP32)
   //(This configuration is for ESP32 DOIT V1 so make sure to change if you're on another board)
-  #define PIN_PINKY     36
-  #define PIN_RING      39
+  #define PIN_PINKY     34//36
+  #define PIN_RING      34//39
   #define PIN_MIDDLE    34
   #define PIN_INDEX     35
-  #define PIN_THUMB     32
+  #define PIN_THUMB     35//32
   #define PIN_JOY_X     33
   #define PIN_JOY_Y     25
   #define PIN_JOY_BTN   26
