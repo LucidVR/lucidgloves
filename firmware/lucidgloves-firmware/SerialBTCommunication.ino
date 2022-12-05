@@ -17,10 +17,10 @@ class BTSerialCommunication : public ICommunication {
 
     void start(){
       m_SerialBT.begin(BTSERIAL_DEVICE_NAME);
-      //#if BT_ECHO
+      #if BT_ECHO
       Serial.begin(SERIAL_BAUD_RATE);
       Serial.println("The device started, now you can pair it with bluetooth!");
-      //#endif
+      #endif
       m_isOpen = true;
     }
 
