@@ -96,28 +96,6 @@ void setupInputs(){
     pinMode(selectPins[i], OUTPUT);
   }
   #endif
-  
-  //Range 0-4096
-  adc1_config_width(ADC_WIDTH_BIT_12);
-  // full voltage range
-  adc1_config_channel_atten(ADC1_CHANNEL_7, ADC_ATTEN_DB_11);
-
-  // check to see what calibration is available
-  if (esp_adc_cal_check_efuse(ESP_ADC_CAL_VAL_EFUSE_VREF) == ESP_OK)
-  {
-    Serial.println("Using voltage ref stored in eFuse");
-  }
-  if (esp_adc_cal_check_efuse(ESP_ADC_CAL_VAL_EFUSE_TP) == ESP_OK)
-  {
-    Serial.println("Using two point values from eFuse");
-  }
-  if (esp_adc_cal_check_efuse(ESP_ADC_CAL_VAL_DEFAULT_VREF) == ESP_OK)
-  {
-    Serial.println("Using default VREF");
-  }
-  //Characterize ADC
-  adc_chars = (esp_adc_cal_characteristics_t *)calloc(1, sizeof(esp_adc_cal_characteristics_t));
-  esp_adc_cal_characterize(ADC_UNIT_1, ADC_ATTEN_DB_11, ADC_WIDTH_BIT_12, DEFAULT_VREF, adc_chars);
 }
 
 int analogPinRead(int pin){
@@ -141,7 +119,7 @@ int readMux(byte pin){
     digitalWrite(selectPins[i], ((int)pow(2,i) & (pin)) == 0 ? LOW:HIGH); //convert the pin number to binary, and set each digit to it's corresponsing select pin.
   }
 
-  delayMicroseconds(MULTIPLEXER_DELAY);*/
+  */
   switch(pin){
     case 0:
       digitalWrite(selectPins[0], LOW);
@@ -240,22 +218,17 @@ int readMux(byte pin){
       digitalWrite(selectPins[3], HIGH);
       break;
   }
-  delayMicroseconds(1);
+  delayMicroseconds(MULTIPLEXER_DELAY);
   return analogRead(MUX_INPUT);
-  //return speedyRead();
 }
 #endif
-
-int speedyRead(){
-  return adc1_get_raw(ADC1_CHANNEL_4);
-}
 
 void getFingerPositions(bool calibrating, bool reset){
   #if FLEXION_MIXING == MIXING_NONE //no mixing, just linear
   int rawFingersFlexion[5] = {NO_THUMB?0:analogPinRead(PIN_THUMB), analogPinRead(PIN_INDEX), analogPinRead(PIN_MIDDLE), analogPinRead(PIN_RING), analogPinRead(PIN_PINKY)};
   
   #elif FLEXION_MIXING == MIXING_SINCOS
-  int rawFingersFlexion[5] = {  /*NO_THUMB?0:analogPinRead(PIN_THUMB),   //*/NO_THUMB?0:sinCosMix(PIN_THUMB, PIN_THUMB_SECOND, 0 ), 
+  int rawFingersFlexion[5] = {NO_THUMB?0:sinCosMix(PIN_THUMB, PIN_THUMB_SECOND, 0 ), 
                                   sinCosMix(PIN_INDEX, PIN_INDEX_SECOND, 1 ), 
                                   sinCosMix(PIN_MIDDLE,PIN_MIDDLE_SECOND,2 ), 
                                   sinCosMix(PIN_RING,  PIN_RING_SECOND,  3 ), 
