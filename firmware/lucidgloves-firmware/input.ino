@@ -60,15 +60,10 @@ int minFingers[10] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX
   int cosMin[5] = {INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN};
   #endif
 
-  int mynewvariable = 0; //WORKS PROPERLY
-  int mynewvariable2 = 0;
   bool atanPositive[8] = {true, true, true, true, true, true, true, true};
-  int totalOffsetTester = 0;
-  int mynewvariable3 = 0;
 
 
-  int totalOffset1[5] = {0,0,0,0,0}; //BREAKS
-  int mynewvariable4 = 0; //BREAKS
+  int totalOffset1[5] = {0,0,0,0,0};
 #endif
 
 void setupInputs(){
@@ -353,7 +348,6 @@ void getFingerPositions(bool calibrating, bool reset){
     }
     
   }
-  //Serial.println("" + (String)minFingers[2] + ", " + (String)maxFingers[2] + ", " + (String)rawFingers[2] + ", " + (String)sinTest + ", " + (String)cosTest);
 }
 
 int analogReadDeadzone(int pin){
@@ -432,35 +426,6 @@ int sinCosMix(int sinPin, int cosPin, int i){
   }
   atanPositive[i] = angleRaw > 0;
   double totalAngle = angleRaw + 2*PI * totalOffset1[i];
-
-  if (i == target){
-      sinScaledTest = sinScaled;
-      cosScaledTest = cosScaled;
-
-      sinMinTest = sinMin[i];
-      sinMaxTest = sinMax[i];
-
-      cosMinTest = cosMin[i];
-      cosMaxTest = cosMax[i];
-
-      sinTest = sinRaw;
-      cosTest = cosRaw;
-
-      sinCalibTest = sinCalib;
-      cosCalibTest = cosCalib;
-
-      minFingersTest = minFingers[target];
-      maxFingersTest = maxFingers[target];
-
-      totalOffsetTest = (int)(totalOffset1[i] * 2 * PI * ANALOG_MAX);
-      angleRawTest = (int)(angleRaw * ANALOG_MAX);
-      totalAngleTest = (int)(totalAngle * ANALOG_MAX);
-
-      //Serial.println(totalOffset1[target]);
-      //Serial.println(totalOffsetTester);
-      //Serial.println("mynewvariable: " + (String)mynewvariable + " mynewvariable2: " + (String)mynewvariable2 + " mynewvariable3: " + (String)mynewvariable3 + " mynewvariable4: " + (String)mynewvariable4);
-      //Serial.println(i);
-  }
   
 
   return (int)(totalAngle * ANALOG_MAX);
