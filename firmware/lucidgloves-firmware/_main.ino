@@ -9,21 +9,6 @@
 bool calibrate = false;
 bool calibButton = false;
 int* fingerPos = (int[]){0,0,0,0,0,0,0,0,0,0};
-int sinScaledTest = 0;
-int cosScaledTest = 0;
-int sinCalibTest = 0;
-int cosCalibTest = 0;
-int totalAngleTest = 0;
-int totalOffsetTest = 0;
-int angleRawTest = 0;
-int sinMinTest = 0;
-int sinMaxTest = 0;
-int cosMinTest = 0;
-int cosMaxTest = 0;
-int minFingersTest = 0;
-int maxFingersTest = 0;
-int sinTest = 0;
-int cosTest = 0;
 
 ICommunication* comm;
 
@@ -35,55 +20,32 @@ int threadLoops = 1;
 int totalLocks = 0;
 int lastMicros = 0;
 int fullLoopTime = 0;
-//int otherStuffLast = 0;
-//int fingerPosTotal = 0;
-//int otherStuffTotal = 0;
 int fullLoopTotal = 0;
 void getInputs(void* parameter){
     for(;;){
       fullLoopTime = micros() - lastMicros;
       fullLoopTotal += fullLoopTime;
-      //int fingerPosTime;
-      //int otherStuffTime;
       lastMicros = micros();
       {
-        //otherStuffLast=micros();
-        //std::lock_guard<std::mutex> lock(fingerPosMutex);
         fingerPosLock->lock();
-        //otherStuffTime = micros() - otherStuffLast;
-        //otherStuffTotal += otherStuffTime;
-        //int fingerPosLast = micros();
         totalLocks++;
         getFingerPositions(calibrate, calibButton); //Save finger positions in thread
 
         fingerPosLock->unlock();
-        //fingerPosTime = micros() - fingerPosLast;
-        //fingerPosTotal += fingerPosTime;
       }
       threadLoops++;
       if (threadLoops%100 == 0){
         vTaskDelay(1); //keep watchdog fed
       }
       delayMicroseconds(1);
-      /*Serial.println(//"Full loop: " + (String)fullLoopTime + 
-                 //", Full Loop Avg: " + (String)(fullLoopTotal / threadLoops) +
-                 ", Finger Pos: " + (String)fingerPosTime + 
-                 ", Finger Pos Avg: " + (String)(fingerPosTotal / threadLoops) +
-                 ", Mutex Stuff: " + (String)otherStuffTime + 
-                 ", Mutex Stuff Avg: " + (String)(otherStuffTotal / threadLoops));*/
     }           
 }
 #endif
 
 int loops = 0;
 void setup() {
-  //fingerPos = new int[10];
-  /*for (int i=0; i<10; i++){
-    fingerPos[i] = 0;
-  }*/
+
   pinMode(32, INPUT_PULLUP);
-  
-  //fingerPos[10] = {0,0,0,0,0,0,0,0,0,0};
   
   #if COMMUNICATION == COMM_SERIAL
     comm = new SerialCommunication();
@@ -136,17 +98,6 @@ void loop() {
   }
   else
     latch = false;
-
-  if (Serial.available() > 0){
-    int testtarget = Serial.parseInt();
-    if (testtarget != 0){
-      if (testtarget == -1)
-        target = 0;
-      else
-        target = testtarget;
-    }
-    //Serial.println("Swtiching target to " + (String)target);
-  }
   
   if (comm->isOpen()){
     #if USING_CALIB_PIN
@@ -197,8 +148,6 @@ void loop() {
     int fingerPosCopy[10];
     int mutexTimeDone;
     bool menuButton = getButton(PIN_MENU_BTN) != INVERT_MENU;
-    //Serial.println("Outside lock: " + String(totalLocks));
-    //totalLocks = 0;
     {
       #if ESP32_DUAL_CORE_SET
       int mutexTime = micros();
@@ -214,18 +163,8 @@ void loop() {
       fingerPosLock->unlock();
       #endif
       
-      Serial.println((String)sinTest + " " + (String)cosTest + " " + 
-      (String)sinMinTest + " " + (String)sinMaxTest + " " + 
-      (String)cosMinTest + " " + (String)cosMaxTest + " " + (String)fingerPosCopy[target] + " " + 
-      (String)minFingersTest + " " + (String)maxFingersTest + " " + (String)totalAngleTest + " " + 
-      (String)totalOffsetTest + " " + (String)angleRawTest + " " + 
-      (String)mainMicros + " " + (String)fullLoopTime + " " + (String)target
-      );
-      
-      //Serial.println((String)sinTest + ", " + (String)sinMinTest + ", " + (String)sinMaxTest + ", " + (String)sinCalibTest);
     }
-    //Serial.println("TotalLocks: " + String(totalLocks));
-   //totalLocks = 0;
+
     comm->output(encode(fingerPosCopy, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
     #if USING_FORCE_FEEDBACK
       char received[100];
@@ -239,6 +178,5 @@ void loop() {
       }
     #endif
     delay(LOOP_TIME);
-    //Serial.println("Main: " + String(mainMicros) + " Main Avg: " + String(mainMicrosTotal/mainloops) + " Side: " + String(fullLoopTime) + " Side Avg: " + String(fullLoopTotal/threadLoops) + " Lock: " + String(lockTime) + " Lock avg: " + String(lockTimeTotal/lockLoops) );
   }
 }

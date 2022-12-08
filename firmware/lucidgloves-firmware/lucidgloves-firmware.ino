@@ -10,7 +10,7 @@
 
 //This is the configuration file, main structure in _main.ino
 //CONFIGURATION SETTINGS:
-#define COMMUNICATION COMM_BTSERIAL //Which communication protocol to use. Options are: COMM_SERIAL (usb), COMM_BTSERIAL (bluetooth)
+#define COMMUNICATION COMM_SERIAL //Which communication protocol to use. Options are: COMM_SERIAL (usb), COMM_BTSERIAL (bluetooth)
 //serial over USB
   #define SERIAL_BAUD_RATE 115200
   
@@ -18,7 +18,7 @@
   #define BTSERIAL_DEVICE_NAME "lucidgloves-left"
 
 //ANALOG INPUT CONFIG
-#define USING_SPLAY true //whether or not your glove tracks splay. - tracks the side to side "wag" of fingers. Requires 5 more inputs.
+#define USING_SPLAY false //whether or not your glove tracks splay. - tracks the side to side "wag" of fingers. Requires 5 more inputs.
 #define USING_MULTIPLEXER true //Whether or not you are using a multiplexer for inputs
 #define FLIP_FLEXION  false  //Flip values from potentiometers (for fingers!) if they are backwards
 #define FLIP_SPLAY true //Flip values for splay
@@ -75,7 +75,7 @@
   #define PIN_TRIG_BTN  12 //unused if gesture set
   #define PIN_GRAB_BTN  13 //unused if gesture set
   #define PIN_PNCH_BTN  23 //unused if gesture set
-  #define PIN_CALIB     0 //button for recalibration (You can set this to GPIO0 to use the BOOT button, but only when using Bluetooth.)
+  #define PIN_CALIB     32 //button for recalibration (You can set this to GPIO0 to use the BOOT button, but only when using Bluetooth.)
   #define DEBUG_LED 2
   #define PIN_PINKY_MOTOR     19  //used for force feedback
   #define PIN_RING_MOTOR      18 //^
