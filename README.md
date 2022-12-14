@@ -4,6 +4,9 @@
 This repo contains the arduino firmware as well as the STL files for Prototypes 3 through 4 of the LucidVR glove. This is a finger tracking glove that allows you to use your hands in VR. Follow along with Lucas_VRTech's developments on his Tiktok page:
 https://www.tiktok.com/@lucas_vrtech
 
+# Building your own gloves
+**Start here at the wiki! https://github.com/LucidVR/lucidgloves/wiki**
+
 # Support
 Join the LucidVR discord server for assistance:
 https://discord.gg/lucidvr
