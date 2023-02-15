@@ -51,6 +51,7 @@
 
 #define USING_FORCE_FEEDBACK false //Force feedback haptics allow you to feel the solid objects you hold
 #define SERVO_SCALING false //dynamic scaling of servo motors
+#define INVERT_SERVO false // Reverse the angles sent to the servo
 
 #if defined(ESP32)
   //(This configuration is for ESP32 DOIT V1 so make sure to change if you're on another board)
