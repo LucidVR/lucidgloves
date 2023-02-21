@@ -4,6 +4,9 @@
 This repo contains the arduino firmware as well as the STL files for Prototypes 3 through 4 of the LucidVR glove. This is a finger tracking glove that allows you to use your hands in VR. Follow along with Lucas_VRTech's developments on his Tiktok page:
 https://www.tiktok.com/@lucas_vrtech
 
+# Building your own gloves
+**Start here at the wiki! https://github.com/LucidVR/lucidgloves/wiki**
+
 # Support
 Join the LucidVR discord server for assistance:
 https://discord.gg/lucidvr
@@ -51,7 +54,9 @@ For Prototypes 4 and 4.1 -
 * EndCap (Proto 3) (1x per finger, will need to be resized to fit)
 
 
-Guide for printing parts: [Printing guide](https://github.com/LucidVR/lucidgloves-hardware/wiki/Parts-Printing-Guide)
+
+Guide for printing parts: [Printing guide](https://github.com/LucidVR/lucidgloves/wiki/Parts-Printing-Guides)
+
 
 **Required parts for each hand: [Parts Lists](https://github.com/LucidVR/lucidgloves/wiki/Parts-Lists)**  
 Optional:  
@@ -61,7 +66,7 @@ Optional:
 
 More information will be available on the [LucidVR site](http://lucidvrtech.com/) very soon.  
 *  [Prototype 3/3.1 Building Tutorial](https://youtu.be/Qj4hqRKiy8g)
-*  Prototype 4 Tutorial to come out in the future
+*  [Prototype 4/4.1 Building Tutorial](https://youtu.be/2yF-SJcg3zQ)
 
 # SteamVR Compatibility (OpenGloves)
 This project uses the OpenGloves OpenVR driver for compatibility with SteamVR, which is downloadable on Steam:  
