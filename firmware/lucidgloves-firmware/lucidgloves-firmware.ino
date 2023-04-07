@@ -55,7 +55,8 @@
 
 #define USING_CALIB_PIN true //When PIN_CALIB is shorted (or it's button pushed) it will reset calibration if this is on.
 
-#define USING_FORCE_FEEDBACK false //Force feedback haptics allow you to feel the solid objects you hold
+#define USING_FORCE_FEEDBACK true //Force feedback haptics allow you to feel the solid objects you hold
+#define FFB_SCALE_GRAB true //Whether or not the FFB data changes the threshold for the grab gesture
 #define FLIP_FORCE_FEEDBACK true
 #define SERVO_SCALING false //dynamic scaling of servo motors
 

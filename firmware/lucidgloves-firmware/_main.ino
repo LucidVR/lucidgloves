@@ -9,7 +9,7 @@
 bool calibrate = false;
 bool calibButton = false;
 int* fingerPos = (int[]){0,0,0,0,0,0,0,0,0,0};
-
+int* savedHapticLimits = (int[]){0,0,0,0,0};
 ICommunication* comm;
 
 #if ESP32_DUAL_CORE_SET
@@ -134,7 +134,7 @@ void loop() {
     bool bButton = getButton(PIN_B_BTN) != INVERT_B;
 
     #if GRAB_GESTURE
-    bool grabButton = grabGesture(fingerPos);
+    bool grabButton = grabGesture(fingerPos, savedHapticLimits);
     #else
     bool grabButton = getButton(PIN_GRAB_BTN) != INVERT_GRAB;
     #endif
@@ -170,6 +170,8 @@ void loop() {
       char received[100];
       if (comm->readData(received)){
         int hapticLimits[5];
+        for (int i = 0; i < 5; i++)
+          savedHapticLimits[i] = hapticLimits[i];
         //This check is a temporary hack to fix an issue with haptics on v0.5 of the driver, will make it more snobby code later
         if(String(received).length() >= 10) {
            decodeData(received, hapticLimits);
