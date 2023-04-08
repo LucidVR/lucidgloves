@@ -31,7 +31,8 @@ class BLECommunication : public ICommunication {
       BLE.addService(m_serial);
 
       int initialFlexion[5] = { 0 };
-      m_tx.writeValue(encode(initialFlexion, 0, 0, false, false, false, false, false, false, false, false));
+      char* encoded = encode(initialFlexion, 0, 0, false, false, false, false, false, false, false, false);
+      m_tx.writeValue(encoded, strlen(encoded));
 
       BLE.advertise();
 
