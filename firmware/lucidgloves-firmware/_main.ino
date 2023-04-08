@@ -12,7 +12,9 @@ void setup() {
     comm = new SerialCommunication();
   #elif COMMUNICATION == COMM_BTSERIAL
     comm = new BTSerialCommunication();
-  #endif  
+  #elif COMMUNICATION == COMM_BLE
+    comm = new BLECommunication();
+  #endif
   comm->start();
 
   setupInputs();
@@ -25,6 +27,9 @@ void setup() {
 
 void loop() {
   if (comm->isOpen()){
+    #if COMMUNICATION == COMM_BLE
+      BLE.poll();
+    #endif
     #if USING_CALIB_PIN
     bool calibButton = getButton(PIN_CALIB) != INVERT_CALIB;
     if (calibButton)
