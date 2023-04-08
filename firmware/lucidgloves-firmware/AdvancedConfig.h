@@ -4,8 +4,13 @@
 #define CALIBRATION_LOOPS -1//How many loops should be calibrated. Set to -1 to always be calibrated.
 
 //Comm defines, no touchy
-#define COMM_SERIAL 0   
-#define COMM_BTSERIAL 1 
+#define COMM_SERIAL 0
+#define COMM_BTSERIAL 1
+#define COMM_BLE 2
+
+#define BLE_SERVICE_UUID "090b69e6-d509-4c32-8b20-5f8b947b253a"
+#define BLE_TX_UUID "0eac19b9-5441-40bc-afca-cffb4380714d"
+#define BLE_RX_UUID "54cd1674-a8aa-4b15-ac74-361b0084877f"
 
 //Encoding
 #define ENCODING 1

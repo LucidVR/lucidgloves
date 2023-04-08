@@ -9,11 +9,14 @@
 //This is the configuration file, main structure in _main.ino
 //CONFIGURATION SETTINGS:
 #define COMMUNICATION COMM_SERIAL //Which communication protocol to use
-//serial over USB
+  //serial over USB
   #define SERIAL_BAUD_RATE 115200
-  
-//serial over Bluetooth
+
+  //serial over Bluetooth
   #define BTSERIAL_DEVICE_NAME "lucidgloves-left"
+
+  //Bluetooth Low Energy
+  #define BLE_DEVICE_NAME "lucidgloves-left"
 
 //ANALOG INPUT CONFIG
 #define FLIP_POTS  false  //Flip values from potentiometers (for fingers!) if they are backwards
@@ -62,7 +65,7 @@
   #define PIN_JOY_X     33
   #define PIN_JOY_Y     25
   #define PIN_JOY_BTN   26
-  #define PIN_A_BTN     27 
+  #define PIN_A_BTN     27
   #define PIN_B_BTN     14
   #define PIN_TRIG_BTN  12 //unused if gesture set
   #define PIN_GRAB_BTN  13 //unused if gesture set
@@ -75,8 +78,8 @@
   #define PIN_INDEX_MOTOR     21 //^
   #define PIN_THUMB_MOTOR     17 //^
   #define PIN_MENU_BTN        27
-  
-//PINS CONFIGURATION 
+
+//PINS CONFIGURATION
 #elif defined(__AVR__)
   //(This configuration is for Arduino Nano so make sure to change if you're on another board)
   #define PIN_PINKY     A0
@@ -86,8 +89,8 @@
   #define PIN_THUMB     A4
   #define PIN_JOY_X     A6
   #define PIN_JOY_Y     A7
-  #define PIN_JOY_BTN   7 
-  #define PIN_A_BTN     8 
+  #define PIN_JOY_BTN   7
+  #define PIN_A_BTN     8
   #define PIN_B_BTN     9
   #define PIN_TRIG_BTN  10 //unused if gesture set
   #define PIN_GRAB_BTN  11 //unused if gesture set
