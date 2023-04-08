@@ -30,7 +30,7 @@ class BLECommunication : public ICommunication {
       m_serial.addCharacteristic(m_rx);
       BLE.addService(m_serial);
 
-      int initialFlexion[5] = { 0 };
+      int initialFlexion[10] = { 0 };
       char* encoded = encode(initialFlexion, 0, 0, false, false, false, false, false, false, false, false);
       m_tx.writeValue(encoded, strlen(encoded));
 
