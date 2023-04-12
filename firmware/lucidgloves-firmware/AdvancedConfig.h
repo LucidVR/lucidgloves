@@ -66,3 +66,13 @@
 #if defined(ESP32) && ESP32_DUAL_CORE
   #define ESP32_DUAL_CORE_SET true
 #endif
+
+
+
+//Advanced options relating to I2C and the PCA9685
+#if ENABLE_PCA_9865_SERVO
+  #define PWM_Board_0_I2C_ADDRESS       0x40    //The I2C address of the PCA9685 Board. Default is 0x40
+  #define PWM_Board_0_PWM_FREQUENCY     50      //set the PWM frequency the board uses. Default is 50hz (20ms Cycles) which is what most analogue servos use
+  #define ServoMin_uS                   500     // Min microsecond pulse length, moves servo to 0* or fully retracted position. Value for sg90 and mg90s by default (ESP32Servo default is 500)
+  #define ServoMax_uS                   2500    // Max microsecond pulse length, moves servo to 180* or whatever it's max rotation position is. Value for sg90 and mg90s by default (ESP32Servo default is 2500)
+#endif

@@ -77,7 +77,7 @@
   #define PIN_PNCH_BTN  23 //unused if gesture set
   #define PIN_CALIB     32 //button for recalibration (You can set this to GPIO0 to use the BOOT button, but only when using Bluetooth.)
   #define DEBUG_LED 2
-  #define PIN_PINKY_MOTOR     19  //used for force feedback
+  #define PIN_PINKY_MOTOR     19  //used for force feedback **alternatively this is which board channel you are plugged into on the PCA9685 servodriver board (accepted values 0-15 in that case)**
   #define PIN_RING_MOTOR      18 //^
   #define PIN_MIDDLE_MOTOR    5 //^
   #define PIN_INDEX_MOTOR     17 //^
@@ -159,4 +159,15 @@
     #define PIN_MIDDLE_SECOND    MUX(5)
     #define PIN_INDEX_SECOND     MUX(7)
     #define PIN_THUMB_SECOND     MUX(9)
+#endif
+
+
+//Drive FFB Servo's from a PCA9685 Board
+// To use you must install the Adafruit PCA9685 PWM Servo Driver Library 
+// https://github.com/adafruit/Adafruit-PWM-Servo-Driver-Library
+
+#define ENABLE_PCA_9865_SERVO         false
+#if ENABLE_PCA_9865_SERVO
+  #define PIN_I2C_SDA         0     //Pin to use for the I2C SDA line connected to the PCA9685
+  #define PIN_I2C_SCL         0     //Pin to use for the I2C SCL line connected to the PCA9685
 #endif

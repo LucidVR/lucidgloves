@@ -1,9 +1,11 @@
 #if USING_FORCE_FEEDBACK
 
-#if defined(ESP32)
-  #include "ESP32Servo.h"
+#if ENABLE_PCA_9865_SERVO
+  #include "PCA9685Servo.hpp"
+#elif defined(ESP32)
+  #include <ESP32Servo.h>
 #else
-  #include "Servo.h"
+  #include <Servo.h>
 #endif
 
 Servo pinkyServo;
@@ -12,7 +14,18 @@ Servo middleServo;
 Servo indexServo;
 Servo thumbServo;
 
+struct {
+  void setup() {
+      Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
+      Serial.println("I2C Initialized");
+  }
+} i2c;
+
 void setupServoHaptics(){
+  #if (ENABLE_PCA_9865_SERVO)
+    i2c.setup();
+    Initialize_PCA9685_Board();
+  #endif  
   pinkyServo.attach(PIN_PINKY_MOTOR);
   ringServo.attach(PIN_RING_MOTOR);
   middleServo.attach(PIN_MIDDLE_MOTOR);
