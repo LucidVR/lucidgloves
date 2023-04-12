@@ -23,8 +23,13 @@ void setupServoHaptics(){
 //static scaling, maps to entire range of servo
 void scaleLimits(int* hapticLimits, float* scaledLimits){
   for (int i = 0; i < 5; i++){
+    #if FLIP_FORCE_FEEDBACK
+    scaledLimits[i] = hapticLimits[i] / 1000.0f * 180.0f;
+    #else
     scaledLimits[i] = 180.0f - hapticLimits[i] / 1000.0f * 180.0f;
+    #endif
   }
+  
 }
 
 //dynamic scaling, maps to the limits calibrated from your finger
@@ -44,11 +49,11 @@ void dynScaleLimits(int* hapticLimits, float* scaledLimits){
 void writeServoHaptics(int* hapticLimits){
   float scaledLimits[5];
   scaleLimits(hapticLimits, scaledLimits);
-  pinkyServo.write(scaledLimits[4]);
-  ringServo.write(scaledLimits[3]);
-  middleServo.write(scaledLimits[2]);
-  indexServo.write(scaledLimits[1]);
-  thumbServo.write(scaledLimits[0]);
+  if(hapticLimits[0] >= 0) thumbServo.write(scaledLimits[0]);
+  if(hapticLimits[1] >= 0) indexServo.write(scaledLimits[1]);
+  if(hapticLimits[2] >= 0) middleServo.write(scaledLimits[2]);
+  if(hapticLimits[3] >= 0) ringServo.write(scaledLimits[3]);
+  if(hapticLimits[4] >= 0) pinkyServo.write(scaledLimits[4]);
 }
 
 #endif

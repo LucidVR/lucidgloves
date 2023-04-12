@@ -16,14 +16,20 @@ class BTSerialCommunication : public ICommunication {
     }
 
     void start(){
-      Serial.begin(115200);
       m_SerialBT.begin(BTSERIAL_DEVICE_NAME);
+      #if BT_ECHO
+      Serial.begin(SERIAL_BAUD_RATE);
       Serial.println("The device started, now you can pair it with bluetooth!");
+      #endif
       m_isOpen = true;
     }
 
     void output(char* data){
       m_SerialBT.print(data);
+      #if BT_ECHO
+      Serial.print(data);
+      Serial.flush();
+      #endif
     }
 
     bool readData(char* input){
