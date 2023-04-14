@@ -4,8 +4,8 @@
 #define CALIBRATION_LOOPS -1//How many loops should be calibrated. Set to -1 to always be calibrated.
 
 //Comm defines, no touchy
-#define COMM_SERIAL 0   
-#define COMM_BTSERIAL 1 
+#define COMM_SERIAL 0
+#define COMM_BTSERIAL 1
 
 //Encoding
 #define ENCODING 1
@@ -23,13 +23,13 @@
 #if defined(__AVR__)
 #define ANALOG_MAX 1023
 #elif defined(ESP32)
-#define ANALOG_MAX 4095 
+#define ANALOG_MAX 4095
 #endif
 
 
 //ANALOG_MAX OVERRIDE:
 //uncomment and set as needed (only touch if you know what you are doing)
-//#define ANALOG_MAX 4095 
+//#define ANALOG_MAX 4095
 
 #ifndef ANALOG_MAX
 #error "This board doesn't have an auto ANALOG_MAX assignment, please set it manually by uncommenting ANALOG_MAX OVERRIDE!"
