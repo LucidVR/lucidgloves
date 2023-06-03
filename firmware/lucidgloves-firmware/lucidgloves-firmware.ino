@@ -8,12 +8,22 @@
 
 //This is the configuration file, main structure in _main.ino
 //CONFIGURATION SETTINGS:
-#define COMMUNICATION COMM_SERIAL //Which communication protocol to use
+#define COMMUNICATION COMM_WIFISERIAL //Which communication protocol to use. Options are: COMM_SERIAL (usb), COMM_BTSERIAL (bluetooth), COMM_WIFISERIAL (wifi)
+
+
 //serial over USB
   #define SERIAL_BAUD_RATE 115200
   
 //serial over Bluetooth
   #define BTSERIAL_DEVICE_NAME "lucidgloves-left"
+
+//serial over WIFI
+#if COMMUNICATION == COMM_WIFISERIAL
+const char* ssid = "Your_Wifi_ssid";
+const char* password = "Your_Wifi_password";
+const char* host = "Your_host_ip";
+const int port = 65432; //port of the tcp server
+#endif
 
 //ANALOG INPUT CONFIG
 #define FLIP_POTS  false  //Flip values from potentiometers (for fingers!) if they are backwards
