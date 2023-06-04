@@ -19,8 +19,8 @@
 
 //serial over WIFI
 #if COMMUNICATION == COMM_WIFISERIAL
-const char* ssid = "Your_Wifi_ssid";
-const char* password = "Your_Wifi_password";
+const char* ssid = "Your_Wifi_SSID";
+const char* password = "Your_Wifi_Password";
 const char* host = "Your_host_ip";
 const int port = 65432; //port of the tcp server
 #endif
