@@ -8,7 +8,7 @@
 
 
 //Bluetooth and WIFI advanced settings
-#define ECHO false//Should the bluetooth or wifi data be echoed over serial for debugging
+#define ECHO_WIRELESS_DATA false//Should the bluetooth or wifi data be echoed over serial for debugging
 
 //ESP32 Specific Settings
 #define ESP32_DUAL_CORE true //Should inputs be handled on a separate core for communication for more accurate rotation counting
