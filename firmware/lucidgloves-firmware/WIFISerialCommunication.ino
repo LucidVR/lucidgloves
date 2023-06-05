@@ -43,7 +43,7 @@ public:
       connect();
     }
     client.println(data);
-    #if ECHO
+    #if ECHO_WIRELESS_DATA
     Serial.print(data);
     Serial.flush();
     #endif
