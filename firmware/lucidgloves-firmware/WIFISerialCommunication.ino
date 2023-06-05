@@ -12,9 +12,7 @@ private:
   void connect() {
     while (!client.connect(host, port)) //blocks thread until connected
       delay(500);
-    Serial.print("Connected to Client at" + String(client.localIP()) + ":" + String(client.localPort()));
-    client.println("Hello, world");
-
+    Serial.print("Connected to Server at" + String(client.localIP()) + ":" + String(client.localPort()));
   }
 
 public:
@@ -36,12 +34,7 @@ public:
     m_isOpen = true;
     Serial.println("Connected to WiFi");
 
-    if (!client.connected()) {
-      if (!client.connect(host, port)) {
-        return;
-      }
-      Serial.println("Connected to Server");
-    }
+    connect();
     
   }
   void output(char* data) {
