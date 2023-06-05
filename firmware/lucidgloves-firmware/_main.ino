@@ -12,7 +12,6 @@ void setup() {
     comm = new SerialCommunication();
   #elif COMMUNICATION == COMM_BTSERIAL
     comm = new BTSerialCommunication();
-  WIFISerialCommunication 
   #elif COMMUNICATION == COMM_WIFISERIAL
     comm = new WIFISerialCommunication();
   comm->start();
