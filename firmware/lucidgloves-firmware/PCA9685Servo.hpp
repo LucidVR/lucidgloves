@@ -1,5 +1,4 @@
 #pragma once
-
 #include <Adafruit_PWMServoDriver.h>
 
 Adafruit_PWMServoDriver pwm_board_0 = Adafruit_PWMServoDriver(PWM_Board_0_I2C_ADDRESS, Wire);

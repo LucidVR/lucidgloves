@@ -70,7 +70,7 @@
 
 
 //Advanced options relating to I2C and the PCA9685
-#if ENABLE_PCA_9865_SERVO
+#if SERVO_INTERFACE == SERVO_PCA9685
   #define PWM_Board_0_I2C_ADDRESS       0x40    //The I2C address of the PCA9685 Board. Default is 0x40
   #define PWM_Board_0_PWM_FREQUENCY     50      //set the PWM frequency the board uses. Default is 50hz (20ms Cycles) which is what most analogue servos use
   #define ServoMin_uS                   500     // Min microsecond pulse length, moves servo to 0* or fully retracted position. Value for sg90 and mg90s by default (ESP32Servo default is 500)

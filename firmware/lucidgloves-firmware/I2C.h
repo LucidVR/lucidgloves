@@ -1,6 +1,6 @@
- #pragma once
- #include "AdvancedConfig.h"
- #include <Wire.h>
+#pragma once
+#include "AdvancedConfig.h"
+#include <Wire.h>
 
 
 void Setup_I2C() {
