@@ -20,7 +20,6 @@ class PCA9685ServoConnection : public IServo
 
     void InitServoInterface(){
       Setup_I2C();
-      Initialize_PCA9685_Board();
       m_isReady = true;
     }
 };
