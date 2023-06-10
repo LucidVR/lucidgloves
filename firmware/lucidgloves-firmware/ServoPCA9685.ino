@@ -1,8 +1,6 @@
 //only compiles if needed
 #if USING_FORCE_FEEDBACK && SERVO_INTERFACE == SERVO_PCA9685
-#pragma once
 #include "I2C.h"
-#include "PCA9685Servo.hpp"
 
 class PCA9685ServoConnection : public IServo 
 {
