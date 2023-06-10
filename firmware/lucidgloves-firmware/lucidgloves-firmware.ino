@@ -11,7 +11,6 @@
 #define COMMUNICATION COMM_SERIAL //Which communication protocol to use. 
 //Options are:COMM_SERIAL (usb), COMM_BTSERIAL (bluetooth), COMM_WIFISERIAL (wifi)
 
-
 //serial over USB
   #define SERIAL_BAUD_RATE 115200
   
