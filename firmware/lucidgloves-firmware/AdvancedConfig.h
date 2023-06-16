@@ -8,9 +8,6 @@
 #define COMM_BTSERIAL 1 
 #define COMM_WIFISERIAL 2
 
-//Bluetooth and WIFI advanced settings
-#define ECHO_WIRELESS_DATA false//Should the bluetooth or wifi data be echoed over serial for debugging
-
 //Encoding
 #define ENCODING 1
 #define ENCODE_LEGACY 0
