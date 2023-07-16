@@ -113,111 +113,12 @@ int analogPinRead(int pin){
 
 #if USING_MULTIPLEXER
 int readMux(byte pin){
-  /*byte selectPins[] = {PINS_MUX_SELECT}; //get the array of select pins for the mux
+  int numSelectPins = sizeof(selectPins) / sizeof(selectPins[0]);
 
-  for (int i = sizeof(selectPins - 1); i > -1; i--){
-    digitalWrite(selectPins[i], ((int)pow(2,i) & (pin)) == 0 ? LOW:HIGH); //convert the pin number to binary, and set each digit to it's corresponsing select pin.
+  for (int i = numSelectPins - 1; i > -1; i--){
+    digitalWrite(selectPins[i], (pin & (1 << i)) ? HIGH : LOW);
   }
 
-  */
-  switch(pin){
-    case 0:
-      digitalWrite(selectPins[0], LOW);
-      digitalWrite(selectPins[1], LOW);
-      digitalWrite(selectPins[2], LOW);
-      digitalWrite(selectPins[3], LOW);
-      break;
-    case 1:
-      digitalWrite(selectPins[0], HIGH);
-      digitalWrite(selectPins[1], LOW);
-      digitalWrite(selectPins[2], LOW);
-      digitalWrite(selectPins[3], LOW);
-      break;
-    case 2:
-      digitalWrite(selectPins[0], LOW);
-      digitalWrite(selectPins[1], HIGH);
-      digitalWrite(selectPins[2], LOW);
-      digitalWrite(selectPins[3], LOW);
-      break;
-   case 3:
-      digitalWrite(selectPins[0], HIGH);
-      digitalWrite(selectPins[1], HIGH);
-      digitalWrite(selectPins[2], LOW);
-      digitalWrite(selectPins[3], LOW);
-      break;
-   case 4:
-      digitalWrite(selectPins[0], LOW);
-      digitalWrite(selectPins[1], LOW);
-      digitalWrite(selectPins[2], HIGH);
-      digitalWrite(selectPins[3], LOW);
-      break;
-    case 5:
-      digitalWrite(selectPins[0], HIGH);
-      digitalWrite(selectPins[1], LOW);
-      digitalWrite(selectPins[2], HIGH);
-      digitalWrite(selectPins[3], LOW);
-      break;
-    case 6:
-      digitalWrite(selectPins[0], LOW);
-      digitalWrite(selectPins[1], HIGH);
-      digitalWrite(selectPins[2], HIGH);
-      digitalWrite(selectPins[3], LOW);
-      break;
-    case 7:
-      digitalWrite(selectPins[0], HIGH);
-      digitalWrite(selectPins[1], HIGH);
-      digitalWrite(selectPins[2], HIGH);
-      digitalWrite(selectPins[3], LOW);
-      break;
-    case 8:
-      digitalWrite(selectPins[0], LOW);
-      digitalWrite(selectPins[1], LOW);
-      digitalWrite(selectPins[2], LOW);
-      digitalWrite(selectPins[3], HIGH);
-      break;
-    case 9:
-      digitalWrite(selectPins[0], HIGH);
-      digitalWrite(selectPins[1], LOW);
-      digitalWrite(selectPins[2], LOW);
-      digitalWrite(selectPins[3], HIGH);
-      break;
-   case 10:
-      digitalWrite(selectPins[0], LOW);
-      digitalWrite(selectPins[1], HIGH);
-      digitalWrite(selectPins[2], LOW);
-      digitalWrite(selectPins[3], HIGH);
-      break;
-    case 11:
-      digitalWrite(selectPins[0], HIGH);
-      digitalWrite(selectPins[1], HIGH);
-      digitalWrite(selectPins[2], LOW);
-      digitalWrite(selectPins[3], HIGH);
-      break;
-    case 12:
-      digitalWrite(selectPins[0], LOW);
-      digitalWrite(selectPins[1], LOW);
-      digitalWrite(selectPins[2], HIGH);
-      digitalWrite(selectPins[3], HIGH);
-      break;
-    case 13:
-      digitalWrite(selectPins[0], HIGH);
-      digitalWrite(selectPins[1], LOW);
-      digitalWrite(selectPins[2], HIGH);
-      digitalWrite(selectPins[3], HIGH);
-      break;
-    case 14:
-      digitalWrite(selectPins[0], LOW);
-      digitalWrite(selectPins[1], HIGH);
-      digitalWrite(selectPins[2], HIGH);
-      digitalWrite(selectPins[3], HIGH);
-      break;
-   case 15:
-      digitalWrite(selectPins[0], HIGH);
-      digitalWrite(selectPins[1], HIGH);
-      digitalWrite(selectPins[2], HIGH);
-      digitalWrite(selectPins[3], HIGH);
-      break;
-  }
   delayMicroseconds(MULTIPLEXER_DELAY);
   return analogRead(MUX_INPUT);
 }
