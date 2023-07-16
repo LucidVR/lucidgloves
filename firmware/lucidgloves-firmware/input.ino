@@ -5,7 +5,7 @@
 #endif
 
 #if ENABLE_MEDIAN_FILTER
-  RunningMedian rmSamples[10] = {
+  RunningMedian rmSamples[2* NUM_FINGERS] = {
       RunningMedian(MEDIAN_SAMPLES),
       RunningMedian(MEDIAN_SAMPLES),
       RunningMedian(MEDIAN_SAMPLES),
@@ -20,7 +20,7 @@
 #endif
 
 #if ((INTERFILTER_MODE != INTERFILTER_NONE) && (FLEXION_MIXING == MIXING_SINCOS))
-  RunningMedian sinSamples[5] = {
+  RunningMedian sinSamples[NUM_FINGERS] = {
       RunningMedian(INTERFILTER_SAMPLES),
       RunningMedian(INTERFILTER_SAMPLES),
       RunningMedian(INTERFILTER_SAMPLES),
@@ -28,7 +28,7 @@
       RunningMedian(INTERFILTER_SAMPLES)
   };
 
-    RunningMedian cosSamples[5] = {
+    RunningMedian cosSamples[NUM_FINGERS] = {
       RunningMedian(INTERFILTER_SAMPLES),
       RunningMedian(INTERFILTER_SAMPLES),
       RunningMedian(INTERFILTER_SAMPLES),
@@ -42,28 +42,28 @@ esp_adc_cal_characteristics_t *adc_chars;
 
 byte selectPins[] = {PINS_MUX_SELECT};
 
-int maxFingers[10] = {0,0,0,0,0,0,0,0,0,0};
-int minFingers[10] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
+int maxFingers[2* NUM_FINGERS] = {0,0,0,0,0,0,0,0,0,0};
+int minFingers[2* NUM_FINGERS] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
 
 #if FLEXION_MIXING == MIXING_SINCOS
   #if INTERMEDIATE_CALIBRATION
-  int sinMin[5] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
-  int sinMax[5] = {0,0,0,0,0};
+  int sinMin[NUM_FINGERS] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
+  int sinMax[NUM_FINGERS] = {0,0,0,0,0};
 
-  int cosMin[5] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
-  int cosMax[5] = {0,0,0,0,0};
+  int cosMin[NUM_FINGERS] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
+  int cosMax[NUM_FINGERS] = {0,0,0,0,0};
   #else
-  int sinMax[5] = {INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX};
-  int sinMin[5] = {INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN};
+  int sinMax[NUM_FINGERS] = {INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX};
+  int sinMin[NUM_FINGERS] = {INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN};
 
-  int cosMax[5] = {INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX};
-  int cosMin[5] = {INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN};
+  int cosMax[NUM_FINGERS] = {INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX};
+  int cosMin[NUM_FINGERS] = {INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN};
   #endif
 
-  bool atanPositive[8] = {true, true, true, true, true, true, true, true};
+  bool atanPositive[NUM_FINGERS] = {true, true, true, true, true};
 
 
-  int totalOffset1[5] = {0,0,0,0,0};
+  int totalOffset1[NUM_FINGERS] = {0,0,0,0,0};
 #endif
 
 void setupInputs(){
@@ -126,10 +126,10 @@ int readMux(byte pin){
 
 void getFingerPositions(bool calibrating, bool reset){
   #if FLEXION_MIXING == MIXING_NONE //no mixing, just linear
-  int rawFingersFlexion[5] = {NO_THUMB?0:analogPinRead(PIN_THUMB), analogPinRead(PIN_INDEX), analogPinRead(PIN_MIDDLE), analogPinRead(PIN_RING), analogPinRead(PIN_PINKY)};
+  int rawFingersFlexion[NUM_FINGERS] = {NO_THUMB?0:analogPinRead(PIN_THUMB), analogPinRead(PIN_INDEX), analogPinRead(PIN_MIDDLE), analogPinRead(PIN_RING), analogPinRead(PIN_PINKY)};
   
   #elif FLEXION_MIXING == MIXING_SINCOS
-  int rawFingersFlexion[5] = {NO_THUMB?0:sinCosMix(PIN_THUMB, PIN_THUMB_SECOND, 0 ), 
+  int rawFingersFlexion[NUM_FINGERS] = {NO_THUMB?0:sinCosMix(PIN_THUMB, PIN_THUMB_SECOND, 0 ), 
                                   sinCosMix(PIN_INDEX, PIN_INDEX_SECOND, 1 ), 
                                   sinCosMix(PIN_MIDDLE,PIN_MIDDLE_SECOND,2 ), 
                                   sinCosMix(PIN_RING,  PIN_RING_SECOND,  3 ), 
@@ -137,41 +137,41 @@ void getFingerPositions(bool calibrating, bool reset){
 
   #endif
 
-  int rawFingers[10];
+  int rawFingers[2 * NUM_FINGERS];
 
   #if USING_SPLAY
-    int rawFingersSplay[5] = {NO_THUMB?0:analogPinRead(PIN_THUMB_SPLAY), 
+    int rawFingersSplay[NUM_FINGERS] = {NO_THUMB?0:analogPinRead(PIN_THUMB_SPLAY), 
                               analogPinRead(PIN_INDEX_SPLAY), 
                               analogPinRead(PIN_MIDDLE_SPLAY), 
                               analogPinRead(PIN_RING_SPLAY), 
                               analogPinRead(PIN_PINKY_SPLAY)};
   #else
-    int rawFingersSplay[5] = {0,0,0,0,0};
+    int rawFingersSplay[NUM_FINGERS] = {0,0,0,0,0};
   #endif
     //memcpy(rawFingers, rawFingersFlexion, 5); //memcpy doesn't seem to work here
     //memcpy(&rawFingers[5], rawFingersSplay, 5); 
 
-  for (int i = 0; i < 5; i++){
+  for (int i = 0; i < NUM_FINGERS; i++){
     rawFingers[i] = rawFingersFlexion[i];
-    rawFingers[i+5] = rawFingersSplay[i];
+    rawFingers[i+NUM_FINGERS] = rawFingersSplay[i];
   }
   
   
   //flip pot values if needed
   #if FLIP_FLEXION
-  for (int i = 0; i < 5; i++){
+  for (int i = 0; i < NUM_FINGERS; i++){
     rawFingers[i] = ANALOG_MAX - rawFingers[i];
   }
   #endif
   
   #if FLIP_SPLAY
-  for (int i = 5; i < 10; i++){
+  for (int i = NUM_FINGERS; i < 2 * NUM_FINGERS; i++){
     rawFingers[i] = ANALOG_MAX - rawFingers[i];
   }
   #endif
   
   #if ENABLE_MEDIAN_FILTER
-  for (int i = 0; i < 10; i++){
+  for (int i = 0; i < 2 * NUM_FINGERS; i++){
     rmSamples[i].add( rawFingers[i] );
     rawFingers[i] = rmSamples[i].getMedian();
   }
@@ -179,9 +179,9 @@ void getFingerPositions(bool calibrating, bool reset){
 
   //reset max and mins as needed
   if (reset){
-    for (int i = 0; i <10; i++){
+    for (int i = 0; i <2 * NUM_FINGERS; i++){
       #if FLEXION_MIXING == MIXING_SINCOS
-      if (i < 5)
+      if (i < NUM_FINGERS)
         totalOffset1[i] = 0;
       #endif
       maxFingers[i] = INT_MIN;
@@ -191,7 +191,7 @@ void getFingerPositions(bool calibrating, bool reset){
   
   //if during the calibration sequence, make sure to update max and mins
   if (calibrating){
-    for (int i = 0; i <10; i++){
+    for (int i = 0; i < 2*NUM_FINGERS; i++){
       if (rawFingers[i] > maxFingers[i])
         #if CLAMP_SENSORS
           maxFingers[i] = ( rawFingers[i] <= CLAMP_MAX )? rawFingers[i] : CLAMP_MAX;
@@ -207,7 +207,7 @@ void getFingerPositions(bool calibrating, bool reset){
     }
   }
   
-  for (int i = 0; i<10; i++){
+  for (int i = 0; i<NUM_FINGERS; i++){
     if (minFingers[i] != maxFingers[i]){
       fingerPos[i] = map( rawFingers[i], minFingers[i], maxFingers[i], 0, ANALOG_MAX );
       #if CLAMP_ANALOG_MAP
