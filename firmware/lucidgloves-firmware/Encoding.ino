@@ -62,7 +62,7 @@ char* encode(int* flexion, int joyX, int joyY, bool joyClick, bool triggerButton
   return stringToEncode;
 }
 
-//legacy decoding
+//alpha decoding
 void decodeData(char* stringToDecode, int* hapticLimits){
   hapticLimits[0] = getArgument(stringToDecode, 'A'); //thumb
   hapticLimits[1] = getArgument(stringToDecode, 'B'); //index
