@@ -1,4 +1,6 @@
-#include "esp_adc_cal.h"
+#include <esp_adc_cal.h>
+#include <EEPROM.h>
+
 // Requires RunningMedian library by Rob Tillaart
 #if (ENABLE_MEDIAN_FILTER || ((INTERFILTER_MODE != INTERFILTER_NONE) && (FLEXION_MIXING != MIXING_NONE)))
   #include <RunningMedian.h>
@@ -44,21 +46,13 @@ byte selectPins[] = {PINS_MUX_SELECT};
 
 int maxFingers[2* NUM_FINGERS] = {0,0,0,0,0,0,0,0,0,0};
 int minFingers[2* NUM_FINGERS] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
-
+int maxTravel[2*NUM_FINGERS] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
 #if FLEXION_MIXING == MIXING_SINCOS
-  #if INTERMEDIATE_CALIBRATION
   int sinMin[NUM_FINGERS] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
   int sinMax[NUM_FINGERS] = {0,0,0,0,0};
 
   int cosMin[NUM_FINGERS] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
   int cosMax[NUM_FINGERS] = {0,0,0,0,0};
-  #else
-  int sinMax[NUM_FINGERS] = {INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX};
-  int sinMin[NUM_FINGERS] = {INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN};
-
-  int cosMax[NUM_FINGERS] = {INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX, INTER_MAX};
-  int cosMin[NUM_FINGERS] = {INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN, INTER_MIN};
-  #endif
 
   bool atanPositive[NUM_FINGERS] = {true, true, true, true, true};
 
@@ -66,7 +60,26 @@ int minFingers[2* NUM_FINGERS] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX
   int totalOffset1[NUM_FINGERS] = {0,0,0,0,0};
 #endif
 
+
+bool savedInter = false;
+bool savedTravel = false;
+
 void setupInputs(){
+
+  EEPROM.begin(0x3C + 1);
+  Serial.begin(115200); //DON'T FORGET TO REMOVE THISSSSS
+  Serial.println("Setting up input!");
+  if (isSavedLimits()){
+    Serial.println("Is saved limits!");
+    savedTravel = true;
+    loadTravel();
+  }
+  if (isSavedIntermediate()){
+    Serial.println("IsSavedIntermediate!");
+    savedInter = true;
+    loadIntermediate();
+  }
+
   pinMode(PIN_JOY_BTN, INPUT_PULLUP);
   pinMode(PIN_A_BTN, INPUT_PULLUP);
   pinMode(PIN_B_BTN, INPUT_PULLUP);
@@ -124,6 +137,7 @@ int readMux(byte pin){
 }
 #endif
 
+int targetSinMin, targetSinMax, targetSinCurrent, targetCosMin, targetCosMax, targetCosCurrent, targetFlexionMin, targetFlexionMax, targetFlexionCurrent;
 void getFingerPositions(bool calibrating, bool reset){
   #if FLEXION_MIXING == MIXING_NONE //no mixing, just linear
   int rawFingersFlexion[NUM_FINGERS] = {NO_THUMB?0:analogPinRead(PIN_THUMB), analogPinRead(PIN_INDEX), analogPinRead(PIN_MIDDLE), analogPinRead(PIN_RING), analogPinRead(PIN_PINKY)};
@@ -208,6 +222,11 @@ void getFingerPositions(bool calibrating, bool reset){
   }
   
   for (int i = 0; i<NUM_FINGERS; i++){
+  if (i == target){
+    targetFlexionMin = minFingers[i];
+    targetFlexionMax = maxFingers[i];
+    targetFlexionCurrent = rawFingers[i];
+  }
     if (minFingers[i] != maxFingers[i]){
       fingerPos[i] = map( rawFingers[i], minFingers[i], maxFingers[i], 0, ANALOG_MAX );
       #if CLAMP_ANALOG_MAP
@@ -222,6 +241,30 @@ void getFingerPositions(bool calibrating, bool reset){
     }
     
   }
+
+  Serial.print(target);
+  Serial.print(" ");
+  Serial.print(targetSinMin);
+  Serial.print(" ");
+  Serial.print(targetSinMax);
+  Serial.print(" ");
+  Serial.print(targetSinCurrent);
+  Serial.print(" ");
+  Serial.print(targetCosMin);
+  Serial.print(" ");
+  Serial.print(targetCosMax);
+  Serial.print(" ");
+  Serial.print(targetCosCurrent);
+  Serial.print(" ");
+  Serial.print(targetFlexionMin);
+  Serial.print(" ");
+  Serial.print(targetFlexionMax);
+  Serial.print(" ");
+  Serial.print(targetFlexionCurrent);
+  Serial.print(" ");
+
+  Serial.println();
+  Serial.flush();
 }
 
 int analogReadDeadzone(int pin){
@@ -263,7 +306,6 @@ int sinCosMix(int sinPin, int cosPin, int i){
   int sinRaw = analogPinRead(sinPin);
   int cosRaw = analogPinRead(cosPin);
 
-
   #if INTERFILTER_MODE != INTERFILTER_NONE
     sinSamples[i].add(sinRaw);
     cosSamples[i].add(cosRaw);
@@ -278,14 +320,23 @@ int sinCosMix(int sinPin, int cosPin, int i){
     int cosCalib = cosRaw;
   #endif 
 
-  #if INTERMEDIATE_CALIBRATION
-  //scaling
-  sinMin[i] = min(sinCalib, sinMin[i]);
-  sinMax[i] = max(sinCalib, sinMax[i]);
+  if (!savedInter){
+    //scaling
+    sinMin[i] = min(sinCalib, sinMin[i]);
+    sinMax[i] = max(sinCalib, sinMax[i]);
 
-  cosMin[i] = min(cosCalib, cosMin[i]);
-  cosMax[i] = max(cosCalib, cosMax[i]);
-  #endif
+    cosMin[i] = min(cosCalib, cosMin[i]);
+    cosMax[i] = max(cosCalib, cosMax[i]);
+  }
+
+  if (i==target){
+    targetSinMin = sinMin[i];
+    targetSinMax = sinMax[i];
+    targetSinCurrent = sinRaw;
+    targetCosMin = cosMin[i];
+    targetCosMax = cosMax[i];
+    targetCosCurrent = cosRaw;
+  }
 
   int sinScaled = map(sinRaw, sinMin[i], sinMax[i], -ANALOG_MAX, ANALOG_MAX);
   int cosScaled = map(cosRaw, cosMin[i], cosMax[i], -ANALOG_MAX, ANALOG_MAX);
@@ -306,3 +357,96 @@ int sinCosMix(int sinPin, int cosPin, int i){
   
 }
 #endif
+
+void saveTravel()
+{
+  byte flags = EEPROM.read(0x00);
+  flags |= 0x01;  // Set bit 0
+  EEPROM.write(0x00, flags); // Save clamping saved limits flag
+
+  int addr = 0x01;  // Start address for flexion and splay values
+
+  for (int i = 0; i < 2*NUM_FINGERS; i++) {
+    int diff = maxFingers[i] - minFingers[i]; // Calculate the difference
+    EEPROM.put(addr, diff); // Store the difference into the EEPROM at the current address
+    addr += sizeof(int); // Increment the address by 4 because we're storing int values
+  }
+  
+  EEPROM.commit(); // Ensure changes are written to EEPROM
+}
+
+void saveIntermediate()
+{
+  byte flags = EEPROM.read(0x00);
+  flags |= 0x02;  // Set bit 1
+  EEPROM.write(0x00, flags); // Save intermediate values saved flag
+
+  int address = 0x29; // Start address for sin and cos values
+
+  for(int i = 0; i < NUM_FINGERS; i++)
+  {
+    EEPROM.put(address, sinMax[i]);
+    address += sizeof(int);
+    EEPROM.put(address, sinMin[i]);
+    address += sizeof(int);
+    EEPROM.put(address, cosMax[i]);
+    address += sizeof(int);
+    EEPROM.put(address, cosMin[i]);
+    address += sizeof(int);
+  }
+  
+  EEPROM.commit(); // Ensure changes are written to EEPROM
+}
+
+void clearFlags()
+{
+  EEPROM.write(0x00, 0x00); // Clear the flags
+  EEPROM.commit(); // Ensure the changes are written to EEPROM
+}
+
+bool isSavedLimits()
+{
+  byte flags = EEPROM.read(0x00);
+  return flags & 0x01;  // Check bit 0
+}
+
+bool isSavedIntermediate()
+{
+  byte flags = EEPROM.read(0x00);
+  return flags & 0x02;  // Check bit 1
+}
+
+void loadTravel()
+{
+  byte flags = EEPROM.read(0x00);
+  if (!(flags & 0x01)) return; // If clamping saved limits flag is not set, do nothing
+
+  int addr = 0x01;  // Start address for flexion and splay values
+
+  for (int i = 0; i < 2*NUM_FINGERS; i++) {
+    EEPROM.get(addr, maxTravel[i]); // Load the max travel value from the EEPROM at the current address
+    addr += sizeof(int); // Increment the address by 4 because we're storing int values
+  }
+}
+
+void loadIntermediate()
+{
+  byte flags = EEPROM.read(0x00);
+  if (!(flags & 0x02)) return; // If intermediate values saved flag is not set, do nothing
+
+  int address = 0x29; // Start address for sin and cos values
+
+  for(int i = 0; i < NUM_FINGERS; i++)
+  {
+    EEPROM.get(address, sinMax[i]);
+    address += sizeof(int);
+    EEPROM.get(address, sinMin[i]);
+    address += sizeof(int);
+    EEPROM.get(address, cosMax[i]);
+    address += sizeof(int);
+    EEPROM.get(address, cosMin[i]);
+    address += sizeof(int);
+  }
+}
+
+
