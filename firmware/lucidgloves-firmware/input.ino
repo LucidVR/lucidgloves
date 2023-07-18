@@ -451,28 +451,16 @@ void loadIntermediate()
 
   for(int i = 0; i < NUM_FINGERS; i++)
   {
-    Serial.print(i);
-    Serial.print("SinMax: ");
     EEPROM.get(address, sinMax[i]);
-    Serial.println(sinMax[i]);
     address += sizeof(int);
 
-    Serial.print(i);
-    Serial.print("SinMin: ");
     EEPROM.get(address, sinMin[i]);
-    Serial.println(sinMin[i]);
     address += sizeof(int);
 
-    Serial.print(i);
-    Serial.print("CosMax: ");
     EEPROM.get(address, cosMax[i]);
-    Serial.println(cosMax[i]);
     address += sizeof(int);
 
-    Serial.print(i);
-    Serial.print("CosMin: ");
     EEPROM.get(address, cosMin[i]);
-    Serial.println(cosMin[i]);
     address += sizeof(int);
   }
 }
