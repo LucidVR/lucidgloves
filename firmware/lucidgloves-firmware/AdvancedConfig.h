@@ -6,18 +6,13 @@
 //Encoding
 #define ENCODING ENCODE_ALPHA
 
+#define NUM_FINGERS 5
 
 //Bluetooth advaned settings
 #define BT_ECHO false//Should the bluetooth data be echoed over serial for debugging
 
 //ESP32 Specific Settings
 #define ESP32_DUAL_CORE true //Should inputs be handled on a separate core for communication for more accurate rotation counting
-
-#define INTERMEDIATE_CALIBRATION true //should intermediate values (used in some forms of mixing such as MIXING_SINCOS be calibrated
-//Intermediate values: If not autocalibrating, you may need to adjust these for accuracy
-#define INTER_MAX 1500 //only used if intermediate calibration is false
-#define INTER_MIN 1200 //only used if intermediate calibration is false
-
 
 //Finger indeces (not used for legacy)
 #define PINKY_IND 4
@@ -59,8 +54,8 @@
 #define MEDIAN_SAMPLES 10
 
 //intermediate filtering. Options are INTERFILTER_NONE, INTERFILTER_LIMITS (filter is only used for limit calib), INTERFILTER_ALL (filter all the way)
-#define INTERFILTER_MODE INTERFILTER_NONE
-#define INTERFILTER_SAMPLES 100
+#define INTERFILTER_MODE INTERFILTER_LIMITS
+#define INTERFILTER_SAMPLES 10
 
 //ESP dual core hardware check
 #if defined(ESP32) && ESP32_DUAL_CORE

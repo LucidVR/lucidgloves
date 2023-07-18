@@ -66,7 +66,7 @@ bool savedTravel = false;
 
 void setupInputs(){
 
-  EEPROM.begin(0x3C + 1);
+  EEPROM.begin(0x78 + 1);
   Serial.begin(115200); //DON'T FORGET TO REMOVE THISSSSS
   Serial.println("Setting up input!");
   if (isSavedLimits()){
@@ -137,7 +137,7 @@ int readMux(byte pin){
 }
 #endif
 
-int targetSinMin, targetSinMax, targetSinCurrent, targetCosMin, targetCosMax, targetCosCurrent, targetFlexionMin, targetFlexionMax, targetFlexionCurrent;
+int targetSinMin, targetSinMax, targetSinCurrent, targetCosMin, targetCosMax, targetCosCurrent, targetFlexionMin, targetFlexionMax, targetFlexionCurrent, targetMaxTravel, targetProcessed;
 void getFingerPositions(bool calibrating, bool reset){
   #if FLEXION_MIXING == MIXING_NONE //no mixing, just linear
   int rawFingersFlexion[NUM_FINGERS] = {NO_THUMB?0:analogPinRead(PIN_THUMB), analogPinRead(PIN_INDEX), analogPinRead(PIN_MIDDLE), analogPinRead(PIN_RING), analogPinRead(PIN_PINKY)};
@@ -211,12 +211,16 @@ void getFingerPositions(bool calibrating, bool reset){
           maxFingers[i] = ( rawFingers[i] <= CLAMP_MAX )? rawFingers[i] : CLAMP_MAX;
         #else
           maxFingers[i] = rawFingers[i];
+          if (savedTravel && (maxFingers[i] - minFingers[i] > maxTravel[i]))
+              minFingers[i] = maxFingers[i] - maxTravel[i];
         #endif
       if (rawFingers[i] < minFingers[i])
         #if CLAMP_SENSORS
           minFingers[i] = ( rawFingers[i] >= CLAMP_MIN )? rawFingers[i] : CLAMP_MIN;
         #else
           minFingers[i] = rawFingers[i];
+          if (savedTravel && (maxFingers[i] - minFingers[i] > maxTravel[i]))
+              maxFingers[i] = minFingers[i] + maxTravel[i];
         #endif
     }
   }
@@ -226,9 +230,12 @@ void getFingerPositions(bool calibrating, bool reset){
     targetFlexionMin = minFingers[i];
     targetFlexionMax = maxFingers[i];
     targetFlexionCurrent = rawFingers[i];
+    targetMaxTravel = maxTravel[i];
   }
     if (minFingers[i] != maxFingers[i]){
       fingerPos[i] = map( rawFingers[i], minFingers[i], maxFingers[i], 0, ANALOG_MAX );
+      if (i == target)
+        targetProcessed = fingerPos[i];
       #if CLAMP_ANALOG_MAP
         if (fingerPos[i] < 0)
           fingerPos[i] = 0;
@@ -241,7 +248,7 @@ void getFingerPositions(bool calibrating, bool reset){
     }
     
   }
-
+  /*
   Serial.print(target);
   Serial.print(" ");
   Serial.print(targetSinMin);
@@ -262,9 +269,13 @@ void getFingerPositions(bool calibrating, bool reset){
   Serial.print(" ");
   Serial.print(targetFlexionCurrent);
   Serial.print(" ");
+  Serial.print(targetMaxTravel);
+  Serial.print(" ");
+  Serial.print(targetProcessed);
 
   Serial.println();
   Serial.flush();
+  */
 }
 
 int analogReadDeadzone(int pin){
@@ -373,6 +384,8 @@ void saveTravel()
   }
   
   EEPROM.commit(); // Ensure changes are written to EEPROM
+
+  loadTravel();
 }
 
 void saveIntermediate()
@@ -438,13 +451,28 @@ void loadIntermediate()
 
   for(int i = 0; i < NUM_FINGERS; i++)
   {
+    Serial.print(i);
+    Serial.print("SinMax: ");
     EEPROM.get(address, sinMax[i]);
+    Serial.println(sinMax[i]);
     address += sizeof(int);
+
+    Serial.print(i);
+    Serial.print("SinMin: ");
     EEPROM.get(address, sinMin[i]);
+    Serial.println(sinMin[i]);
     address += sizeof(int);
+
+    Serial.print(i);
+    Serial.print("CosMax: ");
     EEPROM.get(address, cosMax[i]);
+    Serial.println(cosMax[i]);
     address += sizeof(int);
+
+    Serial.print(i);
+    Serial.print("CosMin: ");
     EEPROM.get(address, cosMin[i]);
+    Serial.println(cosMin[i]);
     address += sizeof(int);
   }
 }

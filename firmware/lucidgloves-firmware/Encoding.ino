@@ -66,9 +66,9 @@ char* encode(int* flexion, int joyX, int joyY, bool joyClick, bool triggerButton
 void decodeData(char* stringToDecode, int* hapticLimits){
 
   //Check if a Z command was received
-  Serial.println("Message recieved");
+  //Serial.println("Message recieved");
   if (strchr(stringToDecode, 'Z') != NULL) {
-    Serial.println("Found Z!");
+    //Serial.println("Found Z!");
     bool toReturn = false;
     if (strstr(stringToDecode, "ClearData") != NULL) {
         clearFlags();
@@ -76,12 +76,15 @@ void decodeData(char* stringToDecode, int* hapticLimits){
     }
     if (strstr(stringToDecode, "SaveInter") != NULL) {
         saveIntermediate();
-        return;
+        toReturn = true;
     }
     if (strstr(stringToDecode, "SaveTravel") != NULL) {
         saveTravel();
-        return;
+        toReturn = true;
     }
+
+    if (toReturn)
+      return;
   }
 
   hapticLimits[0] = getArgument(stringToDecode, 'A'); //thumb
