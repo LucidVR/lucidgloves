@@ -1,3 +1,4 @@
+#pragma once
 //Advanced settings, only for the pros XD
 
 #define LOOP_TIME 1 //How much time between data sends (ms), set to 0 for a good time :)

@@ -1,3 +1,6 @@
+#include "gesture.h"
+#include "AdvancedConfig.h"
+
 bool grabGesture(int *flexion){
   return (flexion[PINKY_IND] + flexion[RING_IND] + flexion[MIDDLE_IND] + flexion[INDEX_IND]) / 4 <= ANALOG_MAX/2 ? 0:1;
 }
