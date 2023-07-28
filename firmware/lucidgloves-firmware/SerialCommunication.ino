@@ -1,3 +1,5 @@
+#include "ICommunication.h"
+
 class SerialCommunication : public ICommunication {
   private:
     bool m_isOpen;
