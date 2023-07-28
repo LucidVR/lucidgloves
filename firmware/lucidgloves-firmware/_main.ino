@@ -1,4 +1,6 @@
 #include <mutex>
+#include "gesture.h"
+
 #define ALWAYS_CALIBRATING CALIBRATION_LOOPS == -1
 
 #define CALIB_OVERRIDE false
