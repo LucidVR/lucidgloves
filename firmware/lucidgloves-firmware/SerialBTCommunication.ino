@@ -1,3 +1,5 @@
+#include "ICommunication.h"
+
 //only compiles if BTSerial is set because it won't compile for a non-compatible board
 #if COMMUNICATION == COMM_BTSERIAL
 #include "BluetoothSerial.h"
