@@ -1,5 +1,6 @@
 #include <mutex>
 #include "gesture.h"
+#include "Haptics.h"
 #include "SerialCommunication.h"
 #include "BTSerialCommunication.h"
 
@@ -15,6 +16,7 @@ bool calibButton = false;
 int* fingerPos = (int[]){0,0,0,0,0,0,0,0,0,0};
 
 ICommunication* comm;
+Haptics haptics;
 
 #if ESP32_DUAL_CORE_SET
 //std::mutex fingerPosMutex;
@@ -61,7 +63,7 @@ void setup() {
   setupInputs();
 
   #if USING_FORCE_FEEDBACK
-    setupServoHaptics();  
+    haptics.setupServoHaptics();  
   #endif
   
   #if ESP32_DUAL_CORE_SET
@@ -176,7 +178,7 @@ void loop() {
         //This check is a temporary hack to fix an issue with haptics on v0.5 of the driver, will make it more snobby code later
         if(String(received).length() >= 5) {
            decodeData(received, hapticLimits);
-           writeServoHaptics(hapticLimits); 
+           haptics.writeServoHaptics(hapticLimits); 
         }
       }
     #endif
