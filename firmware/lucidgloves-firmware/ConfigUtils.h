@@ -1,14 +1,12 @@
-//Contains the definitions that need to be evaluated before the main config file (lucidgloves-firmware.ino).
+//Contains the definitions that need to be evaluated before the main config file (Config.h).
 //These shouldn't need to be changed.
 
+#pragma once
 #include <mutex>
 #include <condition_variable>
 #include <queue>
+#include <Arduino.h>
 
-int lockTime = 0;
-int lockLoops = 1;
-int lockTimeTotal = 0;
-int lockTimeLast = 0;
 
 class ordered_lock {
     std::queue<std::condition_variable *> cvar;
@@ -17,10 +15,6 @@ class ordered_lock {
 public:
     ordered_lock() : locked(false) {};
     void lock() {
-        lockTime = micros() - lockTimeLast;
-        lockTimeLast = micros();
-        lockTimeTotal += lockTime;
-        lockLoops++;
         std::unique_lock<std::mutex> acquire(cvar_lock);
         if (locked) {
             std::condition_variable signal;
