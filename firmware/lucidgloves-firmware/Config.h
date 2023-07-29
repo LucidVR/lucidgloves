@@ -6,7 +6,7 @@
 
 //This is the configuration file, main structure in _main.ino
 //CONFIGURATION SETTINGS:
-#define COMMUNICATION COMM_BTSERIAL //Which communication to use. Options are: COMM_SERIAL (usb), COMM_BTSERIAL (bluetooth)
+#define COMMUNICATION COMM_SERIAL //Which communication to use. Options are: COMM_SERIAL (usb), COMM_BTSERIAL (bluetooth)
 //serial over USB
   #define SERIAL_BAUD_RATE 115200
   
