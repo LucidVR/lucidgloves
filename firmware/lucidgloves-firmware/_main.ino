@@ -1,5 +1,5 @@
 #include <mutex>
-#include "gesture.h"
+#include "Gesture.h"
 #include "Haptics.h"
 #include "SerialCommunication.h"
 #include "BTSerialCommunication.h"
@@ -17,6 +17,7 @@ int* fingerPos = (int[]){0,0,0,0,0,0,0,0,0,0};
 
 ICommunication* comm;
 Haptics haptics;
+Gesture gesture;
 
 #if ESP32_DUAL_CORE_SET
 //std::mutex fingerPosMutex;
@@ -130,7 +131,7 @@ void loop() {
     bool joyButton = getButton(PIN_JOY_BTN) != INVERT_JOY;
 
     #if TRIGGER_GESTURE
-    bool triggerButton = triggerGesture(fingerPos);
+    bool triggerButton = gesture.triggerGesture(fingerPos);
     #else
     bool triggerButton = getButton(PIN_TRIG_BTN) != INVERT_TRIGGER;
     #endif
@@ -139,13 +140,13 @@ void loop() {
     bool bButton = getButton(PIN_B_BTN) != INVERT_B;
 
     #if GRAB_GESTURE
-    bool grabButton = grabGesture(fingerPos);
+    bool grabButton = gesture.grabGesture(fingerPos);
     #else
     bool grabButton = getButton(PIN_GRAB_BTN) != INVERT_GRAB;
     #endif
 
     #if PINCH_GESTURE
-    bool pinchButton = pinchGesture(fingerPos);
+    bool pinchButton = gesture.pinchGesture(fingerPos);
     #else
     bool pinchButton = getButton(PIN_PNCH_BTN) != INVERT_PINCH;
     #endif
