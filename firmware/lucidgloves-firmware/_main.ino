@@ -1,5 +1,6 @@
 #include <mutex>
 #include "gesture.h"
+#include "BTSerialCommunication.h"
 
 #define ALWAYS_CALIBRATING CALIBRATION_LOOPS == -1
 
