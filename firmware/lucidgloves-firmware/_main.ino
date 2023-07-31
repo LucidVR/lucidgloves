@@ -1,6 +1,8 @@
 #include <mutex>
 #include "Gesture.h"
 #include "Haptics.h"
+#include "AlphaEncoding.h"
+#include "LegacyEncoding.h"
 #include "SerialCommunication.h"
 #include "BTSerialCommunication.h"
 
@@ -16,6 +18,7 @@ bool calibButton = false;
 int* fingerPos = (int[]){0,0,0,0,0,0,0,0,0,0};
 
 ICommunication* comm;
+IEncoding* encoding;
 Haptics haptics;
 Gesture gesture;
 
@@ -53,12 +56,21 @@ int loops = 0;
 void setup() {
   pinMode(32, INPUT_PULLUP);
   pinMode(DEBUG_LED, OUTPUT);
-  digitalWrite(DEBUG_LED, HIGH);
+  digitalWrite(DEBUG_LED, HIGH); 
+
   #if COMMUNICATION == COMM_SERIAL
     comm = new SerialCommunication();
   #elif COMMUNICATION == COMM_BTSERIAL
     comm = new BTSerialCommunication();
-  #endif  
+  #endif 
+
+  #if ENCODING == ENCODING_ALPHA
+    encoding = new AlphaEncoding();
+  #elif ENCODING == ENCODING_LEGACY
+    encoding = new LegacyEncoding();
+  #endif
+
+  
   comm->start();
 
   setupInputs();
@@ -171,15 +183,24 @@ void loop() {
       
     }
 
-    comm->output(encode(fingerPosCopy, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
+    comm->output(encoding->encode(fingerPosCopy, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
     #if USING_FORCE_FEEDBACK
       char received[100];
       if (comm->readData(received)){
         int hapticLimits[5];
         //This check is a temporary hack to fix an issue with haptics on v0.5 of the driver, will make it more snobby code later
         if(String(received).length() >= 5) {
-           decodeData(received, hapticLimits);
-           haptics.writeServoHaptics(hapticLimits); 
+           DecodedData recievedData = encoding->decodeData(received);
+           haptics.writeServoHaptics(recievedData.servoValues); 
+
+           if (recievedData.fields.specialCommandReceived){
+              if (recievedData.command == "ClearData")
+                clearFlags();
+              else if (recievedData.command == "SaveInter")
+                saveIntermediate();
+              else if (recievedData.command == "SaveTravel")
+                saveTravel();
+           }
         }
       }
     #endif
