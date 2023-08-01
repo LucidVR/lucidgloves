@@ -1,7 +1,6 @@
 #pragma once
 #include "config.h"
 
-#if USING_FORCE_FEEDBACK
 #if defined(ESP32)
   #include "ESP32Servo.h"
 #else
@@ -22,5 +21,3 @@ public:
     void dynScaleLimits(int* hapticLimits, float* scaledLimits);
     void writeServoHaptics(int* hapticLimits);
 };
-
-#endif
