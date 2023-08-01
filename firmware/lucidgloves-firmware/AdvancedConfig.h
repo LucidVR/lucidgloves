@@ -1,4 +1,5 @@
 #pragma once
+#include "ConfigUtils.h"
 //THIS FILE HAS SOME EXTRA SETTINGS, MAIN SETTINGS ARE IN Config.h
 
 #define LOOP_TIME 1 //How much time between data sends (ms), set to 0 for a good time :)
