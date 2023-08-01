@@ -5,6 +5,7 @@
 #include "LegacyEncoding.h"
 #include "SerialCommunication.h"
 #include "BTSerialCommunication.h"
+#include "AdvancedConfig.h"
 
 #define ALWAYS_CALIBRATING CALIBRATION_LOOPS == -1
 
@@ -62,12 +63,16 @@ void setup() {
     comm = new SerialCommunication();
   #elif COMMUNICATION == COMM_BTSERIAL
     comm = new BTSerialCommunication();
+  #else
+    #error "Communication not set."
   #endif 
 
-  #if ENCODING == ENCODING_ALPHA
+  #if ENCODING == ENCODE_ALPHA
     encoding = new AlphaEncoding();
-  #elif ENCODING == ENCODING_LEGACY
+  #elif ENCODING == ENCODE_LEGACY
     encoding = new LegacyEncoding();
+  #else
+    #error "Encoding not set."
   #endif
 
   
