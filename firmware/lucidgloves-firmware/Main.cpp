@@ -1,62 +1,16 @@
-#include <mutex>
-#include "Gesture.h"
-#include "Haptics.h"
-#include "AlphaEncoding.h"
-#include "LegacyEncoding.h"
-#include "SerialCommunication.h"
-#include "BTSerialCommunication.h"
-#include "AdvancedConfig.h"
-#include "InputManager.h"
+#include "Main.h"
 
 #define ALWAYS_CALIBRATING CALIBRATION_LOOPS == -1
-
 #define CALIB_OVERRIDE false
 #if USING_CALIB_PIN && COMMUNICATION == COMM_SERIAL && PIN_CALIB == 0 && !CALIB_OVERRIDE
   #error "You can't set your calibration pin to 0 over usb. You can calibrate with the BOOT button when using bluetooth only. Set CalibOverride to true to override this."
 #endif
 
-bool calibrate = false;
-bool calibButton = false;
-int* fingerPos = (int[]){0,0,0,0,0,0,0,0,0,0};
-
-ICommunication* comm;
-IEncoding* encoding;
-Haptics haptics;
-Gesture gesture;
-InputManager input;
-
-#if ESP32_DUAL_CORE_SET
-//std::mutex fingerPosMutex;
-ordered_lock* fingerPosLock = new ordered_lock();
-TaskHandle_t Task1;
-int threadLoops = 1;
-int totalLocks = 0;
-int lastMicros = 0;
-int fullLoopTime = 0;
-int fullLoopTotal = 0;
-void getInputs(void* parameter){
-    for(;;){
-      fullLoopTime = micros() - lastMicros;
-      fullLoopTotal += fullLoopTime;
-      lastMicros = micros();
-      {
-        fingerPosLock->lock();
-        totalLocks++;
-        input.getFingerPositions(calibrate, calibButton, fingerPos); //Save finger positions in thread
-
-        fingerPosLock->unlock();
-      }
-      threadLoops++;
-      if (threadLoops%100 == 0){
-        vTaskDelay(1); //keep watchdog fed
-      }
-      delayMicroseconds(1);
-    }           
+Main::Main() {
+  // Constructor code here
 }
-#endif
 
-int loops = 0;
-void setup() {
+void Main::setup() {
   pinMode(32, INPUT_PULLUP);
   pinMode(DEBUG_LED, OUTPUT);
   digitalWrite(DEBUG_LED, HIGH); 
@@ -88,41 +42,17 @@ void setup() {
   
   #if ESP32_DUAL_CORE_SET
     xTaskCreatePinnedToCore(
-      getInputs, /* Function to implement the task */
+      Main::getInputsWrapper, /* Function to implement the task */
       "Get_Inputs", /* Name of the task */
       10000,  /* Stack size in words */
-      NULL,  /* Task input parameter */
+      this,  /* Task input parameter */
       tskIDLE_PRIORITY,  /* Priority of the task */
       &Task1,  /* Task handle. */
       0); /* Core where the task should run */
   #endif
 }
 
-
-int lastMainMicros = micros();
-int mainMicros = 0;
-int mainMicrosTotal = 0;
-int mainloops = 1;
-
-int target = 0;
-bool latch = false;
-
-void loop() {
-  mainloops++;
-  mainMicros = micros() - lastMainMicros;
-  mainMicrosTotal += mainMicros;
-  lastMainMicros = micros();
-
-  if (!digitalRead(27)){
-    if (!latch){
-       target++;
-       target %= 5;
-
-       latch = true;
-    }
-  }
-  else
-    latch = false;
+void Main::loop() {
   
   if (comm->isOpen()){
     #if USING_CALIB_PIN
@@ -145,7 +75,7 @@ void loop() {
     }
 
     #if !ESP32_DUAL_CORE_SET
-      input.getFingerPositions(calibrate, calibButton);
+      input.getFingerPositions(calibrate, calibButton, fingerPos);
     #endif
     bool joyButton = input.getButton(PIN_JOY_BTN) != INVERT_JOY;
 
@@ -214,3 +144,28 @@ void loop() {
     delay(LOOP_TIME);
   }
 }
+
+
+#if ESP32_DUAL_CORE_SET
+void Main::getInputs(){
+    for(;;){
+      {
+        fingerPosLock->lock();
+        input.getFingerPositions(calibrate, calibButton, fingerPos); //Save finger positions in thread
+
+        fingerPosLock->unlock();
+      }
+      threadLoops++;
+      if (threadLoops%100 == 0){
+        vTaskDelay(1); //keep watchdog fed
+      }
+      delayMicroseconds(1);
+    }           
+}
+
+void Main::getInputsWrapper(void* _this) {
+  // Cast the void* parameter back to a Main* and call getInputs on it
+  static_cast<Main*>(_this)->getInputs();
+}
+
+#endif
