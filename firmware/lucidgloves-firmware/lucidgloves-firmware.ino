@@ -4,8 +4,8 @@
  * lucidvrtech.com
  */
 
-#include "Config.h"
-#include "AdvancedConfig.h"
+
+#include "Main.h"
 
 /*
  * 
@@ -15,4 +15,13 @@
  * 
  */
 
- 
+
+Main mainClass;
+
+void setup(){
+  mainClass.setup();
+}
+
+void loop(){
+  mainClass.loop();
+}
