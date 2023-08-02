@@ -1,81 +1,16 @@
-#include <esp_adc_cal.h>
-#include <EEPROM.h>
+#include "InputManager.h"
+InputManager::InputManager() {
+    // Constructor logic here...
+}
 
-// Requires RunningMedian library by Rob Tillaart
-#if (ENABLE_MEDIAN_FILTER || ((INTERFILTER_MODE != INTERFILTER_NONE) && (FLEXION_MIXING != MIXING_NONE)))
-  #include <RunningMedian.h>
-#endif
-
-#if ENABLE_MEDIAN_FILTER
-  RunningMedian rmSamples[2* NUM_FINGERS] = {
-      RunningMedian(MEDIAN_SAMPLES),
-      RunningMedian(MEDIAN_SAMPLES),
-      RunningMedian(MEDIAN_SAMPLES),
-      RunningMedian(MEDIAN_SAMPLES),
-      RunningMedian(MEDIAN_SAMPLES),
-      RunningMedian(MEDIAN_SAMPLES),
-      RunningMedian(MEDIAN_SAMPLES),
-      RunningMedian(MEDIAN_SAMPLES),
-      RunningMedian(MEDIAN_SAMPLES),
-      RunningMedian(MEDIAN_SAMPLES)
-  };
-#endif
-
-#if ((INTERFILTER_MODE != INTERFILTER_NONE) && (FLEXION_MIXING == MIXING_SINCOS))
-  RunningMedian sinSamples[NUM_FINGERS] = {
-      RunningMedian(INTERFILTER_SAMPLES),
-      RunningMedian(INTERFILTER_SAMPLES),
-      RunningMedian(INTERFILTER_SAMPLES),
-      RunningMedian(INTERFILTER_SAMPLES),
-      RunningMedian(INTERFILTER_SAMPLES)
-  };
-
-    RunningMedian cosSamples[NUM_FINGERS] = {
-      RunningMedian(INTERFILTER_SAMPLES),
-      RunningMedian(INTERFILTER_SAMPLES),
-      RunningMedian(INTERFILTER_SAMPLES),
-      RunningMedian(INTERFILTER_SAMPLES),
-      RunningMedian(INTERFILTER_SAMPLES)
-  };
-#endif
-
-#define DEFAULT_VREF 1100
-esp_adc_cal_characteristics_t *adc_chars;
-
-byte selectPins[] = {PINS_MUX_SELECT};
-
-int maxFingers[2* NUM_FINGERS] = {0,0,0,0,0,0,0,0,0,0};
-int minFingers[2* NUM_FINGERS] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
-int maxTravel[2*NUM_FINGERS] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
-#if FLEXION_MIXING == MIXING_SINCOS
-  int sinMin[NUM_FINGERS] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
-  int sinMax[NUM_FINGERS] = {0,0,0,0,0};
-
-  int cosMin[NUM_FINGERS] = {ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX, ANALOG_MAX};
-  int cosMax[NUM_FINGERS] = {0,0,0,0,0};
-
-  bool atanPositive[NUM_FINGERS] = {true, true, true, true, true};
-
-
-  int totalOffset1[NUM_FINGERS] = {0,0,0,0,0};
-#endif
-
-
-bool savedInter = false;
-bool savedTravel = false;
-
-void setupInputs(){
-
+void InputManager::setupInputs() {
+    
   EEPROM.begin(0x78 + 1);
-  Serial.begin(115200); //DON'T FORGET TO REMOVE THISSSSS
-  Serial.println("Setting up input!");
   if (isSavedLimits()){
-    Serial.println("Is saved limits!");
     savedTravel = true;
     loadTravel();
   }
   if (isSavedIntermediate()){
-    Serial.println("IsSavedIntermediate!");
     savedInter = true;
     loadIntermediate();
   }
@@ -103,15 +38,17 @@ void setupInputs(){
   #endif
 
   #if USING_MULTIPLEXER
-  byte selectPins[] = {PINS_MUX_SELECT};
   //pinMode(MUX_INPUT, INPUT);
-  for (int i = 0; i < sizeof(selectPins); i++){
-    pinMode(selectPins[i], OUTPUT);
+  {
+    byte selectPins[] = {PINS_MUX_SELECT};
+    for (int i = 0; i < sizeof(selectPins); i++){
+      pinMode(selectPins[i], OUTPUT);
+    }
   }
   #endif
 }
 
-int analogPinRead(int pin){
+int InputManager::analogPinRead(int pin) {
   #if USING_MULTIPLEXER
   if (ISMUX(pin)){
     return readMux(UNMUX(pin));
@@ -124,8 +61,11 @@ int analogPinRead(int pin){
   #endif
 }
 
+// Other methods follow the same pattern...
+
 #if USING_MULTIPLEXER
-int readMux(byte pin){
+int InputManager::readMux(byte pin) {
+  byte selectPins[] = {PINS_MUX_SELECT};
   int numSelectPins = sizeof(selectPins) / sizeof(selectPins[0]);
 
   for (int i = numSelectPins - 1; i > -1; i--){
@@ -137,8 +77,7 @@ int readMux(byte pin){
 }
 #endif
 
-int targetSinMin, targetSinMax, targetSinCurrent, targetCosMin, targetCosMax, targetCosCurrent, targetFlexionMin, targetFlexionMax, targetFlexionCurrent, targetMaxTravel, targetProcessed;
-void getFingerPositions(bool calibrating, bool reset){
+void InputManager::getFingerPositions(bool calibrating, bool reset, int* fingerPos) {
   #if FLEXION_MIXING == MIXING_NONE //no mixing, just linear
   int rawFingersFlexion[NUM_FINGERS] = {NO_THUMB?0:analogPinRead(PIN_THUMB), analogPinRead(PIN_INDEX), analogPinRead(PIN_MIDDLE), analogPinRead(PIN_RING), analogPinRead(PIN_PINKY)};
   
@@ -226,16 +165,8 @@ void getFingerPositions(bool calibrating, bool reset){
   }
   
   for (int i = 0; i<NUM_FINGERS; i++){
-  if (i == target){
-    targetFlexionMin = minFingers[i];
-    targetFlexionMax = maxFingers[i];
-    targetFlexionCurrent = rawFingers[i];
-    targetMaxTravel = maxTravel[i];
-  }
     if (minFingers[i] != maxFingers[i]){
       fingerPos[i] = map( rawFingers[i], minFingers[i], maxFingers[i], 0, ANALOG_MAX );
-      if (i == target)
-        targetProcessed = fingerPos[i];
       #if CLAMP_ANALOG_MAP
         if (fingerPos[i] < 0)
           fingerPos[i] = 0;
@@ -248,37 +179,9 @@ void getFingerPositions(bool calibrating, bool reset){
     }
     
   }
-  /*
-  Serial.print(target);
-  Serial.print(" ");
-  Serial.print(targetSinMin);
-  Serial.print(" ");
-  Serial.print(targetSinMax);
-  Serial.print(" ");
-  Serial.print(targetSinCurrent);
-  Serial.print(" ");
-  Serial.print(targetCosMin);
-  Serial.print(" ");
-  Serial.print(targetCosMax);
-  Serial.print(" ");
-  Serial.print(targetCosCurrent);
-  Serial.print(" ");
-  Serial.print(targetFlexionMin);
-  Serial.print(" ");
-  Serial.print(targetFlexionMax);
-  Serial.print(" ");
-  Serial.print(targetFlexionCurrent);
-  Serial.print(" ");
-  Serial.print(targetMaxTravel);
-  Serial.print(" ");
-  Serial.print(targetProcessed);
-
-  Serial.println();
-  Serial.flush();
-  */
 }
 
-int analogReadDeadzone(int pin){
+int InputManager::analogReadDeadzone(int pin){
   int raw = analogPinRead(pin);
   if (abs(ANALOG_MAX/2 - raw) < JOYSTICK_DEADZONE * ANALOG_MAX / 100)
     return ANALOG_MAX/2;
@@ -286,7 +189,7 @@ int analogReadDeadzone(int pin){
     return raw;
 }
 
-int getJoyX(){
+int InputManager::getJoyX(){
   #if JOYSTICK_BLANK
   return ANALOG_MAX/2;
   #elif JOY_FLIP_X
@@ -296,7 +199,7 @@ int getJoyX(){
   #endif
 }
 
-int getJoyY(){
+int InputManager::getJoyY(){
   #if JOYSTICK_BLANK
   return ANALOG_MAX/2;
   #elif JOY_FLIP_Y
@@ -306,13 +209,13 @@ int getJoyY(){
   #endif
 }
 
-bool getButton(byte pin){
+bool InputManager::getButton(byte pin){
   return digitalRead(pin) != HIGH;
 }
 
 #if FLEXION_MIXING == MIXING_SINCOS
 //mixing
-int sinCosMix(int sinPin, int cosPin, int i){
+int InputManager::sinCosMix(int sinPin, int cosPin, int i){
 
   int sinRaw = analogPinRead(sinPin);
   int cosRaw = analogPinRead(cosPin);
@@ -340,15 +243,6 @@ int sinCosMix(int sinPin, int cosPin, int i){
     cosMax[i] = max(cosCalib, cosMax[i]);
   }
 
-  if (i==target){
-    targetSinMin = sinMin[i];
-    targetSinMax = sinMax[i];
-    targetSinCurrent = sinRaw;
-    targetCosMin = cosMin[i];
-    targetCosMax = cosMax[i];
-    targetCosCurrent = cosRaw;
-  }
-
   int sinScaled = map(sinRaw, sinMin[i], sinMax[i], -ANALOG_MAX, ANALOG_MAX);
   int cosScaled = map(cosRaw, cosMin[i], cosMax[i], -ANALOG_MAX, ANALOG_MAX);
 
@@ -369,7 +263,7 @@ int sinCosMix(int sinPin, int cosPin, int i){
 }
 #endif
 
-void saveTravel()
+void InputManager::saveTravel()
 {
   byte flags = EEPROM.read(0x00);
   flags |= 0x01;  // Set bit 0
@@ -388,7 +282,7 @@ void saveTravel()
   loadTravel();
 }
 
-void saveIntermediate()
+void InputManager::saveIntermediate()
 {
   byte flags = EEPROM.read(0x00);
   flags |= 0x02;  // Set bit 1
@@ -411,25 +305,25 @@ void saveIntermediate()
   EEPROM.commit(); // Ensure changes are written to EEPROM
 }
 
-void clearFlags()
+void InputManager::clearFlags()
 {
   EEPROM.write(0x00, 0x00); // Clear the flags
   EEPROM.commit(); // Ensure the changes are written to EEPROM
 }
 
-bool isSavedLimits()
+bool InputManager::isSavedLimits()
 {
   byte flags = EEPROM.read(0x00);
   return flags & 0x01;  // Check bit 0
 }
 
-bool isSavedIntermediate()
+bool InputManager::isSavedIntermediate()
 {
   byte flags = EEPROM.read(0x00);
   return flags & 0x02;  // Check bit 1
 }
 
-void loadTravel()
+void InputManager::loadTravel()
 {
   byte flags = EEPROM.read(0x00);
   if (!(flags & 0x01)) return; // If clamping saved limits flag is not set, do nothing
@@ -442,7 +336,7 @@ void loadTravel()
   }
 }
 
-void loadIntermediate()
+void InputManager::loadIntermediate()
 {
   byte flags = EEPROM.read(0x00);
   if (!(flags & 0x02)) return; // If intermediate values saved flag is not set, do nothing
@@ -464,5 +358,6 @@ void loadIntermediate()
     address += sizeof(int);
   }
 }
+
 
 
