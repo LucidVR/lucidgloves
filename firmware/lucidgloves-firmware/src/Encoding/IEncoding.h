@@ -1,5 +1,5 @@
 #pragma once
-#include "DataStructs.h"
+#include "../Util/DataStructs.h"
 
 // Interface for encoding
 class IEncoding {

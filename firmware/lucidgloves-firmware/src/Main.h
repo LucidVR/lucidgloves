@@ -1,15 +1,15 @@
 #pragma once
 
 #include <mutex>
-#include "Gesture.h"
-#include "Haptics.h"
-#include "AlphaEncoding.h"
-#include "LegacyEncoding.h"
-#include "SerialCommunication.h"
-#include "BTSerialCommunication.h"
-#include "AdvancedConfig.h"
-#include "ConfigUtils.h"
-#include "InputManager.h"
+#include "Controller/Gesture.h"
+#include "Controller/Haptics.h"
+#include "Encoding/AlphaEncoding.h"
+#include "Encoding/LegacyEncoding.h"
+#include "Communication/SerialCommunication.h"
+#include "Communication/BTSerialCommunication.h"
+#include "../AdvancedConfig.h"
+#include "Util/ConfigUtils.h"
+#include "Controller/InputManager.h"
 
 
 class Main {

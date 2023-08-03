@@ -1,5 +1,5 @@
 #pragma once
-#include "config.h"
+#include "../../Config.h"
 
 #if defined(ESP32)
   #include "ESP32Servo.h"
