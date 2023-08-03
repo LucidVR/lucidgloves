@@ -3,11 +3,9 @@
 #include <mutex>
 #include "Controller/Gesture.h"
 #include "Controller/Haptics.h"
-#include "Encoding/AlphaEncoding.h"
-#include "Encoding/LegacyEncoding.h"
-#include "Communication/SerialCommunication.h"
-#include "Communication/BTSerialCommunication.h"
 #include "../AdvancedConfig.h"
+#include "Communication/ICommunication.h"
+#include "Encoding/IEncoding.h"
 #include "Util/ConfigUtils.h"
 #include "Controller/InputManager.h"
 
