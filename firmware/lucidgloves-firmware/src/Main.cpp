@@ -1,4 +1,9 @@
 #include "Main.h"
+#include "Communication/SerialCommunication.h"
+#include "Communication/BTSerialCommunication.h"
+#include "Encoding/AlphaEncoding.h"
+#include "Encoding/LegacyEncoding.h"
+
 
 #define ALWAYS_CALIBRATING CALIBRATION_LOOPS == -1
 #define CALIB_OVERRIDE false
