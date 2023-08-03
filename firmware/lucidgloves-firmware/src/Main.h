@@ -32,7 +32,7 @@ private:
 
   bool calibrate = false;
   bool calibButton = false;
-  int* fingerPos = (int[]){0,0,0,0,0,0,0,0,0,0};
+  int fingerPos[10] = {0,0,0,0,0,0,0,0,0,0};
   int loops = 0;
 
   #if ESP32_DUAL_CORE_SET

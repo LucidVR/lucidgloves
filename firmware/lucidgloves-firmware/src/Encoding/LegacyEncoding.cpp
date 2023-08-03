@@ -1,5 +1,5 @@
 #include "LegacyEncoding.h"
-
+#include <Arduino.h>
 char* LegacyEncoding::encode(int* flexion, int joyX, int joyY, bool joyClick, bool triggerButton, bool aButton, bool bButton, bool grab, bool pinch, bool calib, bool menu){
   static char stringToEncode[75];
   

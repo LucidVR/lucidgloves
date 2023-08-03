@@ -5,7 +5,6 @@
 #include <mutex>
 #include <condition_variable>
 #include <queue>
-#include <Arduino.h>
 
 
 class ordered_lock {
