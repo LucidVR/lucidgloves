@@ -3,7 +3,7 @@
 #include "Communication/BTSerialCommunication.h"
 #include "Encoding/AlphaEncoding.h"
 #include "Encoding/LegacyEncoding.h"
-
+#include "Util/DataStructs.h"
 
 #define ALWAYS_CALIBRATING CALIBRATION_LOOPS == -1
 #define CALIB_OVERRIDE false
@@ -60,17 +60,14 @@ void Main::setup() {
 void Main::loop() {
   
   if (comm->isOpen()){
+
     #if USING_CALIB_PIN
-    calibButton = input.getButton(PIN_CALIB) != INVERT_CALIB;
-    //Serial.println(getButton(PIN_CALIB));
-    if (calibButton)
+    data.calib = input.getButton(PIN_CALIB) != INVERT_CALIB;
+    if (data.calib)
       loops = 0;
     #else
-    calibButton = false;
+    data.calib = false;
     #endif
-
-
-    //bool calibrate = false;
     if (loops < CALIBRATION_LOOPS || ALWAYS_CALIBRATING){
       calibrate = true;
       loops++;
@@ -80,34 +77,34 @@ void Main::loop() {
     }
 
     #if !ESP32_DUAL_CORE_SET
-      input.getFingerPositions(calibrate, calibButton, fingerPos);
+      input.getFingerPositions(calibrate, data.calib, fingerPos);
     #endif
-    bool joyButton = input.getButton(PIN_JOY_BTN) != INVERT_JOY;
+    data.joyClick = input.getButton(PIN_JOY_BTN) != INVERT_JOY;
 
     #if TRIGGER_GESTURE
-    bool triggerButton = gesture.triggerGesture(fingerPos);
+    data.triggerButton = gesture.triggerGesture(fingerPos);
     #else
-    bool triggerButton = input.getButton(PIN_TRIG_BTN) != INVERT_TRIGGER;
+    data.triggerButton = input.getButton(PIN_TRIG_BTN) != INVERT_TRIGGER;
     #endif
 
-    bool aButton = input.getButton(PIN_A_BTN) != INVERT_A;
-    bool bButton = input.getButton(PIN_B_BTN) != INVERT_B;
+    data.aButton = input.getButton(PIN_A_BTN) != INVERT_A;
+    data.bButton = input.getButton(PIN_B_BTN) != INVERT_B;
 
     #if GRAB_GESTURE
-    bool grabButton = gesture.grabGesture(fingerPos);
+    data.grab = gesture.grabGesture(fingerPos);
     #else
-    bool grabButton = input.getButton(PIN_GRAB_BTN) != INVERT_GRAB;
+    data.grab = input.getButton(PIN_GRAB_BTN) != INVERT_GRAB;
     #endif
 
     #if PINCH_GESTURE
-    bool pinchButton = gesture.pinchGesture(fingerPos);
+    data.pinch = gesture.pinchGesture(fingerPos);
     #else
-    bool pinchButton = input.getButton(PIN_PNCH_BTN) != INVERT_PINCH;
+    data.pinch = input.getButton(PIN_PNCH_BTN) != INVERT_PINCH;
     #endif
 
     int fingerPosCopy[10];
     int mutexTimeDone;
-    bool menuButton = input.getButton(PIN_MENU_BTN) != INVERT_MENU;
+    data.menu = input.getButton(PIN_MENU_BTN) != INVERT_MENU;
     {
       #if ESP32_DUAL_CORE_SET
       int mutexTime = micros();
@@ -125,7 +122,11 @@ void Main::loop() {
       
     }
 
-    comm->output(encoding->encode(fingerPosCopy, input.getJoyX(), input.getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
+    memcpy(data.fingers, fingerPosCopy, 5 * sizeof(int));
+    data.joyX = input.getJoyX();
+    data.joyY = input.getJoyY();
+
+    comm->output(encoding->encode(data));
     #if USING_FORCE_FEEDBACK
       char received[100];
       if (comm->readData(received)){
@@ -156,7 +157,7 @@ void Main::getInputs(){
     for(;;){
       {
         fingerPosLock->lock();
-        input.getFingerPositions(calibrate, calibButton, fingerPos); //Save finger positions in thread
+        input.getFingerPositions(calibrate, data.calib, fingerPos); //Save finger positions in thread
 
         fingerPosLock->unlock();
       }
