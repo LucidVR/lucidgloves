@@ -28,8 +28,9 @@ private:
   Gesture gesture;
   InputManager input;
 
+  OutboundData data = {};
+
   bool calibrate = false;
-  bool calibButton = false;
   int fingerPos[10] = {0,0,0,0,0,0,0,0,0,0};
   int loops = 0;
 

@@ -21,3 +21,21 @@ struct DecodedData {
     int servoValues[NUM_FINGERS];
     const char* command;
 };
+
+struct OutboundData {
+    int fingers[NUM_FINGERS];
+    int joyX;
+    int joyY;
+    bool joyClick;
+    bool triggerButton;
+    bool aButton;
+    bool bButton;
+    bool grab;
+    bool pinch;
+    bool calib;
+    bool menu;
+
+    #if USING_SPLAY
+    int splay[NUM_FINGERS];
+    #endif
+};
