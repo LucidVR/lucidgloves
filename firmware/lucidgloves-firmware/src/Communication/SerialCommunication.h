@@ -1,6 +1,6 @@
 #pragma once
 #include "ICommunication.h"
-#include "config.h"
+#include "../../Config.h"
 #include <Arduino.h>
 
 class SerialCommunication : public ICommunication {

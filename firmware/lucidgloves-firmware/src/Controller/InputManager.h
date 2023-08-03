@@ -1,8 +1,8 @@
 #pragma once
 
 #include <EEPROM.h>
-#include "Config.h"
-#include "AdvancedConfig.h"
+#include "../../Config.h"
+#include "../../AdvancedConfig.h"
 
 
 #if (ENABLE_MEDIAN_FILTER || ((INTERFILTER_MODE != INTERFILTER_NONE) && (FLEXION_MIXING != MIXING_NONE)))

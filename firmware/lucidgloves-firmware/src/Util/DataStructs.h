@@ -1,5 +1,5 @@
 #pragma once
-#include "AdvancedConfig.h"
+#include "../../AdvancedConfig.h"
 
 const char* const SPECIAL_COMMANDS[] = {
     "SaveInter",

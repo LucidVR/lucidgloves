@@ -1,5 +1,5 @@
 #pragma once
-#include "ConfigUtils.h"
+#include "src/Util/ConfigUtils.h"
 #include "AdvancedConfig.h"
 
 //LUCIDGLOVES CONFIGURATION SETTINGS :)

@@ -1,6 +1,6 @@
 #pragma once
 #include "ICommunication.h"
-#include "config.h"
+#include "../../Config.h"
 
 #if COMMUNICATION == COMM_BTSERIAL
 #include "BluetoothSerial.h"
