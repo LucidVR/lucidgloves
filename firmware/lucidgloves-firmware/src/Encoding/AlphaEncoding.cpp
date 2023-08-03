@@ -1,5 +1,5 @@
 #include "AlphaEncoding.h"
-
+#include <Arduino.h>
 char* AlphaEncoding::encode(int* flexion, int joyX, int joyY, bool joyClick, bool triggerButton, bool aButton, bool bButton, bool grab, bool pinch, bool calib, bool menu){
   static char stringToEncode[75];
   int trigger = (flexion[1] > ANALOG_MAX/2) ? (flexion[1] - ANALOG_MAX/2) * 2:0;
