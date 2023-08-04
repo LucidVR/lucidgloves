@@ -126,7 +126,9 @@ void Main::loop() {
     data.joyX = input.getJoyX();
     data.joyY = input.getJoyY();
 
-    comm->output(encoding->encode(data));
+    static char encodedString[75];
+    encoding->encode(data, encodedString);
+    comm->output(encodedString);
     #if USING_FORCE_FEEDBACK
       char received[100];
       if (comm->readData(received)){

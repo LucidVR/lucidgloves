@@ -5,6 +5,6 @@
 
 class LegacyEncoding : public IEncoding {
 public:
-    char* encode(OutboundData data) override;
+    void encode(OutboundData data, char* stringToEncode) override;
     DecodedData decodeData(char* stringToDecode) override;
 };

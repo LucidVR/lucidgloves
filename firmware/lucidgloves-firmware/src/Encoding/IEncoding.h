@@ -7,7 +7,7 @@
 // Interface for encoding
 class IEncoding {
 public:
-    virtual char* encode(OutboundData data) = 0;
+    virtual void encode(OutboundData data, char* stringToEncode) = 0;
 
     virtual DecodedData decodeData(char* stringToDecode) = 0;
 };

@@ -1,7 +1,6 @@
 #include "AlphaEncoding.h"
 #include <Arduino.h>
-char* AlphaEncoding::encode(OutboundData data){
-  static char stringToEncode[75];
+void AlphaEncoding::encode(OutboundData data, char* stringToEncode){
   int trigger = (data.fingers[1] > ANALOG_MAX/2) ? (data.fingers[1] - ANALOG_MAX/2) * 2:0;
   char splayString[30] = "";
   #if USING_SPLAY
@@ -15,7 +14,6 @@ char* AlphaEncoding::encode(OutboundData data){
   data.triggerButton?"I":"", data.aButton?"J":"", data.bButton?"K":"", data.grab?"L":"", data.pinch?"M":"", data.menu?"N":"", data.calib?"O":"",
   splayString
   );
-  return stringToEncode;
 }
 DecodedData AlphaEncoding::decodeData(char* stringToDecode) {
   DecodedData decodedData = {};
