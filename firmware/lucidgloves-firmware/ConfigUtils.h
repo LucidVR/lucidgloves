@@ -45,6 +45,10 @@ public:
 #define COMM_SERIAL 0   
 #define COMM_BTSERIAL 1 
 
+//ServoInterface
+#define SERVO_DIRECT 0
+#define SERVO_PCA9685 1 
+
 //Encode
 #define ENCODE_LEGACY 0
 #define ENCODE_ALPHA  1

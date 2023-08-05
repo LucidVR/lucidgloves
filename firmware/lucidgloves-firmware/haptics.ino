@@ -1,18 +1,23 @@
 #if USING_FORCE_FEEDBACK
 
-#if defined(ESP32)
-  #include "ESP32Servo.h"
-#else
-  #include "Servo.h"
-#endif
-
 Servo pinkyServo;
 Servo ringServo;
 Servo middleServo;
 Servo indexServo;
 Servo thumbServo;
 
+IServo* servoint;
+
 void setupServoHaptics(){
+    
+  #if SERVO_INTERFACE == SERVO_DIRECT
+    servoint = new DirectServoConnection();
+  #elif SERVO_INTERFACE == SERVO_PCA9685
+    servoint = new PCA9685ServoConnection();
+  #endif
+  
+  servoint->InitServoInterface(); //Calls the InitServoInterface() function. What that function does is determined by the defined servo interface
+
   pinkyServo.attach(PIN_PINKY_MOTOR);
   ringServo.attach(PIN_RING_MOTOR);
   middleServo.attach(PIN_MIDDLE_MOTOR);

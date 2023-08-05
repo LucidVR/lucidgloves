@@ -55,7 +55,18 @@
 
 #define USING_CALIB_PIN true //When PIN_CALIB is shorted (or it's button pushed) it will reset calibration if this is on.
 
+//servo Configuration
 #define USING_FORCE_FEEDBACK false //Force feedback haptics allow you to feel the solid objects you hold
+#define SERVO_INTERFACE SERVO_DIRECT  //How your servos are connected. Options are: SERVO_DIRECT (mcu gpio pins), SERVO_PCA9685 (through I2C PCA9685 board)
+  //servos through gpio Pins
+
+  //servos through PCA9685
+    // To use you must install the Adafruit PCA9685 PWM Servo Driver Library 
+    // https://github.com/adafruit/Adafruit-PWM-Servo-Driver-Library
+  #if SERVO_INTERFACE == SERVO_PCA9685
+    #define PIN_I2C_SDA         -1     //Pin to use for the I2C SDA line connected to the PCA9685
+    #define PIN_I2C_SCL         -1     //Pin to use for the I2C SCL line connected to the PCA9685
+  #endif
 #define FLIP_FORCE_FEEDBACK true
 #define SERVO_SCALING false //dynamic scaling of servo motors
 
@@ -77,7 +88,7 @@
   #define PIN_PNCH_BTN  23 //unused if gesture set
   #define PIN_CALIB     32 //button for recalibration (You can set this to GPIO0 to use the BOOT button, but only when using Bluetooth.)
   #define DEBUG_LED 2
-  #define PIN_PINKY_MOTOR     19  //used for force feedback
+  #define PIN_PINKY_MOTOR     19  //used for force feedback **alternatively this is which board channel you are plugged into on the PCA9685 servodriver board (accepted values 0-15 in that case)**
   #define PIN_RING_MOTOR      18 //^
   #define PIN_MIDDLE_MOTOR    5 //^
   #define PIN_INDEX_MOTOR     17 //^
@@ -128,7 +139,7 @@
   #define PIN_PNCH_BTN  12 //unused if gesture set
   #define PIN_CALIB     13 //button for recalibration
   #define DEBUG_LED     LED_BUILTIN
-  #define PIN_PINKY_MOTOR     2 //used for force feedback
+  #define PIN_PINKY_MOTOR     2 //used for force feedback **alternatively this is which board channel you are plugged into on the PCA9685 servodriver board (accepted values 0-15 in that case)**
   #define PIN_RING_MOTOR      3 //^
   #define PIN_MIDDLE_MOTOR    4 //^
   #define PIN_INDEX_MOTOR     5 //^
