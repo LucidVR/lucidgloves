@@ -8,12 +8,11 @@ void AlphaEncoding::encode(OutboundData data, char* stringToEncode){
   data.splay[0], data.splay[1], data.splay[2], data.splay[3], data.splay[4]
   );
   #endif
-  sprintf(stringToEncode, "A%dB%dC%dD%dE%dF%dG%dP%d%s%s%s%s%s%s%s%s%s%s\n", 
+  snprintf(stringToEncode, 100, "A%dB%dC%dD%dE%dF%dG%dP%d%s%s%s%s%s%s%s%s%s\n", 
   data.fingers[0], data.fingers[1], data.fingers[2], data.fingers[3], data.fingers[4],
   data.joyX, data.joyY, trigger, data.joyClick?"H":"",
   data.triggerButton?"I":"", data.aButton?"J":"", data.bButton?"K":"", data.grab?"L":"", data.pinch?"M":"", data.menu?"N":"", data.calib?"O":"",
-  splayString
-  );
+  splayString);
 }
 DecodedData AlphaEncoding::decodeData(char* stringToDecode) {
   DecodedData decodedData = {};

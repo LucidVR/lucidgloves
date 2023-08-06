@@ -126,19 +126,19 @@ void Main::loop() {
     data.joyX = input.getJoyX();
     data.joyY = input.getJoyY();
 
-    static char encodedString[75];
+    static char encodedString[100] = {0};
     encoding->encode(data, encodedString);
     comm->output(encodedString);
     #if USING_FORCE_FEEDBACK
-      char received[100];
+      static char received[100];
       if (comm->readData(received)){
         int hapticLimits[5];
         //This check is a temporary hack to fix an issue with haptics on v0.5 of the driver, will make it more snobby code later
         if(String(received).length() >= 5) {
            DecodedData recievedData = encoding->decodeData(received);
            haptics.writeServoHaptics(recievedData.servoValues); 
-
            if (recievedData.fields.specialCommandReceived){
+            Serial.println("Special command recieved!!!");
               if (recievedData.command == "ClearData")
                 input.clearFlags();
               else if (recievedData.command == "SaveInter")
@@ -149,7 +149,11 @@ void Main::loop() {
         }
       }
     #endif
-    delay(LOOP_TIME);
+    #if defined(ESP32)
+      vTaskDelay(LOOP_TIME);
+    #else
+      delay(LOOP_TIME);
+    #endif
   }
 }
 
