@@ -14,6 +14,7 @@ void setup() {
     comm = new BTSerialCommunication();
   #elif COMMUNICATION == COMM_WIFISERIAL
     comm = new WIFISerialCommunication();
+  #endif
   comm->start();
 
   setupInputs();
