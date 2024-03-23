@@ -44,9 +44,7 @@ void getInputs(void* parameter){
 
 int loops = 0;
 void setup() {
-
-  pinMode(32, INPUT_PULLUP);
-  
+ 
   #if COMMUNICATION == COMM_SERIAL
     comm = new SerialCommunication();
   #elif COMMUNICATION == COMM_BTSERIAL

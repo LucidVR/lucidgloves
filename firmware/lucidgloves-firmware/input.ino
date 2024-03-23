@@ -71,12 +71,6 @@ void setupInputs(){
   pinMode(PIN_A_BTN, INPUT_PULLUP);
   pinMode(PIN_B_BTN, INPUT_PULLUP);
 
-  pinMode(PIN_MENU_BTN, INPUT_PULLUP);
-  
-  #if !TRIGGER_GESTURE
-  pinMode(PIN_TRIG_BTN, INPUT_PULLUP);
-  #endif
-
   #if !GRAB_GESTURE
   pinMode(PIN_GRAB_BTN, INPUT_PULLUP);
   #endif
@@ -107,7 +101,7 @@ int analogPinRead(int pin){
     return analogRead(pin);
   }
   #else
-   return analogRead(UNMUX(pin));
+   return analogRead(pin);
   #endif
 }
 
