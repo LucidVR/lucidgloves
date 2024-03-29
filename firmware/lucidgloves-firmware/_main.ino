@@ -44,7 +44,11 @@ void getInputs(void* parameter){
 
 int loops = 0;
 void setup() {
- 
+  #ifndef ESP32S3
+  pinMode(32, INPUT_PULLUP);
+  #endif
+  pinMode(DEBUG_LED, OUTPUT);
+  digitalWrite(DEBUG_LED, HIGH);
   #if COMMUNICATION == COMM_SERIAL
     comm = new SerialCommunication();
   #elif COMMUNICATION == COMM_BTSERIAL
@@ -79,7 +83,6 @@ int mainMicrosTotal = 0;
 int mainloops = 1;
 
 int target = 0;
-
 bool latch = false;
 
 void loop() {
@@ -88,7 +91,7 @@ void loop() {
   mainMicrosTotal += mainMicros;
   lastMainMicros = micros();
 
-  if (!digitalRead(32)){
+  if (!digitalRead(27)){
     if (!latch){
        target++;
        target %= 5;
@@ -171,7 +174,7 @@ void loop() {
       if (comm->readData(received)){
         int hapticLimits[5];
         //This check is a temporary hack to fix an issue with haptics on v0.5 of the driver, will make it more snobby code later
-        if(String(received).length() >= 10) {
+        if(String(received).length() >= 5) {
            decodeData(received, hapticLimits);
            writeServoHaptics(hapticLimits); 
         }

@@ -62,14 +62,36 @@ char* encode(int* flexion, int joyX, int joyY, bool joyClick, bool triggerButton
   return stringToEncode;
 }
 
-//legacy decoding
+//alpha decoding
 void decodeData(char* stringToDecode, int* hapticLimits){
+
+  //Check if a Z command was received
+  //Serial.println("Message recieved");
+  if (strchr(stringToDecode, 'Z') != NULL) {
+    //Serial.println("Found Z!");
+    bool toReturn = false;
+    if (strstr(stringToDecode, "ClearData") != NULL) {
+        clearFlags();
+        toReturn = true;
+    }
+    if (strstr(stringToDecode, "SaveInter") != NULL) {
+        saveIntermediate();
+        toReturn = true;
+    }
+    if (strstr(stringToDecode, "SaveTravel") != NULL) {
+        saveTravel();
+        toReturn = true;
+    }
+
+    if (toReturn)
+      return;
+  }
+
   hapticLimits[0] = getArgument(stringToDecode, 'A'); //thumb
   hapticLimits[1] = getArgument(stringToDecode, 'B'); //index
   hapticLimits[2] = getArgument(stringToDecode, 'C'); //middle
   hapticLimits[3] = getArgument(stringToDecode, 'D'); //ring
   hapticLimits[4] = getArgument(stringToDecode, 'E'); //pinky
-  //Serial.println("Haptic: "+ (String)hapticLimits[0] + " " + (String)hapticLimits[1] + " " + (String)hapticLimits[2] + " " + (String)hapticLimits[3] + " " + (String)hapticLimits[4] + " ");
 }
 
 int getArgument(char* stringToDecode, char command){
