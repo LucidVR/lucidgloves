@@ -49,6 +49,8 @@ void setup() {
     comm = new SerialCommunication();
   #elif COMMUNICATION == COMM_BTSERIAL
     comm = new BTSerialCommunication();
+  #elif COMMUNICATION == COMM_BLESERIAL
+    comm = new BLESerialCommunication();
   #endif  
   comm->start();
 
