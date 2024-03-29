@@ -10,6 +10,7 @@
 
 //This is the configuration file, main structure in _main.ino
 //CONFIGURATION SETTINGS:
+#define ESP32S3 // Hack to workaround pin32 issue
 #define COMMUNICATION COMM_BLESERIAL //Which communication protocol to use. Options are: COMM_SERIAL (usb), COMM_BTSERIAL (bluetooth), COMM_BLESERIAL (BLE Serial, using Nordic UART Service)
 //serial over USB
   #define SERIAL_BAUD_RATE 115200
