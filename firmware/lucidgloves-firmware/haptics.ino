@@ -1,7 +1,7 @@
 #if USING_FORCE_FEEDBACK
 
 #if defined(ESP32)
-  #include "ESP32Servo.h"
+  #include <Servo.h>
 #else
   #include "Servo.h"
 #endif
@@ -49,11 +49,19 @@ void dynScaleLimits(int* hapticLimits, float* scaledLimits){
 void writeServoHaptics(int* hapticLimits){
   float scaledLimits[5];
   scaleLimits(hapticLimits, scaledLimits);
-  if(hapticLimits[0] >= 0) thumbServo.write(scaledLimits[0]);
-  if(hapticLimits[1] >= 0) indexServo.write(scaledLimits[1]);
-  if(hapticLimits[2] >= 0) middleServo.write(scaledLimits[2]);
-  if(hapticLimits[3] >= 0) ringServo.write(scaledLimits[3]);
-  if(hapticLimits[4] >= 0) pinkyServo.write(scaledLimits[4]);
+  #if defined(ESP32)
+    if(hapticLimits[0] >= 0) thumbServo.write(PIN_THUMB_MOTOR,scaledLimits[0]);
+    if(hapticLimits[1] >= 0) indexServo.write(PIN_INDEX_MOTOR,scaledLimits[1]);
+    if(hapticLimits[2] >= 0) middleServo.write(PIN_MIDDLE_MOTOR,scaledLimits[2]);
+    if(hapticLimits[3] >= 0) ringServo.write(PIN_RING_MOTOR,scaledLimits[3]);
+    if(hapticLimits[4] >= 0) pinkyServo.write(PIN_PINKY_MOTOR,scaledLimits[4]);
+  #else
+    if(hapticLimits[0] >= 0) thumbServo.write(scaledLimits[0]);
+    if(hapticLimits[1] >= 0) indexServo.write(scaledLimits[1]);
+    if(hapticLimits[2] >= 0) middleServo.write(ecaledLimits[2]);
+    if(hapticLimits[3] >= 0) ringServo.write(scaledLimits[3]);
+    if(hapticLimits[4] >= 0) pinkyServo.write(scaledLimits[4]);
+  #endif
 }
 
 #endif
