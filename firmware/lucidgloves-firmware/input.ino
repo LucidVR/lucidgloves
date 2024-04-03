@@ -219,7 +219,7 @@ void getFingerPositions(bool calibrating, bool reset){
     }
   }
   
-  for (int i = 0; i<NUM_FINGERS; i++){
+  for (int i = 0; i < 2*NUM_FINGERS; i++){
   if (i == target){
     targetFlexionMin = minFingers[i];
     targetFlexionMax = maxFingers[i];
