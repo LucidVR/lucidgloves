@@ -11,6 +11,7 @@
 //This is the configuration file, main structure in _main.ino
 //CONFIGURATION SETTINGS:
 #define ESP32S3 // Hack to workaround pin32 issue
+#define NEOPIXEL //Is the DEBUG_LED a WS2812? 
 #define COMMUNICATION COMM_BLESERIAL //Which communication protocol to use. Options are: COMM_SERIAL (usb), COMM_BTSERIAL (bluetooth), COMM_BLESERIAL (BLE Serial, using Nordic UART Service)
 //serial over USB
   #define SERIAL_BAUD_RATE 115200
@@ -77,7 +78,7 @@
   #define PIN_GRAB_BTN  48 //unused if gesture set
   #define PIN_PNCH_BTN  47 //unused if gesture set
   #define PIN_CALIB     36 //button for recalibration (You can set this to GPIO0 to use the BOOT button, but only when using Bluetooth.)
-  #define DEBUG_LED 23
+  #define DEBUG_LED 37
   #define PIN_PINKY_MOTOR     42  //used for force feedback
   #define PIN_RING_MOTOR      41 //^
   #define PIN_MIDDLE_MOTOR    40 //^
