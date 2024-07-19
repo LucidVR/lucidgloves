@@ -48,7 +48,11 @@ void setup() {
   pinMode(32, INPUT_PULLUP);
   #endif
   pinMode(DEBUG_LED, OUTPUT);
-  digitalWrite(DEBUG_LED, HIGH);
+  #ifdef NEOPIXEL 
+  neopixelWrite(DEBUG_LED,RGB_BRIGHTNESS,0,0); // Red 
+  #else   
+  digitalWrite(DEBUG_LED, HIGH); 
+  #endif 
   #if COMMUNICATION == COMM_SERIAL
     comm = new SerialCommunication();
   #elif COMMUNICATION == COMM_BTSERIAL
