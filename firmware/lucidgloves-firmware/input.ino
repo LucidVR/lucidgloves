@@ -77,7 +77,7 @@ void setupInputs(){
     savedTravel = true;
     loadTravel();
   }
-  if (isSavedIntermediate() && FLEXION_MIXING != MIXING_NONE){ \\ Check to make sure we're even using mixing. If someone had the wrong mixing type set before, this will cause an issue!
+  if (isSavedIntermediate() && FLEXION_MIXING != MIXING_NONE){ // Check to make sure we're even using mixing. If someone had the wrong mixing type set before, this will cause an issue!
     Serial.println("IsSavedIntermediate!");
     savedInter = true;
     loadIntermediate();
