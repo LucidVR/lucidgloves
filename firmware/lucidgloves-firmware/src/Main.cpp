@@ -141,8 +141,10 @@ void Main::loop() {
             Serial.println("Special command recieved!!!");
               if (recievedData.command == "ClearData")
                 input.clearFlags();
+              #if FLEXION_MIXING == MIXING_SINCOS
               else if (recievedData.command == "SaveInter")
                 input.saveIntermediate();
+              #endif
               else if (recievedData.command == "SaveTravel")
                 input.saveTravel();
            }

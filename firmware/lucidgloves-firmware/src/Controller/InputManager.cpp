@@ -10,10 +10,12 @@ void InputManager::setupInputs() {
     savedTravel = true;
     loadTravel();
   }
-  if (isSavedIntermediate()){
-    savedInter = true;
-    loadIntermediate();
-  }
+  #if FLEXION_MIXING == MIXING__SINCOS
+    if (isSavedIntermediate()){
+      savedInter = true;
+      loadIntermediate();
+    }
+  #endif
 
   pinMode(PIN_JOY_BTN, INPUT_PULLUP);
   pinMode(PIN_A_BTN, INPUT_PULLUP);
@@ -284,6 +286,7 @@ void InputManager::saveTravel()
 
 void InputManager::saveIntermediate()
 {
+  #if FLEXION_MIXING == MIXING_SINCOS
   byte flags = EEPROM.read(0x00);
   flags |= 0x02;  // Set bit 1
   EEPROM.write(0x00, flags); // Save intermediate values saved flag
@@ -303,6 +306,7 @@ void InputManager::saveIntermediate()
   }
   
   EEPROM.commit(); // Ensure changes are written to EEPROM
+  #endif
 }
 
 void InputManager::clearFlags()
@@ -338,6 +342,7 @@ void InputManager::loadTravel()
 
 void InputManager::loadIntermediate()
 {
+  #if FLEXION_MIXING == MIXING_SINCOS
   byte flags = EEPROM.read(0x00);
   if (!(flags & 0x02)) return; // If intermediate values saved flag is not set, do nothing
 
@@ -357,6 +362,7 @@ void InputManager::loadIntermediate()
     EEPROM.get(address, cosMin[i]);
     address += sizeof(int);
   }
+  #endif
 }
 
 
