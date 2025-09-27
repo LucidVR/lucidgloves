@@ -45,7 +45,7 @@ void Main::setup() {
     haptics.setupServoHaptics();  
   #endif
   
-  #if ESP32_DUAL_CORE_SET
+  #if defined(ESP32_DUAL_CORE_SET)
     xTaskCreatePinnedToCore(
       Main::getInputsWrapper, /* Function to implement the task */
       "Get_Inputs", /* Name of the task */
@@ -76,7 +76,7 @@ void Main::loop() {
       calibrate = false;
     }
 
-    #if !ESP32_DUAL_CORE_SET
+    #if !defined(ESP32_DUAL_CORE_SET)
       input.getFingerPositions(calibrate, data.calib, fingerPos);
     #endif
     data.joyClick = input.getButton(PIN_JOY_BTN) != INVERT_JOY;
@@ -106,7 +106,7 @@ void Main::loop() {
     int mutexTimeDone;
     data.menu = input.getButton(PIN_MENU_BTN) != INVERT_MENU;
     {
-      #if ESP32_DUAL_CORE_SET
+      #if defined(ESP32_DUAL_CORE_SET)
       int mutexTime = micros();
       //const std::lock_guard<std::mutex> lock(fingerPosMutex);
       fingerPosLock->lock();
@@ -116,7 +116,7 @@ void Main::loop() {
       for (int i = 0; i < 10; i++){
         fingerPosCopy[i] = fingerPos[i];
       }
-      #if ESP32_DUAL_CORE_SET
+      #if defined(ESP32_DUAL_CORE_SET)
       fingerPosLock->unlock();
       #endif
       
@@ -160,7 +160,7 @@ void Main::loop() {
 }
 
 
-#if ESP32_DUAL_CORE_SET
+#if defined(ESP32_DUAL_CORE_SET)
 void Main::getInputs(){
     for(;;){
       {
