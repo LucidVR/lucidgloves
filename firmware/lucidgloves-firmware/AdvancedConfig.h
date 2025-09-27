@@ -14,7 +14,7 @@
 #define BT_ECHO false//Should the bluetooth data be echoed over serial for debugging
 
 //ESP32 Specific Settings
-#define ESP32_DUAL_CORE true //Should inputs be handled on a separate core for communication for more accurate rotation counting
+#define ESP32_DUAL_CORE false //Should inputs be handled on a separate core for communication for more accurate rotation counting
 
 //Finger indeces (not used for legacy)
 #define PINKY_IND 4

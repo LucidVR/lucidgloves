@@ -16,7 +16,7 @@ public:
   void setup();
   void loop();
 
-  #if ESP32_DUAL_CORE_SET
+  #if defined(ESP32_DUAL_CORE_SET)
   static void getInputsWrapper(void* _this);
   #endif
 
@@ -34,7 +34,7 @@ private:
   int fingerPos[10] = {0,0,0,0,0,0,0,0,0,0};
   int loops = 0;
 
-  #if ESP32_DUAL_CORE_SET
+  #if defined(ESP32_DUAL_CORE_SET)
   void getInputs();
   ordered_lock* fingerPosLock = new ordered_lock();
   TaskHandle_t Task1;
