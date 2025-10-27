@@ -15,10 +15,10 @@
 
 // serial over WIFI
 #if COMMUNICATION == COMM_WIFISERIAL
-const char *ssid = "Your_Wifi_SSID";
-const char *password = "Your_Wifi_Password";
-const char *host = "Your_host_ip";
-const int port = 65432; // port of the tcp server
+#define ssid "Your_Wifi_SSID";
+#define password "Your_Wifi_Password";
+#define host "Your_host_ip";
+#define port 65432; // port of the tcp server
 #endif
 
 //ANALOG INPUT CONFIG

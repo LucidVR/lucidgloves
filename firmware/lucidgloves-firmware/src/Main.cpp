@@ -26,7 +26,6 @@ void Main::setup() {
     comm = new BTSerialCommunication();
   #elif COMMUNICATION == COMM_WIFISERIAL
     comm = new WIFISerialCommunication();
-  #endif
   #else
     #error "Communication not set."
   #endif 

@@ -6,6 +6,7 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
+class WIFISerialCommunication : public ICommunication {
 private:
     bool m_isOpen;
     WiFiClient client;
@@ -15,12 +16,12 @@ private:
 public:
     WIFISerialCommunication();
 
-    bool isOpen();
+    bool isOpen() override;
 
-    void start();
+    void start() override;
 
-    void output(char *data);
+    void output(char *data) override;
 
-    bool readData(char *input);
+    bool readData(char *input) override;
 };
 #endif
