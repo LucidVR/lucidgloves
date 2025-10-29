@@ -6,12 +6,20 @@
 
 //This is the configuration file, main structure in _main.ino
 //CONFIGURATION SETTINGS:
-#define COMMUNICATION COMM_SERIAL //Which communication to use. Options are: COMM_SERIAL (usb), COMM_BTSERIAL (bluetooth)
+#define COMMUNICATION COMM_SERIAL //Which communication to use. Options are: COMM_SERIAL (usb), COMM_BTSERIAL (bluetooth), COMM_WIFISERIAL (wifi)
 //serial over USB
   #define SERIAL_BAUD_RATE 115200
   
 //serial over Bluetooth
   #define BTSERIAL_DEVICE_NAME "lucidgloves-left"
+
+// serial over WIFI
+#if COMMUNICATION == COMM_WIFISERIAL
+#define ssid "Your_Wifi_SSID";
+#define password "Your_Wifi_Password";
+#define host "Your_host_ip";
+#define port 65432; // port of the tcp server
+#endif
 
 //ANALOG INPUT CONFIG
 #define USING_SPLAY false //whether or not your glove tracks splay. - tracks the side to side "wag" of fingers. Requires 5 more inputs.

@@ -2,6 +2,8 @@
 //These shouldn't need to be changed.
 
 #pragma once
+#ifndef CONFIGUTILS_H
+#define CONFIGUTILS_H
 #include <mutex>
 #include <condition_variable>
 #include <queue>
@@ -37,6 +39,7 @@ public:
 //Comm
 #define COMM_SERIAL 0   
 #define COMM_BTSERIAL 1 
+#define COMM_WIFISERIAL 2
 
 //Encode
 #define ENCODE_LEGACY 0
@@ -55,3 +58,5 @@ public:
 #define INTERFILTER_NONE 0
 #define INTERFILTER_LIMITS 1
 #define INTERFILTER_ALL 2
+
+#endif
