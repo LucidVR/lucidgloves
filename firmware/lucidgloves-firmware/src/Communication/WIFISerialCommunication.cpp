@@ -4,7 +4,7 @@
 
 void WIFISerialCommunication::connect()
 {
-    while (!client.connect(host, port)) // blocks thread until connected
+    while (!client.connect(SERVER_HOST, SERVER_PORT)) // blocks thread until connected
         delay(500);
     Serial.print("Connected to Server at" + String(client.localIP()) + ":" + String(client.localPort()));
 }
@@ -23,7 +23,7 @@ bool WIFISerialCommunication::isOpen()
 void WIFISerialCommunication::start()
 {
     Serial.begin(SERIAL_BAUD_RATE);
-    WiFi.begin(ssid, password);
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(1000);

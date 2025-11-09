@@ -1,6 +1,7 @@
 #include "Main.h"
 #include "Communication/SerialCommunication.h"
 #include "Communication/BTSerialCommunication.h"
+#include "Communication/WIFISerialCommunication.h"
 #include "Encoding/AlphaEncoding.h"
 #include "Encoding/LegacyEncoding.h"
 #include "Util/DataStructs.h"

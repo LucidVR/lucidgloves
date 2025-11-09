@@ -15,10 +15,10 @@
 
 // serial over WIFI
 #if COMMUNICATION == COMM_WIFISERIAL
-#define ssid "Your_Wifi_SSID";
-#define password "Your_Wifi_Password";
-#define host "Your_host_ip";
-#define port 65432; // port of the tcp server
+#define WIFI_SSID "Your_Wifi_SSID";
+#define WIFI_PASSWORD "Your_Wifi_Password";
+#define SERVER_HOST "Your_host_ip";
+#define SERVER_PORT 65432; // port of the tcp server
 #endif
 
 //ANALOG INPUT CONFIG
